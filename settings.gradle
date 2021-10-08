@@ -1,0 +1,4 @@
+include ':markdown'
+include ':base'
+include ':app'
+rootProject.name = "Memo"
