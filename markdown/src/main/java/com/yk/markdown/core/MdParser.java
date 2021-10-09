@@ -94,7 +94,7 @@ public class MdParser {
             type = MdType.CODE_BLOCK;
         } else if (src.matches("\\d+\\.\\s.*")) {
             type = MdType.ORDERED_LIST;
-        } else if (src.matches("-\\s.*")) {
+        } else if (src.matches("[+*-]\\s.*")) {
             type = MdType.UNORDERED_LIST;
         } else if (src.matches("#+\\s.*")) {
             type = MdType.TITLE;

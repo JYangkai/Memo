@@ -35,10 +35,10 @@ public class Markdown {
 
         tv.setPadding(padding, padding, padding, padding);
 
-        tv.setText(MdRender.getSpanStrBuilder(MdParser.dealMarkdown(src)));
+        tv.setText(getMd());
     }
 
-    public static SpannableStringBuilder getMd(String src) {
+    public SpannableStringBuilder getMd() {
         return MdRender.getSpanStrBuilder(MdParser.dealMarkdown(src));
     }
 

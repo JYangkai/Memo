@@ -75,7 +75,7 @@ public class MdRender {
     }
 
     private static SpannableString dealNormal(MdSection section) {
-        String src = section.getSrc();
+        String src = section.getSrc().trim();
 
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdNormalSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
