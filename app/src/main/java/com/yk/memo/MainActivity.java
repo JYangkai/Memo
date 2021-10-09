@@ -1,14 +1,10 @@
 package com.yk.memo;
 
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.yk.base.rxjava.Observable;
-import com.yk.base.rxjava.Subscriber;
 import com.yk.markdown.Markdown;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,46 +45,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvMd = findViewById(R.id.tvMd);
+
+        Markdown.load(src).padding(64).into(tvMd);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        tvMd.post(new Runnable() {
-            @Override
-            public void run() {
-                test();
-            }
-        });
-    }
-
-    private void test() {
-        Observable.fromCallable(new Observable.OnCallable<SpannableStringBuilder>() {
-            @Override
-            public SpannableStringBuilder call() {
-                Log.d(TAG, "call: ");
-                return Markdown.getMd(src);
-            }
-        })
-                .subscribeOnIo()
-                .observeOnUi()
-                .subscribe(new Subscriber<SpannableStringBuilder>() {
-                    @Override
-                    public void onNext(SpannableStringBuilder spannableStringBuilder) {
-                        Log.d(TAG, "onNext: " + spannableStringBuilder);
-                        tvMd.setText(spannableStringBuilder);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d(TAG, "onComplete: ");
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        Log.e(TAG, "onError: ", e);
-                    }
-                });
     }
 }

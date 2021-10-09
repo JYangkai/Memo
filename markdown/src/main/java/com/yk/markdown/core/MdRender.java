@@ -85,7 +85,7 @@ public class MdRender {
 
     private static SpannableString dealQuote(MdSection section) {
         String src = section.getSrc();
-        src = src.substring(2);
+        src = src.substring(src.indexOf(" ") + 1);
 
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdQuoteSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -95,7 +95,7 @@ public class MdRender {
 
     private static SpannableString dealCodeBlock(MdSection section) {
         String src = section.getSrc();
-        src = src.substring(3, src.length() - 1 - 3).trim();
+        src = "\n" + src.substring(src.indexOf("```") + 3, src.lastIndexOf("```")) + "\n";
 
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdCodeBlockSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -106,7 +106,7 @@ public class MdRender {
     private static SpannableString dealOrderedList(MdSection section) {
         String src = section.getSrc();
         int index = Integer.parseInt(src.substring(0, 1));
-        src = src.substring(3);
+        src = src.substring(src.indexOf(" ") + 1);
 
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdOrderedListSpan(index), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -116,7 +116,7 @@ public class MdRender {
 
     private static SpannableString dealUnorderedList(MdSection section) {
         String src = section.getSrc();
-        src = src.substring(2);
+        src = src.substring(src.indexOf(" ") + 1);
 
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdUnorderedListSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

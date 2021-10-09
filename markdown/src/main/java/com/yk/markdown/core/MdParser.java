@@ -27,10 +27,8 @@ public class MdParser {
 
         List<MdSection> sectionList = new ArrayList<>();
 
-        for (String s : mdSrcSplit) {
+        for (String src : mdSrcSplit) {
             int codeBlockCount = getCodeBlockCount(sectionList);
-
-            String src = s.trim();
 
             MdType type = getMdType(src);
 
@@ -62,7 +60,7 @@ public class MdParser {
     private static int getCodeBlockCount(List<MdSection> sectionList) {
         int count = 0;
 
-        if (sectionList.isEmpty()) {
+        if (sectionList == null || sectionList.isEmpty()) {
             return count;
         }
 
@@ -89,20 +87,20 @@ public class MdParser {
      */
     private static MdType getMdType(String src) {
         MdType type = MdType.NORMAL;
-        if (Pattern.matches(">\\s.*", src)) {
+
+        if (src.matches(">\\s.*")) {
             type = MdType.QUOTE;
-        } else if (Pattern.matches("`{3}.*", src)) {
+        } else if (src.matches("`{3}.*")) {
             type = MdType.CODE_BLOCK;
-        } else if (Pattern.matches("\\d+\\.\\s.*", src)) {
+        } else if (src.matches("\\d+\\.\\s.*")) {
             type = MdType.ORDERED_LIST;
-        } else if (Pattern.matches("-\\s.*", src)) {
+        } else if (src.matches("-\\s.*")) {
             type = MdType.UNORDERED_LIST;
-        } else if (Pattern.matches("#+\\s.*", src)) {
+        } else if (src.matches("#+\\s.*")) {
             type = MdType.TITLE;
-        } else if (Pattern.matches("-{3,}.*", src)) {
+        } else if (src.matches("[+*-]{3,}.*")) {
             type = MdType.SEPARATOR;
         }
         return type;
     }
-
 }
