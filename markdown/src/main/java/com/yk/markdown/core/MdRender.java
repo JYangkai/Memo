@@ -32,8 +32,12 @@ public class MdRender {
 
         SpannableStringBuilder spanStrBuilder = new SpannableStringBuilder();
 
-        for (MdSection section : sectionList) {
-            spanStrBuilder.append(getSpanStr(section)).append("\n");
+        for (int i = 0; i < sectionList.size(); i++) {
+            MdSection section = sectionList.get(i);
+            spanStrBuilder.append(getSpanStr(section));
+            if (i != sectionList.size() - 1) {
+                spanStrBuilder.append("\n");
+            }
         }
 
         return spanStrBuilder;
