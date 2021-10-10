@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.PopupMenu;
@@ -75,6 +76,10 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
     private void initToolbar() {
         toolbar.setTitle("Edit");
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void initExtra() {
@@ -252,7 +257,9 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_edit_save) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        } else if (item.getItemId() == R.id.menu_edit_save) {
             save();
         } else if (item.getItemId() == R.id.menu_edit_clear) {
             clear();
