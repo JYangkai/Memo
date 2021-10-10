@@ -19,7 +19,7 @@ public class MdParser {
             return null;
         }
 
-        String[] mdSrcSplit = mdSrc.trim().split("\n");
+        String[] mdSrcSplit = mdSrc.split("\n");
 
         if (mdSrcSplit.length == 0) {
             return null;
