@@ -1,8 +1,11 @@
 package com.yk.markdown.span;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Parcel;
 import android.text.ParcelableSpan;
 import android.text.TextPaint;
+import android.text.style.LineBackgroundSpan;
 import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
@@ -10,7 +13,7 @@ import androidx.annotation.NonNull;
 import com.yk.markdown.bean.MdStyle;
 import com.yk.markdown.bean.MdType;
 
-public class MdTitleSpan extends MetricAffectingSpan implements ParcelableSpan {
+public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSpan, ParcelableSpan {
     private final int level;
 
     private final int textColor;
@@ -77,5 +80,18 @@ public class MdTitleSpan extends MetricAffectingSpan implements ParcelableSpan {
 
         tp.setColor(textColor);
         tp.setTextSize(textSize);
+    }
+
+    @Override
+    public void drawBackground(@NonNull Canvas canvas, @NonNull Paint paint, int left, int right, int top, int baseline, int bottom, @NonNull CharSequence text, int start, int end, int lineNumber) {
+        int preColor = paint.getColor();
+        float preStrokeWidth = paint.getStrokeWidth();
+
+        paint.setColor(MdStyle.Separator.COLOR);
+        paint.setStrokeWidth(MdStyle.Separator.SIZE);
+        canvas.drawLine(left, bottom, right, bottom, paint);
+
+        paint.setColor(preColor);
+        paint.setStrokeWidth(preStrokeWidth);
     }
 }
