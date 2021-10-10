@@ -16,6 +16,7 @@ import com.yk.memo.R;
 import com.yk.memo.data.bean.Note;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> implements Filterable {
@@ -101,6 +102,18 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
                 notifyDataSetChanged();
             }
         };
+    }
+
+    public void topNote(Note note) {
+        if (noteList.contains(note)) {
+            Collections.swap(noteList, 0, noteList.indexOf(note));
+        }
+
+        if (filterList.contains(note)) {
+            Collections.swap(filterList, 0, filterList.indexOf(note));
+        }
+
+        notifyDataSetChanged();
     }
 
     public Note findNoteForId(long id) {

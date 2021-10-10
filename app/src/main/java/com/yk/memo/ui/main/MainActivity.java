@@ -1,6 +1,5 @@
 package com.yk.memo.ui.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -130,7 +129,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     }
 
     private void startEditActivity(Note note) {
-        EditActivity.startEditActivity(this, note.getId());
+        EditActivity.startEditActivity(this, note != null ? note.getId() : -1);
     }
 
     private void showItemNotePopupMenu(View view, Note note) {
@@ -173,7 +172,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         note.setUpdateTime(event.getUpdateTime());
         note.setSpanStrBuilder(event.getSpanStrBuilder());
 
-        noteAdapter.notifyDataSetChanged();
+        noteAdapter.topNote(note);
     }
 
     @Subscribe(threadMode = Subscribe.Thread.UI)
@@ -183,12 +182,16 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         }
 
         noteAdapter.refreshDataAdd(event.getNote(), true);
+
+        noteAdapter.getFilter().filter(searchView.getQuery());
     }
 
     @Override
     public void onLoadNoteList(List<Note> noteList) {
         noteAdapter.refreshDataAdd(noteList);
         swipeRefreshLayout.setRefreshing(false);
+
+        noteAdapter.getFilter().filter(searchView.getQuery());
     }
 
     @Override
@@ -210,7 +213,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_main_edit:
-                startActivity(new Intent(this, EditActivity.class));
+                startEditActivity(null);
                 break;
             default:
                 break;
