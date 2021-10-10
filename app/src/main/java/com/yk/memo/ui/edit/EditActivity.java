@@ -156,8 +156,6 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
                     }
                 });
                 popupMenu.show();
-
-
             }
         });
 
@@ -219,6 +217,10 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
         }
     }
 
+    private void clear() {
+        etNoteContent.setText("");
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit, menu);
@@ -229,6 +231,8 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_edit_save) {
             save();
+        } else if (item.getItemId() == R.id.menu_edit_clear) {
+            clear();
         }
         return true;
     }

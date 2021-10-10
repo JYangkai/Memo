@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_edit_clear"
+        android:icon="@drawable/ic_baseline_clear_24"
+        android:title="Clear"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_edit_save"
         android:icon="@drawable/ic_baseline_done_24"
         android:title="Save"
