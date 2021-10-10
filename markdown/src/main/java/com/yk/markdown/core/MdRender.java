@@ -3,6 +3,7 @@ package com.yk.markdown.core;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 
 import com.yk.markdown.bean.MdSection;
 import com.yk.markdown.bean.MdType;
@@ -91,6 +92,10 @@ public class MdRender {
         String src = section.getSrc();
         src = src.substring(src.indexOf(" ") + 1);
 
+        if (TextUtils.isEmpty(src)){
+            src = " ";
+        }
+
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdQuoteSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -100,6 +105,10 @@ public class MdRender {
     private static SpannableString dealCodeBlock(MdSection section) {
         String src = section.getSrc();
         src = "\n" + src.substring(src.indexOf("```") + 4, src.lastIndexOf("```")) + "\n";
+
+        if (TextUtils.isEmpty(src)){
+            src = " ";
+        }
 
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdCodeBlockSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -112,6 +121,10 @@ public class MdRender {
         int index = Integer.parseInt(src.substring(0, 1));
         src = src.substring(src.indexOf(" ") + 1);
 
+        if (TextUtils.isEmpty(src)){
+            src = " ";
+        }
+
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdOrderedListSpan(index), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -121,6 +134,10 @@ public class MdRender {
     private static SpannableString dealUnorderedList(MdSection section) {
         String src = section.getSrc();
         src = src.substring(src.indexOf(" ") + 1);
+
+        if (TextUtils.isEmpty(src)){
+            src = " ";
+        }
 
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdUnorderedListSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -132,6 +149,10 @@ public class MdRender {
         String src = section.getSrc();
         int level = src.indexOf(" ");
         src = src.substring(src.indexOf(" ") + 1);
+
+        if (TextUtils.isEmpty(src)){
+            src = " ";
+        }
 
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdTitleSpan(level), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
