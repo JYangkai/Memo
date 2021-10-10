@@ -9,11 +9,13 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yk.memo.R;
 import com.yk.memo.data.bean.Note;
+import com.yk.memo.utils.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,6 +58,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
                 return true;
             }
         });
+        holder.ivMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemListener != null) {
+                    onItemListener.onItemMoreClick(v, filterList.get(holder.getAdapterPosition()));
+                }
+            }
+        });
         return holder;
     }
 
@@ -63,6 +73,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Note note = filterList.get(position);
         holder.tvNoteContent.setText(note.getSpanStrBuilder());
+        holder.tvTime.setText(TimeUtils.getTime(note.getUpdateTime()));
     }
 
     @Override
@@ -186,10 +197,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         AppCompatTextView tvNoteContent;
+        AppCompatTextView tvTime;
+        AppCompatImageView ivMore;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNoteContent = itemView.findViewById(R.id.tvNoteContent);
+            tvTime = itemView.findViewById(R.id.tvTime);
+            ivMore = itemView.findViewById(R.id.ivMore);
         }
     }
 
@@ -203,5 +218,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         void onItemClick(View view, Note note);
 
         void onItemLongClick(View view, Note note);
+
+        void onItemMoreClick(View view, Note note);
     }
 }

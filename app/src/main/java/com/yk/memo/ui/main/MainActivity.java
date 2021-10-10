@@ -123,6 +123,10 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
 
             @Override
             public void onItemLongClick(View view, Note note) {
+            }
+
+            @Override
+            public void onItemMoreClick(View view, Note note) {
                 showItemNotePopupMenu(view, note);
             }
         });
