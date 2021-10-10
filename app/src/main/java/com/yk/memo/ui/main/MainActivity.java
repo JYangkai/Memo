@@ -14,11 +14,16 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.yk.base.eventbus.EventBus;
+import com.yk.base.eventbus.Subscribe;
 import com.yk.base.mvp.BaseMvpActivity;
 import com.yk.memo.R;
 import com.yk.memo.data.adapter.NoteAdapter;
 import com.yk.memo.data.bean.Note;
+import com.yk.memo.data.event.NoteAddEvent;
+import com.yk.memo.data.event.NoteUpdateEvent;
 import com.yk.memo.ui.edit.EditActivity;
 
 import java.util.ArrayList;
@@ -29,6 +34,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
 
     private Toolbar toolbar;
     private SearchView searchView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rvNote;
 
     private final List<Note> noteList = new ArrayList<>();
@@ -38,25 +44,54 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EventBus.getInstance().register(this);
         findView();
         initData();
         bindEvent();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getInstance().unregister(this);
+    }
+
     private void findView() {
         toolbar = findViewById(R.id.toolbar);
         searchView = findViewById(R.id.searchView);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         rvNote = findViewById(R.id.rvNote);
     }
 
     private void initData() {
-        setSupportActionBar(toolbar);
+        initToolbar();
+        initRvNote();
+        initSwipeRefreshLayout();
 
+        loadAllNote();
+    }
+
+    private void initToolbar() {
+        setSupportActionBar(toolbar);
+    }
+
+    private void initRvNote() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         noteAdapter = new NoteAdapter(noteList);
         rvNote.setLayoutManager(linearLayoutManager);
         rvNote.setAdapter(noteAdapter);
+    }
+
+    private void initSwipeRefreshLayout() {
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.design_default_color_primary,
+                R.color.design_default_color_secondary);
+    }
+
+    private void loadAllNote() {
+        swipeRefreshLayout.setRefreshing(true);
+        presenter.loadAllNote();
     }
 
     private void bindEvent() {
@@ -71,6 +106,13 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
                 Log.d(TAG, "onQueryTextChange: " + newText);
                 noteAdapter.getFilter().filter(newText);
                 return true;
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.loadAllNote();
             }
         });
 
@@ -111,23 +153,42 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        presenter.loadAllNote();
-    }
-
-    @Override
     public MainPresenter createPresenter() {
         return new MainPresenter();
     }
 
-    @Override
-    public void onLoadNoteList(List<Note> noteList) {
-        if (noteList == null || noteList.isEmpty()) {
+    @Subscribe(threadMode = Subscribe.Thread.UI)
+    public void onNoteUpdate(NoteUpdateEvent event) {
+        if (event == null) {
             return;
         }
 
-        noteAdapter.addAll(noteList);
+        Note note = noteAdapter.findNoteForId(event.getNoteId());
+
+        if (note == null) {
+            return;
+        }
+
+        note.setSrc(event.getSrc());
+        note.setUpdateTime(event.getUpdateTime());
+        note.setSpanStrBuilder(event.getSpanStrBuilder());
+
+        noteAdapter.notifyDataSetChanged();
+    }
+
+    @Subscribe(threadMode = Subscribe.Thread.UI)
+    public void onNoteAdd(NoteAddEvent event) {
+        if (event == null) {
+            return;
+        }
+
+        noteAdapter.refreshDataAdd(event.getNote(), true);
+    }
+
+    @Override
+    public void onLoadNoteList(List<Note> noteList) {
+        noteAdapter.refreshDataAdd(noteList);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -136,8 +197,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         if (!success) {
             return;
         }
-        noteList.remove(note);
-        noteAdapter.notifyDataSetChanged();
+        noteAdapter.refreshDataRemove(note);
     }
 
     @Override

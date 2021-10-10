@@ -18,7 +18,7 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
         Observable.fromCallable(new Observable.OnCallable<List<Note>>() {
             @Override
             public List<Note> call() {
-                Log.d(TAG, "call: loadAllNote");
+                Log.d(TAG, "call: loadAll note");
                 return NoteDbManager.getAllNote();
             }
         })
@@ -41,7 +41,7 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
                 .subscribe(new Subscriber<List<Note>>() {
                     @Override
                     public void onNext(List<Note> noteList) {
-                        Log.d(TAG, "onNext: loadAllNote:" + noteList);
+                        Log.d(TAG, "onNext: loadAll note:" + noteList);
                         if (getView() != null) {
                             getView().onLoadNoteList(noteList);
                         }
@@ -49,12 +49,12 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: loadAllNote");
+                        Log.d(TAG, "onComplete: loadAll note");
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Log.e(TAG, "onError: loadAllNote ", e);
+                        Log.e(TAG, "onError: loadAll note ", e);
                     }
                 });
     }

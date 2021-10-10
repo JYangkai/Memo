@@ -7,10 +7,10 @@ import org.litepal.LitePal;
 import java.util.List;
 
 public class NoteDbManager {
-
-    public static boolean addNote(String src) {
+    public static Note addNote(String src) {
         Note note = new Note(src, System.currentTimeMillis(), System.currentTimeMillis());
-        return note.save();
+        boolean success = note.save();
+        return success ? note : null;
     }
 
     public static boolean addNote(Note note) {
@@ -42,5 +42,4 @@ public class NoteDbManager {
     public static List<Note> getAllNote() {
         return LitePal.order("updateTime desc").find(Note.class);
     }
-
 }

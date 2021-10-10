@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> implements Filterable {
-
     private Context context;
 
     private final List<Note> noteList;
@@ -29,16 +28,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         this.noteList = noteList;
         filterList.clear();
         filterList.addAll(noteList);
-    }
-
-    public void addAll(List<Note> noteList) {
-        this.noteList.clear();
-        this.noteList.addAll(noteList);
-
-        filterList.clear();
-        filterList.addAll(noteList);
-
-        notifyDataSetChanged();
     }
 
     @NonNull
@@ -112,6 +101,73 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
                 notifyDataSetChanged();
             }
         };
+    }
+
+    public Note findNoteForId(long id) {
+        Note findNote = null;
+        for (Note note : noteList) {
+            if (note.getId() != id) {
+                continue;
+            }
+            findNote = note;
+            break;
+        }
+        return findNote;
+    }
+
+    public void refreshDataRemove(Note note) {
+        if (note == null) {
+            return;
+        }
+
+        noteList.remove(note);
+        filterList.remove(note);
+
+        notifyDataSetChanged();
+    }
+
+    public void refreshDataRemove(List<Note> noteList) {
+        if (noteList == null || noteList.isEmpty()) {
+            return;
+        }
+
+        for (Note note : noteList) {
+            refreshDataRemove(note);
+        }
+    }
+
+    public void refreshDataAdd(Note note, boolean needTop) {
+        if (note == null) {
+            return;
+        }
+
+        if (!noteList.contains(note)) {
+            if (needTop) {
+                noteList.add(0, note);
+            } else {
+                noteList.add(note);
+            }
+        }
+
+        if (!filterList.contains(note)) {
+            if (needTop) {
+                filterList.add(0, note);
+            } else {
+                filterList.add(note);
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public void refreshDataAdd(List<Note> noteList) {
+        if (noteList == null || noteList.isEmpty()) {
+            return;
+        }
+
+        for (Note note : noteList) {
+            refreshDataAdd(note, false);
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
