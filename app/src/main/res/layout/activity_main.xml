@@ -6,7 +6,8 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -16,6 +17,13 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_scrollFlags="scroll"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSearch"
+            app:queryHint="Search" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

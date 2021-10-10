@@ -41,7 +41,7 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
                 .subscribe(new Subscriber<List<Note>>() {
                     @Override
                     public void onNext(List<Note> noteList) {
-                        Log.d(TAG, "onNext: loadAllNote");
+                        Log.d(TAG, "onNext: loadAllNote:" + noteList);
                         if (getView() != null) {
                             getView().onLoadNoteList(noteList);
                         }
@@ -55,6 +55,39 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
                     @Override
                     public void onError(Exception e) {
                         Log.e(TAG, "onError: loadAllNote ", e);
+                    }
+                });
+    }
+
+    public void deleteNote(Note note) {
+        Observable.fromCallable(new Observable.OnCallable<Boolean>() {
+            @Override
+            public Boolean call() {
+                Log.d(TAG, "call: delete note");
+                NoteDbManager.deleteNote(note);
+                return true;
+            }
+        })
+                .subscribeOnIo()
+                .observeOnUi()
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onNext(Boolean success) {
+                        Log.d(TAG, "onNext: delete note");
+
+                        if (getView() != null) {
+                            getView().onDeleteNote(success, note);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: delete note");
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e(TAG, "onError: delete note ", e);
                     }
                 });
     }
