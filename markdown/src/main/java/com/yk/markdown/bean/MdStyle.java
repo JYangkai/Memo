@@ -72,7 +72,7 @@ public interface MdStyle {
     }
 
     interface Code {
-        int BACKGROUND_COLOR = Color.BLACK;
+        int BACKGROUND_COLOR = Color.GRAY;
 
         int TEXT_COLOR = Color.WHITE;
         int TEXT_SIZE = Base.TEXT_SIZE;
