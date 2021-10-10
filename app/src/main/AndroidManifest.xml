@@ -17,7 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.edit.EditActivity" />
+        <activity
+            android:name=".ui.edit.EditActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

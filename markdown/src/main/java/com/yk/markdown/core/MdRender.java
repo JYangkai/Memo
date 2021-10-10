@@ -99,7 +99,7 @@ public class MdRender {
 
     private static SpannableString dealCodeBlock(MdSection section) {
         String src = section.getSrc();
-        src = "\n" + src.substring(src.indexOf("```") + 3, src.lastIndexOf("```")) + "\n";
+        src = "\n" + src.substring(src.indexOf("```") + 4, src.lastIndexOf("```")) + "\n";
 
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdCodeBlockSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
