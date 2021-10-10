@@ -118,11 +118,20 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         noteAdapter.setOnItemListener(new NoteAdapter.OnItemListener() {
             @Override
             public void onItemClick(View view, Note note) {
-                startEditActivity(note);
+                if (noteAdapter.isMoreSelectMode()) {
+                    noteAdapter.selectNote(note);
+                } else {
+                    startEditActivity(note);
+                }
             }
 
             @Override
             public void onItemLongClick(View view, Note note) {
+                if (noteAdapter.isMoreSelectMode()) {
+                    return;
+                }
+                noteAdapter.setMoreSelectMode(true);
+                noteAdapter.selectNote(note);
             }
 
             @Override
@@ -223,5 +232,14 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (noteAdapter.isMoreSelectMode()) {
+            noteAdapter.setMoreSelectMode(false);
+            return;
+        }
+        super.onBackPressed();
     }
 }

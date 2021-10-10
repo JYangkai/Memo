@@ -18,6 +18,9 @@ public class Note extends LitePalSupport implements Serializable {
     @Column(ignore = true)
     private SpannableStringBuilder spanStrBuilder;
 
+    @Column(ignore = true)
+    private boolean isSelect = false;
+
     public Note(String src, long createTime, long updateTime) {
         this.src = src;
         this.createTime = createTime;
@@ -60,6 +63,14 @@ public class Note extends LitePalSupport implements Serializable {
         this.spanStrBuilder = spanStrBuilder;
     }
 
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj instanceof Note) {
@@ -77,6 +88,7 @@ public class Note extends LitePalSupport implements Serializable {
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", spanStrBuilder=" + spanStrBuilder +
+                ", isSelect=" + isSelect +
                 '}';
     }
 }

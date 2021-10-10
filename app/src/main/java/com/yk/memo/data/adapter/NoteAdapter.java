@@ -27,6 +27,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
     private final List<Note> noteList;
     private final List<Note> filterList = new ArrayList<>();
 
+    private boolean isMoreSelectMode = false;
+
     public NoteAdapter(List<Note> noteList) {
         this.noteList = noteList;
         filterList.clear();
@@ -74,6 +76,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         Note note = filterList.get(position);
         holder.tvNoteContent.setText(note.getSpanStrBuilder());
         holder.tvTime.setText(TimeUtils.getTime(note.getUpdateTime()));
+        if (note.isSelect()) {
+            holder.viewSelect.setVisibility(View.VISIBLE);
+        } else {
+            holder.viewSelect.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -194,17 +201,58 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         }
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public void refreshDataChange(Note note) {
+        notifyItemChanged(filterList.indexOf(note));
+    }
 
+    public void selectNote(Note note) {
+        note.setSelect(!note.isSelect());
+        refreshDataChange(note);
+
+        if (getSelectNoteList().isEmpty()) {
+            setMoreSelectMode(false);
+        }
+    }
+
+    public boolean isMoreSelectMode() {
+        return isMoreSelectMode;
+    }
+
+    public void setMoreSelectMode(boolean moreSelectMode) {
+        isMoreSelectMode = moreSelectMode;
+
+        if (!isMoreSelectMode) {
+            for (Note note : filterList) {
+                note.setSelect(false);
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public List<Note> getSelectNoteList() {
+        List<Note> selectNoteList = new ArrayList<>();
+        for (Note note : filterList) {
+            if (!note.isSelect()) {
+                continue;
+            }
+            selectNoteList.add(note);
+        }
+        return selectNoteList;
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
         AppCompatTextView tvNoteContent;
         AppCompatTextView tvTime;
         AppCompatImageView ivMore;
+        View viewSelect;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNoteContent = itemView.findViewById(R.id.tvNoteContent);
             tvTime = itemView.findViewById(R.id.tvTime);
             ivMore = itemView.findViewById(R.id.ivMore);
+            viewSelect = itemView.findViewById(R.id.viewSelect);
         }
     }
 
