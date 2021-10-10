@@ -10,23 +10,26 @@ import androidx.annotation.NonNull;
 import com.yk.markdown.bean.MdStyle;
 import com.yk.markdown.bean.MdType;
 
-public class MdNormalSpan extends MetricAffectingSpan implements ParcelableSpan {
+public class MdCodeSpan extends MetricAffectingSpan implements ParcelableSpan {
+    private final int backgroundColor;
     private final int textColor;
     private final int textSize;
 
-    public MdNormalSpan() {
-        this(MdStyle.Normal.TEXT_COLOR,
-                MdStyle.Normal.TEXT_SIZE);
+    public MdCodeSpan() {
+        this(MdStyle.Code.BACKGROUND_COLOR,
+                MdStyle.Code.TEXT_COLOR,
+                MdStyle.Code.TEXT_SIZE);
     }
 
-    public MdNormalSpan(int textColor, int textSize) {
+    public MdCodeSpan(int backgroundColor, int textColor, int textSize) {
+        this.backgroundColor = backgroundColor;
         this.textColor = textColor;
         this.textSize = textSize;
     }
 
     @Override
     public int getSpanTypeId() {
-        return MdType.NORMAL.ordinal();
+        return MdType.CODE.ordinal();
     }
 
     @Override
@@ -36,8 +39,14 @@ public class MdNormalSpan extends MetricAffectingSpan implements ParcelableSpan 
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(backgroundColor);
         dest.writeInt(textColor);
         dest.writeInt(textSize);
+    }
+
+    @Override
+    public void updateMeasureState(@NonNull TextPaint textPaint) {
+        updateState(textPaint);
     }
 
     @Override
@@ -45,12 +54,8 @@ public class MdNormalSpan extends MetricAffectingSpan implements ParcelableSpan 
         updateState(tp);
     }
 
-    @Override
-    public void updateMeasureState(@NonNull TextPaint tp) {
-        updateState(tp);
-    }
-
     private void updateState(TextPaint tp) {
+        tp.bgColor = backgroundColor;
         tp.setColor(textColor);
         tp.setTextSize(textSize);
     }

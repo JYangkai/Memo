@@ -7,7 +7,12 @@ import android.text.TextUtils;
 
 import com.yk.markdown.bean.MdSection;
 import com.yk.markdown.bean.MdType;
+import com.yk.markdown.bean.MdWord;
+import com.yk.markdown.span.MdBoldItalicsSpan;
+import com.yk.markdown.span.MdBoldSpan;
 import com.yk.markdown.span.MdCodeBlockSpan;
+import com.yk.markdown.span.MdCodeSpan;
+import com.yk.markdown.span.MdItalicsSpan;
 import com.yk.markdown.span.MdNormalSpan;
 import com.yk.markdown.span.MdOrderedListSpan;
 import com.yk.markdown.span.MdQuoteSpan;
@@ -44,55 +49,43 @@ public class MdRender {
         return spanStrBuilder;
     }
 
-    private static SpannableString getSpanStr(MdSection section) {
+    private static SpannableStringBuilder getSpanStr(MdSection section) {
         MdType type = section.getType();
 
-        SpannableString spanStr;
+        SpannableStringBuilder spanStrBuilder = new SpannableStringBuilder();
 
         switch (type) {
-            case NORMAL:
-                spanStr = dealNormal(section);
-                break;
             case QUOTE:
-                spanStr = dealQuote(section);
+                spanStrBuilder.append(dealQuote(section));
                 break;
             case CODE_BLOCK:
-                spanStr = dealCodeBlock(section);
+                spanStrBuilder.append(dealCodeBlock(section));
                 break;
             case ORDERED_LIST:
-                spanStr = dealOrderedList(section);
+                spanStrBuilder.append(dealOrderedList(section));
                 break;
             case UNORDERED_LIST:
-                spanStr = dealUnorderedList(section);
+                spanStrBuilder.append(dealUnorderedList(section));
                 break;
             case TITLE:
-                spanStr = dealTitle(section);
+                spanStrBuilder.append(dealTitle(section));
                 break;
             case SEPARATOR:
-                spanStr = dealSeparator(section);
+                spanStrBuilder.append(dealSeparator(section));
                 break;
             default:
-                spanStr = new SpannableString(section.getSrc());
+                spanStrBuilder.append(dealNormal(section));
                 break;
         }
 
-        return spanStr;
-    }
-
-    private static SpannableString dealNormal(MdSection section) {
-        String src = section.getSrc().trim();
-
-        SpannableString spanStr = new SpannableString(src);
-        spanStr.setSpan(new MdNormalSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        return spanStr;
+        return spanStrBuilder;
     }
 
     private static SpannableString dealQuote(MdSection section) {
         String src = section.getSrc();
         src = src.substring(src.indexOf(" ") + 1);
 
-        if (TextUtils.isEmpty(src)){
+        if (TextUtils.isEmpty(src)) {
             src = " ";
         }
 
@@ -106,7 +99,7 @@ public class MdRender {
         String src = section.getSrc();
         src = "\n" + src.substring(src.indexOf("```") + 4, src.lastIndexOf("```")) + "\n";
 
-        if (TextUtils.isEmpty(src)){
+        if (TextUtils.isEmpty(src)) {
             src = " ";
         }
 
@@ -121,7 +114,7 @@ public class MdRender {
         int index = Integer.parseInt(src.substring(0, 1));
         src = src.substring(src.indexOf(" ") + 1);
 
-        if (TextUtils.isEmpty(src)){
+        if (TextUtils.isEmpty(src)) {
             src = " ";
         }
 
@@ -135,7 +128,7 @@ public class MdRender {
         String src = section.getSrc();
         src = src.substring(src.indexOf(" ") + 1);
 
-        if (TextUtils.isEmpty(src)){
+        if (TextUtils.isEmpty(src)) {
             src = " ";
         }
 
@@ -150,7 +143,7 @@ public class MdRender {
         int level = src.indexOf(" ");
         src = src.substring(src.indexOf(" ") + 1);
 
-        if (TextUtils.isEmpty(src)){
+        if (TextUtils.isEmpty(src)) {
             src = " ";
         }
 
@@ -169,4 +162,89 @@ public class MdRender {
         return spanStr;
     }
 
+    private static SpannableStringBuilder dealNormal(MdSection section) {
+        String src = section.getSrc().trim();
+
+        SpannableStringBuilder spanStrBuilder = new SpannableStringBuilder();
+
+        List<MdWord> wordList = section.getWordList();
+
+        if (wordList == null || wordList.isEmpty()) {
+            spanStrBuilder.append(dealWordNormal(new MdWord(MdType.NORMAL, src, 0, src.length())));
+            return spanStrBuilder;
+        }
+
+        for (MdWord word : wordList) {
+            MdType type = word.getType();
+
+            switch (type) {
+                case NORMAL:
+                    spanStrBuilder.append(dealWordNormal(word));
+                    break;
+                case CODE:
+                    spanStrBuilder.append(dealWordCode(word));
+                    break;
+                case BOLD_ITALICS:
+                    spanStrBuilder.append(dealWordBoldItalics(word));
+                    break;
+                case BOLD:
+                    spanStrBuilder.append(dealWordBold(word));
+                    break;
+                case ITALICS:
+                    spanStrBuilder.append(dealWordItalics(word));
+                    break;
+            }
+        }
+
+        return spanStrBuilder;
+    }
+
+    private static SpannableString dealWordNormal(MdWord word) {
+        String src = word.getSrc();
+
+        SpannableString spanStr = new SpannableString(src);
+        spanStr.setSpan(new MdNormalSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spanStr;
+    }
+
+    private static SpannableString dealWordCode(MdWord word) {
+        String src = word.getSrc();
+        src = src.substring(src.indexOf('`') + 1, src.lastIndexOf('`'));
+
+        SpannableString spanStr = new SpannableString(src);
+        spanStr.setSpan(new MdCodeSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spanStr;
+    }
+
+    private static SpannableString dealWordBoldItalics(MdWord word) {
+        String src = word.getSrc();
+        src = src.substring(src.indexOf("***") + 3, src.lastIndexOf("***"));
+
+        SpannableString spanStr = new SpannableString(src);
+        spanStr.setSpan(new MdBoldItalicsSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spanStr;
+    }
+
+    private static SpannableString dealWordBold(MdWord word) {
+        String src = word.getSrc();
+        src = src.substring(src.indexOf("**") + 2, src.lastIndexOf("**"));
+
+        SpannableString spanStr = new SpannableString(src);
+        spanStr.setSpan(new MdBoldSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spanStr;
+    }
+
+    private static SpannableString dealWordItalics(MdWord word) {
+        String src = word.getSrc();
+        src = src.substring(src.indexOf("*") + 1, src.lastIndexOf("*"));
+
+        SpannableString spanStr = new SpannableString(src);
+        spanStr.setSpan(new MdItalicsSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spanStr;
+    }
 }

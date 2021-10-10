@@ -10,23 +10,23 @@ import androidx.annotation.NonNull;
 import com.yk.markdown.bean.MdStyle;
 import com.yk.markdown.bean.MdType;
 
-public class MdNormalSpan extends MetricAffectingSpan implements ParcelableSpan {
+public class MdItalicsSpan extends MetricAffectingSpan implements ParcelableSpan {
     private final int textColor;
     private final int textSize;
 
-    public MdNormalSpan() {
-        this(MdStyle.Normal.TEXT_COLOR,
-                MdStyle.Normal.TEXT_SIZE);
+    public MdItalicsSpan() {
+        this(MdStyle.Italics.TEXT_COLOR,
+                MdStyle.Italics.TEXT_SIZE);
     }
 
-    public MdNormalSpan(int textColor, int textSize) {
+    public MdItalicsSpan(int textColor, int textSize) {
         this.textColor = textColor;
         this.textSize = textSize;
     }
 
     @Override
     public int getSpanTypeId() {
-        return MdType.NORMAL.ordinal();
+        return MdType.CODE.ordinal();
     }
 
     @Override
@@ -41,17 +41,18 @@ public class MdNormalSpan extends MetricAffectingSpan implements ParcelableSpan 
     }
 
     @Override
-    public void updateDrawState(TextPaint tp) {
-        updateState(tp);
+    public void updateMeasureState(@NonNull TextPaint textPaint) {
+        updateState(textPaint);
     }
 
     @Override
-    public void updateMeasureState(@NonNull TextPaint tp) {
+    public void updateDrawState(TextPaint tp) {
         updateState(tp);
     }
 
     private void updateState(TextPaint tp) {
         tp.setColor(textColor);
         tp.setTextSize(textSize);
+        tp.setTextSkewX(-0.25f);
     }
 }

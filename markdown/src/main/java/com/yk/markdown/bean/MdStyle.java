@@ -70,4 +70,26 @@ public interface MdStyle {
         int COLOR = Color.GRAY;
         int SIZE = 2;
     }
+
+    interface Code {
+        int BACKGROUND_COLOR = Color.BLACK;
+
+        int TEXT_COLOR = Color.WHITE;
+        int TEXT_SIZE = Base.TEXT_SIZE;
+    }
+
+    interface BoldItalics {
+        int TEXT_COLOR = Base.TEXT_COLOR;
+        int TEXT_SIZE = Base.TEXT_SIZE;
+    }
+
+    interface Bold {
+        int TEXT_COLOR = Base.TEXT_COLOR;
+        int TEXT_SIZE = Base.TEXT_SIZE;
+    }
+
+    interface Italics {
+        int TEXT_COLOR = Base.TEXT_COLOR;
+        int TEXT_SIZE = Base.TEXT_SIZE;
+    }
 }
