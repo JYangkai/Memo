@@ -115,7 +115,8 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
                 if (getContentLastChar() == '\n') {
                     appContent("1. ");
                 } else {
-                    appContent("\n1. ");
+                    int index = getCurLineIndex() + 1;
+                    appContent("\n" + index + ". ");
                 }
                 selectContentLast();
             }
@@ -170,6 +171,28 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
                 selectContentLast();
             }
         });
+    }
+
+    private int getCurLineIndex() {
+        String content = getContent();
+        if (TextUtils.isEmpty(content)) {
+            return 0;
+        }
+
+        String[] lines = content.split("\n");
+
+        if (lines == null) {
+            return 0;
+        }
+
+        String line = lines[lines.length - 1];
+
+        if (line.matches("\\d+\\.\\s.*")) {
+            String index = line.substring(0, line.indexOf('.'));
+            return Integer.parseInt(index);
+        }
+
+        return 0;
     }
 
     private void insertTitle(String content) {
