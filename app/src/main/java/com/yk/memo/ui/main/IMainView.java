@@ -9,4 +9,6 @@ public interface IMainView extends BaseMvpView {
     void onLoadNoteList(List<Note> noteList);
 
     void onDeleteNote(boolean success, Note note);
+
+    void onDeleteNoteList(boolean success, List<Note> noteList);
 }

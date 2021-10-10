@@ -92,4 +92,39 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
                 });
     }
 
+    public void deleteBatchNote(List<Note> noteList) {
+        Observable.fromCallable(new Observable.OnCallable<Boolean>() {
+            @Override
+            public Boolean call() {
+                Log.d(TAG, "call: delete batch note");
+                for (Note note : noteList) {
+                    NoteDbManager.deleteNote(note);
+                }
+                return true;
+            }
+        })
+                .subscribeOnIo()
+                .observeOnUi()
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onNext(Boolean success) {
+                        Log.d(TAG, "onNext: delete batch note");
+
+                        if (getView() != null) {
+                            getView().onDeleteNoteList(success, noteList);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: delete batch note");
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e(TAG, "onError: delete batch note ", e);
+                    }
+                });
+    }
+
 }

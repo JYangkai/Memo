@@ -39,6 +39,8 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     private final List<Note> noteList = new ArrayList<>();
     private NoteAdapter noteAdapter;
 
+    private MenuItem deleteMenuItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,6 +134,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
                 }
                 noteAdapter.setMoreSelectMode(true);
                 noteAdapter.selectNote(note);
+                showDeleteMenu();
             }
 
             @Override
@@ -143,6 +146,15 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
 
     private void startEditActivity(Note note) {
         EditActivity.startEditActivity(this, note != null ? note.getId() : -1);
+    }
+
+    private void deleteBatch() {
+        List<Note> noteList = noteAdapter.getSelectNoteList();
+        if (noteList.isEmpty()) {
+            Toast.makeText(this, "至少选中一个", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        presenter.deleteBatchNote(noteList);
     }
 
     private void showItemNotePopupMenu(View view, Note note) {
@@ -162,6 +174,20 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
             }
         });
         popupMenu.show();
+    }
+
+    private void showDeleteMenu() {
+        if (deleteMenuItem == null) {
+            return;
+        }
+        deleteMenuItem.setVisible(true);
+    }
+
+    private void hideDeleteMenu() {
+        if (deleteMenuItem == null) {
+            return;
+        }
+        deleteMenuItem.setVisible(false);
     }
 
     @Override
@@ -217,19 +243,30 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     }
 
     @Override
+    public void onDeleteNoteList(boolean success, List<Note> noteList) {
+        Toast.makeText(this, success ? "delete list success" : "delete fail", Toast.LENGTH_SHORT).show();
+        if (!success) {
+            return;
+        }
+        noteAdapter.refreshDataRemove(noteList);
+        noteAdapter.setMoreSelectMode(false);
+        hideDeleteMenu();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        deleteMenuItem = menu.findItem(R.id.menu_main_delete);
+        hideDeleteMenu();
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_main_edit:
-                startEditActivity(null);
-                break;
-            default:
-                break;
+        if (item.getItemId() == R.id.menu_main_edit) {
+            startEditActivity(null);
+        } else if (item.getItemId() == R.id.menu_main_delete) {
+            deleteBatch();
         }
         return true;
     }
@@ -238,6 +275,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     public void onBackPressed() {
         if (noteAdapter.isMoreSelectMode()) {
             noteAdapter.setMoreSelectMode(false);
+            hideDeleteMenu();
             return;
         }
         super.onBackPressed();
