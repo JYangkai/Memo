@@ -37,6 +37,13 @@
         android:padding="16dp">
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivFormat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_baseline_text_format_24" />
+
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivQuote"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

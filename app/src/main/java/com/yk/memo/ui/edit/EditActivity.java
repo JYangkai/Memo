@@ -38,6 +38,7 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
     private Toolbar toolbar;
     private AppCompatEditText etNoteContent;
 
+    private AppCompatImageView ivFormat;
     private AppCompatImageView ivQuote;
     private AppCompatImageView ivCode;
     private AppCompatImageView ivOrderedList;
@@ -60,6 +61,7 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
         toolbar = findViewById(R.id.toolbar);
         etNoteContent = findViewById(R.id.etNoteContent);
 
+        ivFormat = findViewById(R.id.ivFormat);
         ivQuote = findViewById(R.id.ivQuote);
         ivCode = findViewById(R.id.ivCode);
         ivOrderedList = findViewById(R.id.ivOrderedList);
@@ -90,6 +92,31 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
     }
 
     private void bindEvent() {
+        ivFormat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(EditActivity.this, v);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_iv_format, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getItemId() == R.id.menu_iv_format_bold_italics) {
+                            appContent("******");
+                            selectContent(getContent().lastIndexOf("***"));
+                        } else if (item.getItemId() == R.id.menu_iv_format_bold) {
+                            appContent("****");
+                            selectContent(getContent().lastIndexOf("**"));
+                        } else if (item.getItemId() == R.id.menu_iv_format_italics) {
+                            appContent("**");
+                            selectContent(getContent().lastIndexOf("*"));
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
+
         ivQuote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,12 +132,26 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
         ivCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getContentLastChar() == '\n') {
-                    appContent("```\n\n```");
-                } else {
-                    appContent("\n```\n\n```");
-                }
-                selectContent(getContent().lastIndexOf("\n"));
+                PopupMenu popupMenu = new PopupMenu(EditActivity.this, v);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_iv_code, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getItemId() == R.id.menu_iv_code_code_block) {
+                            if (getContentLastChar() == '\n') {
+                                appContent("```\n\n```");
+                            } else {
+                                appContent("\n```\n\n```");
+                            }
+                            selectContent(getContent().lastIndexOf("\n"));
+                        } else if (item.getItemId() == R.id.menu_iv_code_code) {
+                            appContent("``");
+                            selectContent(getContent().lastIndexOf("`"));
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show();
             }
         });
 
