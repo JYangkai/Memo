@@ -7,21 +7,18 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdStyle;
 import com.yk.markdown.bean.MdType;
+import com.yk.markdown.style.MdStyleManager;
+import com.yk.markdown.style.bean.MdStyleNormal;
 
 public class MdNormalSpan extends MetricAffectingSpan implements ParcelableSpan {
     private final int textColor;
     private final int textSize;
 
     public MdNormalSpan() {
-        this(MdStyle.Normal.TEXT_COLOR,
-                MdStyle.Normal.TEXT_SIZE);
-    }
-
-    public MdNormalSpan(int textColor, int textSize) {
-        this.textColor = textColor;
-        this.textSize = textSize;
+        MdStyleNormal normal = MdStyleManager.getInstance().getMdStyle().getNormal();
+        textColor = normal.getTextColor();
+        textSize = normal.getTextSize();
     }
 
     @Override

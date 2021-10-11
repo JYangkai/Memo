@@ -11,8 +11,9 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdStyle;
 import com.yk.markdown.bean.MdType;
+import com.yk.markdown.style.MdStyleManager;
+import com.yk.markdown.style.bean.MdStyleQuote;
 
 public class MdQuoteSpan extends MetricAffectingSpan implements LeadingMarginSpan, ParcelableSpan {
     private final int stripeColor;
@@ -22,19 +23,12 @@ public class MdQuoteSpan extends MetricAffectingSpan implements LeadingMarginSpa
     private final int textSize;
 
     public MdQuoteSpan() {
-        this(MdStyle.Quote.STRIPE_COLOR,
-                MdStyle.Quote.STRIPE_WIDTH,
-                MdStyle.Quote.GAP_WIDTH,
-                MdStyle.Quote.TEXT_COLOR,
-                MdStyle.Quote.TEXT_SIZE);
-    }
-
-    public MdQuoteSpan(int stripeColor, int stripeWidth, int gapWidth, int textColor, int textSize) {
-        this.stripeColor = stripeColor;
-        this.stripeWidth = stripeWidth;
-        this.gapWidth = gapWidth;
-        this.textColor = textColor;
-        this.textSize = textSize;
+        MdStyleQuote quote = MdStyleManager.getInstance().getMdStyle().getQuote();
+        stripeColor = quote.getStripeColor();
+        stripeWidth = quote.getStripeWidth();
+        gapWidth = quote.getGapWidth();
+        textColor = quote.getTextColor();
+        textSize = quote.getTextSize();
     }
 
     @Override

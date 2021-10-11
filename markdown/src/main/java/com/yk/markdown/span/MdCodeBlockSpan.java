@@ -13,8 +13,9 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdStyle;
 import com.yk.markdown.bean.MdType;
+import com.yk.markdown.style.MdStyleManager;
+import com.yk.markdown.style.bean.MdStyleCodeBlock;
 
 public class MdCodeBlockSpan extends MetricAffectingSpan implements LeadingMarginSpan, LineBackgroundSpan, ParcelableSpan {
     private final int gapWidth;
@@ -23,17 +24,11 @@ public class MdCodeBlockSpan extends MetricAffectingSpan implements LeadingMargi
     private final int textSize;
 
     public MdCodeBlockSpan() {
-        this(MdStyle.CodeBlock.GAP_WIDTH,
-                MdStyle.CodeBlock.BACKGROUND_COLOR,
-                MdStyle.CodeBlock.TEXT_COLOR,
-                MdStyle.CodeBlock.TEXT_SIZE);
-    }
-
-    public MdCodeBlockSpan(int gapWidth, int backgroundColor, int textColor, int textSize) {
-        this.gapWidth = gapWidth;
-        this.backgroundColor = backgroundColor;
-        this.textColor = textColor;
-        this.textSize = textSize;
+        MdStyleCodeBlock codeBlock = MdStyleManager.getInstance().getMdStyle().getCodeBlock();
+        gapWidth = codeBlock.getGapWidth();
+        backgroundColor = codeBlock.getBackgroundColor();
+        textColor = codeBlock.getTextColor();
+        textSize = codeBlock.getTextSize();
     }
 
     @Override

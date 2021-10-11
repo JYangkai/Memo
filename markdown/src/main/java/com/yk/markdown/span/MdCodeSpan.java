@@ -7,8 +7,9 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdStyle;
 import com.yk.markdown.bean.MdType;
+import com.yk.markdown.style.MdStyleManager;
+import com.yk.markdown.style.bean.MdStyleCode;
 
 public class MdCodeSpan extends MetricAffectingSpan implements ParcelableSpan {
     private final int backgroundColor;
@@ -16,15 +17,10 @@ public class MdCodeSpan extends MetricAffectingSpan implements ParcelableSpan {
     private final int textSize;
 
     public MdCodeSpan() {
-        this(MdStyle.Code.BACKGROUND_COLOR,
-                MdStyle.Code.TEXT_COLOR,
-                MdStyle.Code.TEXT_SIZE);
-    }
-
-    public MdCodeSpan(int backgroundColor, int textColor, int textSize) {
-        this.backgroundColor = backgroundColor;
-        this.textColor = textColor;
-        this.textSize = textSize;
+        MdStyleCode code = MdStyleManager.getInstance().getMdStyle().getCode();
+        backgroundColor = code.getBackgroundColor();
+        textColor = code.getTextColor();
+        textSize = code.getTextSize();
     }
 
     @Override

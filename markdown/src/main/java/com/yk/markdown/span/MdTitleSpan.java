@@ -10,25 +10,40 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdStyle;
 import com.yk.markdown.bean.MdType;
+import com.yk.markdown.style.MdStyleManager;
+import com.yk.markdown.style.bean.MdStyleSeparator;
+import com.yk.markdown.style.bean.MdStyleTitle;
 
 public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSpan, ParcelableSpan {
-    private final int level;
-
     private final int textColor;
+    private final int textSize;
 
     public MdTitleSpan() {
         this(1);
     }
 
     public MdTitleSpan(int level) {
-        this(level, MdStyle.Title.TEXT_COLOR);
-    }
-
-    public MdTitleSpan(int level, int textColor) {
-        this.level = level;
-        this.textColor = textColor;
+        MdStyleTitle title = MdStyleManager.getInstance().getMdStyle().getTitle();
+        textColor = title.getTextColor();
+        switch (level) {
+            case 1:
+                textSize = title.getTextSize1();
+                break;
+            case 2:
+                textSize = title.getTextSize2();
+                break;
+            case 3:
+                textSize = title.getTextSize3();
+                break;
+            case 4:
+                textSize = title.getTextSize4();
+                break;
+            case 5:
+            default:
+                textSize = title.getTextSize5();
+                break;
+        }
     }
 
     @Override
@@ -43,8 +58,8 @@ public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSp
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(level);
         dest.writeInt(textColor);
+        dest.writeInt(textSize);
     }
 
     @Override
@@ -58,26 +73,7 @@ public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSp
     }
 
     private void updateState(TextPaint tp) {
-        int textSize;
-        switch (level) {
-            case 1:
-                textSize = MdStyle.Title.TEXT_SIZE_1;
-                break;
-            case 2:
-                textSize = MdStyle.Title.TEXT_SIZE_2;
-                break;
-            case 3:
-                textSize = MdStyle.Title.TEXT_SIZE_3;
-                break;
-            case 4:
-                textSize = MdStyle.Title.TEXT_SIZE_4;
-                break;
-            case 5:
-            default:
-                textSize = MdStyle.Title.TEXT_SIZE_5;
-                break;
-        }
-
+        tp.setFakeBoldText(true);
         tp.setColor(textColor);
         tp.setTextSize(textSize);
     }
@@ -87,8 +83,10 @@ public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSp
         int preColor = paint.getColor();
         float preStrokeWidth = paint.getStrokeWidth();
 
-        paint.setColor(MdStyle.Separator.COLOR);
-        paint.setStrokeWidth(MdStyle.Separator.SIZE);
+        MdStyleSeparator separator = MdStyleManager.getInstance().getMdStyle().getSeparator();
+
+        paint.setColor(separator.getColor());
+        paint.setStrokeWidth(separator.getSize());
         canvas.drawLine(left, bottom, right, bottom, paint);
 
         paint.setColor(preColor);

@@ -12,8 +12,9 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdStyle;
 import com.yk.markdown.bean.MdType;
+import com.yk.markdown.style.MdStyleManager;
+import com.yk.markdown.style.bean.MdStyleOrderedList;
 
 public class MdOrderedListSpan extends MetricAffectingSpan implements LeadingMarginSpan, ParcelableSpan {
     private final int index;
@@ -30,22 +31,15 @@ public class MdOrderedListSpan extends MetricAffectingSpan implements LeadingMar
     }
 
     public MdOrderedListSpan(int index) {
-        this(index, MdStyle.OrderedList.INDEX_COLOR,
-                MdStyle.OrderedList.INDEX_SIZE,
-                MdStyle.OrderedList.INDEX_WIDTH,
-                MdStyle.OrderedList.GAP_WIDTH,
-                MdStyle.OrderedList.TEXT_COLOR,
-                MdStyle.OrderedList.TEXT_SIZE);
-    }
+        MdStyleOrderedList orderedList = MdStyleManager.getInstance().getMdStyle().getOrderedList();
+        indexColor = orderedList.getIndexColor();
+        indexSize = orderedList.getIndexSize();
+        indexWidth = orderedList.getIndexWidth();
+        gapWidth = orderedList.getGapWidth();
+        textColor = orderedList.getTextColor();
+        textSize = orderedList.getTextSize();
 
-    public MdOrderedListSpan(int index, int indexColor, int indexSize, int indexWidth, int gapWidth, int textColor, int textSize) {
         this.index = index;
-        this.indexColor = indexColor;
-        this.indexSize = indexSize;
-        this.indexWidth = indexWidth;
-        this.gapWidth = gapWidth;
-        this.textColor = textColor;
-        this.textSize = textSize;
     }
 
     @Override
@@ -93,10 +87,12 @@ public class MdOrderedListSpan extends MetricAffectingSpan implements LeadingMar
             Paint.Style preStyle = p.getStyle();
             int preColor = p.getColor();
             float preTextSize = p.getTextSize();
+            boolean isBold = p.isFakeBoldText();
 
             p.setStyle(Paint.Style.FILL);
             p.setColor(indexColor);
             p.setTextSize(indexSize);
+            p.setFakeBoldText(true);
 
             String indexStr = index + ". ";
             c.drawText(indexStr, x, baseline, p);
@@ -104,6 +100,7 @@ public class MdOrderedListSpan extends MetricAffectingSpan implements LeadingMar
             p.setStyle(preStyle);
             p.setColor(preColor);
             p.setTextSize(preTextSize);
+            p.setFakeBoldText(isBold);
         }
     }
 }
