@@ -93,7 +93,7 @@ public class TyporaMdStyle extends BaseMdStyle {
         // 分隔符
         setSeparator(
                 new MdStyleSeparator(
-                        Color.GRAY,
+                        Color.parseColor("#30888888"),
                         2
                 )
         );
