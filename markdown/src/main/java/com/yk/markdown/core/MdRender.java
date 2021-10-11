@@ -210,7 +210,7 @@ public class MdRender {
 
     private static SpannableString dealWordCode(MdWord word) {
         String src = word.getSrc();
-        src = src.substring(src.indexOf('`') + 1, src.lastIndexOf('`'));
+        src = src.replace("`"," ");
 
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdCodeSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

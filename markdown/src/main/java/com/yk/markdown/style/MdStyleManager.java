@@ -2,10 +2,12 @@ package com.yk.markdown.style;
 
 import com.yk.markdown.style.style.BaseMdStyle;
 import com.yk.markdown.style.style.StandardMdStyle;
+import com.yk.markdown.style.style.TyporaMdStyle;
 
 public class MdStyleManager {
     public enum Style {
-        STANDARD
+        STANDARD,
+        TYPORA,
     }
 
     private BaseMdStyle mdStyle;
@@ -13,7 +15,7 @@ public class MdStyleManager {
     private static volatile MdStyleManager instance;
 
     private MdStyleManager() {
-        mdStyle = new StandardMdStyle();
+        choose(Style.TYPORA);
     }
 
     public static MdStyleManager getInstance() {
@@ -31,6 +33,9 @@ public class MdStyleManager {
         switch (style) {
             case STANDARD:
                 mdStyle = new StandardMdStyle();
+                break;
+            case TYPORA:
+                mdStyle = new TyporaMdStyle();
                 break;
         }
     }

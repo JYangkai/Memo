@@ -16,6 +16,7 @@ import com.yk.markdown.style.bean.MdStyleSeparator;
 import com.yk.markdown.style.bean.MdStyleTitle;
 
 public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSpan, ParcelableSpan {
+    private final int level;
     private final int textColor;
     private final int textSize;
 
@@ -24,6 +25,8 @@ public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSp
     }
 
     public MdTitleSpan(int level) {
+        this.level = level;
+
         MdStyleTitle title = MdStyleManager.getInstance().getMdStyle().getTitle();
         textColor = title.getTextColor();
         switch (level) {
@@ -58,6 +61,7 @@ public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSp
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(level);
         dest.writeInt(textColor);
         dest.writeInt(textSize);
     }
@@ -80,6 +84,10 @@ public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSp
 
     @Override
     public void drawBackground(@NonNull Canvas canvas, @NonNull Paint paint, int left, int right, int top, int baseline, int bottom, @NonNull CharSequence text, int start, int end, int lineNumber) {
+        if (level > 2) {
+            return;
+        }
+
         int preColor = paint.getColor();
         float preStrokeWidth = paint.getStrokeWidth();
 
