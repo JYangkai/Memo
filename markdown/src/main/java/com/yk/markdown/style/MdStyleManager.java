@@ -15,7 +15,7 @@ public class MdStyleManager {
     private static volatile MdStyleManager instance;
 
     private MdStyleManager() {
-        choose(Style.TYPORA);
+        choose(Style.STANDARD);
     }
 
     public static MdStyleManager getInstance() {

@@ -37,10 +37,10 @@ public class StandardMdStyle extends BaseMdStyle {
         // 引用
         setQuote(
                 new MdStyleQuote(
-                        Color.BLACK,
+                        Color.parseColor("#30888888"),
                         20,
                         30,
-                        getBase().getTextColor(),
+                        Color.parseColor("#A0000000"),
                         getBase().getTextSize()
                 )
         );
@@ -49,8 +49,8 @@ public class StandardMdStyle extends BaseMdStyle {
         setCodeBlock(
                 new MdStyleCodeBlock(
                         30,
-                        Color.BLACK,
-                        Color.WHITE,
+                        Color.parseColor("#30888888"),
+                        Color.parseColor("#A0000000"),
                         getBase().getTextSize()
                 )
         );
@@ -93,7 +93,7 @@ public class StandardMdStyle extends BaseMdStyle {
         // 分隔符
         setSeparator(
                 new MdStyleSeparator(
-                        Color.GRAY,
+                        Color.parseColor("#30888888"),
                         2
                 )
         );
@@ -101,8 +101,8 @@ public class StandardMdStyle extends BaseMdStyle {
         // 代码
         setCode(
                 new MdStyleCode(
-                        Color.GRAY,
-                        Color.WHITE,
+                        Color.parseColor("#10FF0000"),
+                        Color.parseColor("#A0FF0000"),
                         getBase().getTextSize()
                 )
         );
