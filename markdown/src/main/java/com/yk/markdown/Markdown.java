@@ -6,9 +6,11 @@ import android.widget.TextView;
 
 import com.yk.markdown.core.MdParser;
 import com.yk.markdown.core.MdRender;
+import com.yk.markdown.core.MdThreadManager;
 
 public class Markdown {
     private final String src;
+    private boolean usePlaceHolder;
     private int padding;
 
     private Markdown(String src) {
@@ -17,6 +19,11 @@ public class Markdown {
 
     public static Markdown load(String src) {
         return new Markdown(src);
+    }
+
+    public Markdown usePlaceHolder(boolean usePlaceHolder) {
+        this.usePlaceHolder = usePlaceHolder;
+        return this;
     }
 
     public Markdown padding(int padding) {
@@ -33,9 +40,28 @@ public class Markdown {
             return;
         }
 
-        tv.setPadding(padding, padding, padding, padding);
+        MdThreadManager.getInstance().postUi(new Runnable() {
+            @Override
+            public void run() {
+                tv.setPadding(padding, padding, padding, padding);
+                tv.setText(src);
 
-        tv.setText(getMd());
+                MdThreadManager.getInstance().postIo(new Runnable() {
+                    @Override
+                    public void run() {
+                        SpannableStringBuilder spanStrBuilder = getMd();
+
+                        MdThreadManager.getInstance().postUi(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                tv.setText(spanStrBuilder);
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 
     public SpannableStringBuilder getMd() {

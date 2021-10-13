@@ -3,7 +3,9 @@ package com.yk.memo.ui.edit;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,10 +17,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 
 import com.yk.base.mvp.BaseMvpActivity;
+import com.yk.markdown.Markdown;
 import com.yk.memo.R;
 import com.yk.memo.data.bean.Note;
 import com.yk.memo.utils.TimeUtils;
@@ -36,6 +40,7 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
     }
 
     private Toolbar toolbar;
+    private AppCompatTextView tvNoteContent;
     private AppCompatEditText etNoteContent;
 
     private AppCompatImageView ivFormat;
@@ -59,6 +64,7 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
 
     private void findView() {
         toolbar = findViewById(R.id.toolbar);
+        tvNoteContent = findViewById(R.id.tvNoteContent);
         etNoteContent = findViewById(R.id.etNoteContent);
 
         ivFormat = findViewById(R.id.ivFormat);
@@ -92,6 +98,23 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
     }
 
     private void bindEvent() {
+        etNoteContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Markdown.load(s.toString()).usePlaceHolder(true).into(tvNoteContent);
+            }
+        });
+
         ivFormat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
