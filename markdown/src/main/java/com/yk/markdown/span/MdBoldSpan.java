@@ -23,7 +23,7 @@ public class MdBoldSpan extends MetricAffectingSpan implements ParcelableSpan {
 
     @Override
     public int getSpanTypeId() {
-        return MdType.CODE.ordinal();
+        return MdType.BOLD.ordinal();
     }
 
     @Override

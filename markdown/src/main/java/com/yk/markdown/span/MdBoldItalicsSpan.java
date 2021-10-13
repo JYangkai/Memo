@@ -23,7 +23,7 @@ public class MdBoldItalicsSpan extends MetricAffectingSpan implements Parcelable
 
     @Override
     public int getSpanTypeId() {
-        return MdType.CODE.ordinal();
+        return MdType.BOLD_ITALICS.ordinal();
     }
 
     @Override
