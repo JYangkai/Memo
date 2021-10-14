@@ -53,12 +53,15 @@ public class MdUnorderedListSpan extends MetricAffectingSpan implements LeadingM
 
     @Override
     public void updateDrawState(TextPaint tp) {
-        tp.setColor(textColor);
-        tp.setTextSize(textSize);
+        updateState(tp);
     }
 
     @Override
     public void updateMeasureState(@NonNull TextPaint tp) {
+        updateState(tp);
+    }
+
+    private void updateState(TextPaint tp) {
         tp.setColor(textColor);
         tp.setTextSize(textSize);
     }
