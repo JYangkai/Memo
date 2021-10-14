@@ -1,17 +1,14 @@
 package com.yk.markdown.span;
 
-import android.os.Parcel;
-import android.text.ParcelableSpan;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdType;
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleItalics;
 
-public class MdItalicsSpan extends MetricAffectingSpan implements ParcelableSpan {
+public class MdItalicsSpan extends MetricAffectingSpan {
     private final int textColor;
     private final int textSize;
 
@@ -19,22 +16,6 @@ public class MdItalicsSpan extends MetricAffectingSpan implements ParcelableSpan
         MdStyleItalics italics = MdStyleManager.getInstance().getMdStyle().getItalics();
         textColor = italics.getTextColor();
         textSize = italics.getTextSize();
-    }
-
-    @Override
-    public int getSpanTypeId() {
-        return MdType.ITALICS.ordinal();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(textColor);
-        dest.writeInt(textSize);
     }
 
     @Override

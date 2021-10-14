@@ -2,9 +2,7 @@ package com.yk.markdown.span;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Parcel;
 import android.text.Layout;
-import android.text.ParcelableSpan;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.style.LeadingMarginSpan;
@@ -12,11 +10,10 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdType;
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleUnorderedList;
 
-public class MdUnorderedListSpan extends MetricAffectingSpan implements LeadingMarginSpan, ParcelableSpan {
+public class MdUnorderedListSpan extends MetricAffectingSpan implements LeadingMarginSpan {
     private final int circleColor;
     private final int circleRadius;
     private final int gapWidth;
@@ -30,25 +27,6 @@ public class MdUnorderedListSpan extends MetricAffectingSpan implements LeadingM
         gapWidth = unorderedList.getGapWidth();
         textColor = unorderedList.getTextColor();
         textSize = unorderedList.getTextSize();
-    }
-
-    @Override
-    public int getSpanTypeId() {
-        return MdType.UNORDERED_LIST.ordinal();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(circleColor);
-        dest.writeInt(circleRadius);
-        dest.writeInt(gapWidth);
-        dest.writeInt(textColor);
-        dest.writeInt(textSize);
     }
 
     @Override

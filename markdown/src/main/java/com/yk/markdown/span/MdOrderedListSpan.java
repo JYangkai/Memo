@@ -2,9 +2,7 @@ package com.yk.markdown.span;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Parcel;
 import android.text.Layout;
-import android.text.ParcelableSpan;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.style.LeadingMarginSpan;
@@ -12,11 +10,10 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdType;
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleOrderedList;
 
-public class MdOrderedListSpan extends MetricAffectingSpan implements LeadingMarginSpan, ParcelableSpan {
+public class MdOrderedListSpan extends MetricAffectingSpan implements LeadingMarginSpan {
     private final int index;
 
     private final int indexColor;
@@ -40,27 +37,6 @@ public class MdOrderedListSpan extends MetricAffectingSpan implements LeadingMar
         textSize = orderedList.getTextSize();
 
         this.index = index;
-    }
-
-    @Override
-    public int getSpanTypeId() {
-        return MdType.ORDERED_LIST.ordinal();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(index);
-        dest.writeInt(indexColor);
-        dest.writeInt(indexSize);
-        dest.writeInt(indexWidth);
-        dest.writeInt(gapWidth);
-        dest.writeInt(textColor);
-        dest.writeInt(textSize);
     }
 
     @Override

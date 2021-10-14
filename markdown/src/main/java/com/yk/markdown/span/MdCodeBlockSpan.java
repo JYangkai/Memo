@@ -3,9 +3,7 @@ package com.yk.markdown.span;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.Parcel;
 import android.text.Layout;
-import android.text.ParcelableSpan;
 import android.text.TextPaint;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.LineBackgroundSpan;
@@ -13,11 +11,10 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdType;
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleCodeBlock;
 
-public class MdCodeBlockSpan extends MetricAffectingSpan implements LeadingMarginSpan, LineBackgroundSpan, ParcelableSpan {
+public class MdCodeBlockSpan extends MetricAffectingSpan implements LeadingMarginSpan, LineBackgroundSpan {
     private final int gapWidth;
     private final int backgroundColor;
     private final int textColor;
@@ -29,24 +26,6 @@ public class MdCodeBlockSpan extends MetricAffectingSpan implements LeadingMargi
         backgroundColor = codeBlock.getBackgroundColor();
         textColor = codeBlock.getTextColor();
         textSize = codeBlock.getTextSize();
-    }
-
-    @Override
-    public int getSpanTypeId() {
-        return MdType.CODE_BLOCK.ordinal();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(gapWidth);
-        dest.writeInt(backgroundColor);
-        dest.writeInt(textColor);
-        dest.writeInt(textSize);
     }
 
     @Override

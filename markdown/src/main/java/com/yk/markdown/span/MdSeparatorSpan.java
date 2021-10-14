@@ -2,17 +2,14 @@ package com.yk.markdown.span;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Parcel;
-import android.text.ParcelableSpan;
 import android.text.style.LineBackgroundSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdType;
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleSeparator;
 
-public class MdSeparatorSpan implements LineBackgroundSpan, ParcelableSpan {
+public class MdSeparatorSpan implements LineBackgroundSpan {
     private final int color;
     private final int size;
 
@@ -20,22 +17,6 @@ public class MdSeparatorSpan implements LineBackgroundSpan, ParcelableSpan {
         MdStyleSeparator separator = MdStyleManager.getInstance().getMdStyle().getSeparator();
         color = separator.getColor();
         size = separator.getSize();
-    }
-
-    @Override
-    public int getSpanTypeId() {
-        return MdType.SEPARATOR.ordinal();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(color);
-        dest.writeInt(size);
     }
 
     @Override

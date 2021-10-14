@@ -2,20 +2,17 @@ package com.yk.markdown.span;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Parcel;
 import android.text.Layout;
-import android.text.ParcelableSpan;
 import android.text.TextPaint;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdType;
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleQuote;
 
-public class MdQuoteSpan extends MetricAffectingSpan implements LeadingMarginSpan, ParcelableSpan {
+public class MdQuoteSpan extends MetricAffectingSpan implements LeadingMarginSpan {
     private final int stripeColor;
     private final int stripeWidth;
     private final int gapWidth;
@@ -29,25 +26,6 @@ public class MdQuoteSpan extends MetricAffectingSpan implements LeadingMarginSpa
         gapWidth = quote.getGapWidth();
         textColor = quote.getTextColor();
         textSize = quote.getTextSize();
-    }
-
-    @Override
-    public int getSpanTypeId() {
-        return MdType.QUOTE.ordinal();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(stripeColor);
-        dest.writeInt(stripeWidth);
-        dest.writeInt(gapWidth);
-        dest.writeInt(textColor);
-        dest.writeInt(textSize);
     }
 
     @Override

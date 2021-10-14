@@ -1,17 +1,14 @@
 package com.yk.markdown.span;
 
-import android.os.Parcel;
-import android.text.ParcelableSpan;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdType;
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleCode;
 
-public class MdCodeSpan extends MetricAffectingSpan implements ParcelableSpan {
+public class MdCodeSpan extends MetricAffectingSpan {
     private final int backgroundColor;
     private final int textColor;
     private final int textSize;
@@ -21,23 +18,6 @@ public class MdCodeSpan extends MetricAffectingSpan implements ParcelableSpan {
         backgroundColor = code.getBackgroundColor();
         textColor = code.getTextColor();
         textSize = code.getTextSize();
-    }
-
-    @Override
-    public int getSpanTypeId() {
-        return MdType.CODE.ordinal();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(backgroundColor);
-        dest.writeInt(textColor);
-        dest.writeInt(textSize);
     }
 
     @Override

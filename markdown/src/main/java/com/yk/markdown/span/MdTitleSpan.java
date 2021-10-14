@@ -2,20 +2,17 @@ package com.yk.markdown.span;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Parcel;
-import android.text.ParcelableSpan;
 import android.text.TextPaint;
 import android.text.style.LineBackgroundSpan;
 import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.bean.MdType;
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleSeparator;
 import com.yk.markdown.style.bean.MdStyleTitle;
 
-public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSpan, ParcelableSpan {
+public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSpan {
     private final int level;
     private final int textColor;
     private final int textSize;
@@ -47,23 +44,6 @@ public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSp
                 textSize = title.getTextSize5();
                 break;
         }
-    }
-
-    @Override
-    public int getSpanTypeId() {
-        return MdType.TITLE.ordinal();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(level);
-        dest.writeInt(textColor);
-        dest.writeInt(textSize);
     }
 
     @Override
