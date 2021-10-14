@@ -1,7 +1,6 @@
 package com.yk.markdown.core;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.yk.markdown.bean.MdSection;
 import com.yk.markdown.bean.MdType;
@@ -18,8 +17,12 @@ import java.util.regex.Pattern;
  * Markdown解析器
  */
 public class MdParser {
-    private static final String TAG = "MdParser";
-
+    /**
+     * 处理Markdown文本
+     *
+     * @param mdSrc Markdown源码
+     * @return 段落列表
+     */
     public static List<MdSection> dealMarkdown(String mdSrc) {
         if (TextUtils.isEmpty(mdSrc)) {
             return null;
@@ -30,46 +33,57 @@ public class MdParser {
         // 处理段落
         dealSection(mdSrc, sectionList);
 
-        // 处理普通字符
+        // 处理其他普通字符
         dealNormal(sectionList);
-
-        for (MdSection section : sectionList) {
-            Log.d(TAG, "dealMarkdown: " + section);
-        }
 
         return sectionList;
     }
 
+    /**
+     * 处理段落
+     *
+     * @param mdSrc       Markdown源码
+     * @param sectionList 段落列表
+     */
     private static void dealSection(String mdSrc, List<MdSection> sectionList) {
+        // 分行
         String[] mdSrcSplit = mdSrc.split("\n");
 
         if (mdSrcSplit.length == 0) {
             return;
         }
 
+        // 逐行分析
         for (int i = 0; i < mdSrcSplit.length; i++) {
+            // 获取当前行
             String src = mdSrcSplit[i];
 
+            // 获取当前包含```代码块标识的行数
             int codeBlockCount = getCodeBlockCount(sectionList);
 
+            // 获取当前行的类型
             MdType type = getMdType(src);
 
             if (codeBlockCount % 2 != 0) {
-                // 代码块未关闭
+                // 代码块未关闭，则将当前行添加到上一个段落
                 MdSection lastSection = sectionList.get(sectionList.size() - 1);
                 lastSection.setSrc(lastSection.getSrc() + "\n" + src);
             } else {
                 // 代码块不存在，或已关闭
                 if (type == MdType.NORMAL && sectionList.size() > 0) {
+                    // 是普通段落，且不在第一行
                     MdSection lastSection = sectionList.get(sectionList.size() - 1);
                     if (lastSection.getType() == MdType.TITLE
                             || lastSection.getType() == MdType.SEPARATOR
                             || mdSrcSplit[i - 1].isEmpty()) {
+                        // 当前行的上一行是标题/分隔符/空行，则新建一个段落
                         sectionList.add(new MdSection(type, src, new ArrayList<>()));
                     } else {
+                        // 否则，添加到上一个段落
                         lastSection.setSrc(lastSection.getSrc() + "\n" + src);
                     }
                 } else {
+                    // 不是普通段落，则直接新建一个段落
                     sectionList.add(new MdSection(type, src, new ArrayList<>()));
                 }
             }
@@ -84,10 +98,12 @@ public class MdParser {
             return;
         }
 
+        // 对每个段落进行分析
         for (MdSection section : sectionList) {
             if (section.getType() != MdType.NORMAL) {
                 continue;
             }
+            // 只处理被标记为普通的段落
             dealWord(section);
         }
     }
@@ -98,6 +114,7 @@ public class MdParser {
     private static void dealWord(MdSection section) {
         String src = section.getSrc();
 
+        // 首先处理代码（处理代码中会再处理其他类型，代码优先级最高）
         List<MdWord> wordList = dealCode(src, 0);
 
         section.setWordList(wordList);
@@ -105,19 +122,26 @@ public class MdParser {
 
     /**
      * 处理代码
+     *
+     * @param src    一行普通字符
+     * @param offset 偏移位置（表示src在父src中的起始位置）
+     * @return 字符列表
      */
     private static List<MdWord> dealCode(String src, int offset) {
+        // 保存所有的字符列表
         List<MdWord> wordList = new ArrayList<>();
 
         if (TextUtils.isEmpty(src)) {
             return wordList;
         }
 
+        // 仅保存代码的字符列表
         List<MdWord> codeList = new ArrayList<>();
 
         Pattern pattern = Pattern.compile("[`][^`]+[`]");
         Matcher matcher = pattern.matcher(src);
         while (matcher.find()) {
+            // 找到代码
             int start = matcher.start();
             int end = matcher.end();
             String group = matcher.group();
@@ -184,17 +208,20 @@ public class MdParser {
      * 处理粗斜体
      */
     private static List<MdWord> dealBoldItalics(String src, int offset) {
+        // 保存所有的字符列表
         List<MdWord> wordList = new ArrayList<>();
 
         if (TextUtils.isEmpty(src)) {
             return wordList;
         }
 
+        // 仅保存粗斜体的字符列表
         List<MdWord> boldItalicsList = new ArrayList<>();
 
         Pattern pattern = Pattern.compile("[*]{3}[^*]+[*]{3}");
         Matcher matcher = pattern.matcher(src);
         while (matcher.find()) {
+            // 找到粗斜体
             int start = matcher.start();
             int end = matcher.end();
             String group = matcher.group();
@@ -261,17 +288,20 @@ public class MdParser {
      * 处理粗体
      */
     private static List<MdWord> dealBold(String src, int offset) {
+        // 保存所有的字符列表
         List<MdWord> wordList = new ArrayList<>();
 
         if (TextUtils.isEmpty(src)) {
             return wordList;
         }
 
+        // 仅保存粗体的字符列表
         List<MdWord> boldList = new ArrayList<>();
 
         Pattern pattern = Pattern.compile("[*]{2}[^*]+[*]{2}");
         Matcher matcher = pattern.matcher(src);
         while (matcher.find()) {
+            // 找到粗体
             int start = matcher.start();
             int end = matcher.end();
             String group = matcher.group();
@@ -338,17 +368,20 @@ public class MdParser {
      * 处理斜体
      */
     private static List<MdWord> dealItalics(String src, int offset) {
+        // 保存所有的字符列表
         List<MdWord> wordList = new ArrayList<>();
 
         if (TextUtils.isEmpty(src)) {
             return wordList;
         }
 
+        // 仅保存斜体的字符列表
         List<MdWord> italicsList = new ArrayList<>();
 
         Pattern pattern = Pattern.compile("[*][^*]+[*]");
         Matcher matcher = pattern.matcher(src);
         while (matcher.find()) {
+            // 找到斜体
             int start = matcher.start();
             int end = matcher.end();
             String group = matcher.group();

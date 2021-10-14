@@ -27,6 +27,12 @@ import java.util.List;
  */
 public class MdRender {
 
+    /**
+     * 获取Span Builder
+     *
+     * @param sectionList 段落列表
+     * @return Span Builder
+     */
     public static SpannableStringBuilder getSpanStrBuilder(List<MdSection> sectionList) {
         if (sectionList == null) {
             return null;
@@ -42,6 +48,7 @@ public class MdRender {
             MdSection section = sectionList.get(i);
             spanStrBuilder.append(getSpanStr(section));
             if (i != sectionList.size() - 1) {
+                // 最后一个段落不需要换行
                 spanStrBuilder.append("\n");
             }
         }
@@ -49,6 +56,12 @@ public class MdRender {
         return spanStrBuilder;
     }
 
+    /**
+     * 获取Span Builder
+     *
+     * @param section 段落
+     * @return Span Builder
+     */
     private static SpannableStringBuilder getSpanStr(MdSection section) {
         MdType type = section.getType();
 
@@ -81,6 +94,9 @@ public class MdRender {
         return spanStrBuilder;
     }
 
+    /**
+     * 处理引用
+     */
     private static SpannableString dealQuote(MdSection section) {
         String src = section.getSrc();
         src = src.substring(src.indexOf(" ") + 1);
@@ -95,9 +111,12 @@ public class MdRender {
         return spanStr;
     }
 
+    /**
+     * 处理代码块
+     */
     private static SpannableString dealCodeBlock(MdSection section) {
         String src = section.getSrc();
-        src = "\n" + src.substring(src.indexOf("```") + 4, src.lastIndexOf("```")) + "\n";
+        src = "\n" + src.substring(src.indexOf("\n") + 1, src.lastIndexOf("\n")) + "\n";
 
         if (TextUtils.isEmpty(src)) {
             src = " ";
@@ -109,6 +128,9 @@ public class MdRender {
         return spanStr;
     }
 
+    /**
+     * 处理有序列表
+     */
     private static SpannableString dealOrderedList(MdSection section) {
         String src = section.getSrc();
         int index = Integer.parseInt(src.substring(0, 1));
@@ -124,6 +146,9 @@ public class MdRender {
         return spanStr;
     }
 
+    /**
+     * 处理无序列表
+     */
     private static SpannableString dealUnorderedList(MdSection section) {
         String src = section.getSrc();
         src = src.substring(src.indexOf(" ") + 1);
@@ -138,6 +163,9 @@ public class MdRender {
         return spanStr;
     }
 
+    /**
+     * 处理标题
+     */
     private static SpannableString dealTitle(MdSection section) {
         String src = section.getSrc();
         int level = src.indexOf(" ");
@@ -153,6 +181,9 @@ public class MdRender {
         return spanStr;
     }
 
+    /**
+     * 处理分隔符
+     */
     private static SpannableString dealSeparator(MdSection section) {
         String src = " ";
 
@@ -162,8 +193,11 @@ public class MdRender {
         return spanStr;
     }
 
+    /**
+     * 处理其他普通字符
+     */
     private static SpannableStringBuilder dealNormal(MdSection section) {
-        String src = section.getSrc().trim();
+        String src = section.getSrc();
 
         SpannableStringBuilder spanStrBuilder = new SpannableStringBuilder();
 
@@ -199,6 +233,9 @@ public class MdRender {
         return spanStrBuilder;
     }
 
+    /**
+     * 处理普通字符
+     */
     private static SpannableString dealWordNormal(MdWord word) {
         String src = word.getSrc();
 
@@ -208,9 +245,12 @@ public class MdRender {
         return spanStr;
     }
 
+    /**
+     * 处理代码
+     */
     private static SpannableString dealWordCode(MdWord word) {
         String src = word.getSrc();
-        src = src.replace("`"," ");
+        src = src.replace("`", " ");
 
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdCodeSpan(), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -218,6 +258,9 @@ public class MdRender {
         return spanStr;
     }
 
+    /**
+     * 处理粗斜体
+     */
     private static SpannableString dealWordBoldItalics(MdWord word) {
         String src = word.getSrc();
         src = src.substring(src.indexOf("***") + 3, src.lastIndexOf("***"));
@@ -228,6 +271,9 @@ public class MdRender {
         return spanStr;
     }
 
+    /**
+     * 处理粗体
+     */
     private static SpannableString dealWordBold(MdWord word) {
         String src = word.getSrc();
         src = src.substring(src.indexOf("**") + 2, src.lastIndexOf("**"));
@@ -238,6 +284,9 @@ public class MdRender {
         return spanStr;
     }
 
+    /**
+     * 处理斜体
+     */
     private static SpannableString dealWordItalics(MdWord word) {
         String src = word.getSrc();
         src = src.substring(src.indexOf("*") + 1, src.lastIndexOf("*"));
