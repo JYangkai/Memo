@@ -116,7 +116,7 @@ public class MdRender {
      */
     private static SpannableString dealCodeBlock(MdSection section) {
         String src = section.getSrc();
-        src = "\n" + src.substring(src.indexOf("\n") + 1, src.lastIndexOf("\n")) + "\n";
+        src = "\n" + src.substring(src.indexOf("```") + 4, src.lastIndexOf("```")) + "\n";
 
         if (TextUtils.isEmpty(src)) {
             src = " ";
