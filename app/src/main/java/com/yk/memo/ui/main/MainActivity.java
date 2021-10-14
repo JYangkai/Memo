@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.yk.base.eventbus.EventBus;
@@ -77,10 +77,9 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     }
 
     private void initRvNote() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         noteAdapter = new NoteAdapter(noteList);
-        rvNote.setLayoutManager(linearLayoutManager);
+        rvNote.setLayoutManager(layoutManager);
         rvNote.setAdapter(noteAdapter);
     }
 

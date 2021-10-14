@@ -75,8 +75,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Note note = filterList.get(position);
-        Markdown.load(note.getSrc()).usePlaceHolder(true).into(holder.tvNoteContent);
-//        holder.tvNoteContent.setText(note.getSpanStrBuilder());
+        Markdown.load(note.getSrc()).placeHolder(note.getSrc()).into(holder.tvNoteContent);
         holder.tvTime.setText(TimeUtils.getTime(note.getUpdateTime()));
         if (note.isSelect()) {
             holder.viewSelect.setVisibility(View.VISIBLE);

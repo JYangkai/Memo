@@ -111,7 +111,7 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
 
             @Override
             public void afterTextChanged(Editable s) {
-                Markdown.load(s.toString()).usePlaceHolder(true).into(tvNoteContent);
+                Markdown.load(s.toString()).into(tvNoteContent);
             }
         });
 
