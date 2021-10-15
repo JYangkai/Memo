@@ -1,4 +1,4 @@
-package com.yk.base.rxjava;
+package com.yk.base.rxSimple;
 
 /**
  * 可订阅的对象

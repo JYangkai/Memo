@@ -1,4 +1,4 @@
-package com.yk.base.eventbus;
+package com.yk.base.eventposter;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

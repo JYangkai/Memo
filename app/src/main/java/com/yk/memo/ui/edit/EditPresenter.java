@@ -2,10 +2,10 @@ package com.yk.memo.ui.edit;
 
 import android.util.Log;
 
-import com.yk.base.eventbus.EventBus;
+import com.yk.base.eventposter.EventPoster;
 import com.yk.base.mvp.BaseMvpPresenter;
-import com.yk.base.rxjava.Observable;
-import com.yk.base.rxjava.Subscriber;
+import com.yk.base.rxSimple.Observable;
+import com.yk.base.rxSimple.Subscriber;
 import com.yk.markdown.Markdown;
 import com.yk.memo.data.bean.Note;
 import com.yk.memo.data.db.NoteDbManager;
@@ -58,7 +58,7 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                     @Override
                     public Note call(Note note) {
                         note.setSpanStrBuilder(Markdown.load(note.getSrc()).getMd());
-                        EventBus.getInstance().post(new NoteAddEvent(note));
+                        EventPoster.getInstance().post(new NoteAddEvent(note));
                         return note;
                     }
                 })
@@ -103,7 +103,7 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                                     note.getSrc(),
                                     note.getUpdateTime(),
                                     Markdown.load(note.getSrc()).getMd());
-                            EventBus.getInstance().post(event);
+                            EventPoster.getInstance().post(event);
                         }
                         return success;
                     }

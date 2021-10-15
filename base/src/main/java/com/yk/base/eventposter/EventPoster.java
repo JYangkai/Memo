@@ -1,23 +1,23 @@
-package com.yk.base.eventbus;
+package com.yk.base.eventposter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventBus {
-    private static volatile EventBus instance;
+public class EventPoster {
+    private static volatile EventPoster instance;
 
     private final List<Subscriber> subscriberList = new ArrayList<>();
 
-    private EventBus() {
+    private EventPoster() {
     }
 
-    public static EventBus getInstance() {
+    public static EventPoster getInstance() {
         if (instance == null) {
-            synchronized (EventBus.class) {
+            synchronized (EventPoster.class) {
                 if (instance == null) {
-                    instance = new EventBus();
+                    instance = new EventPoster();
                 }
             }
         }

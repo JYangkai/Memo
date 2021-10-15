@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.yk.base.eventbus.EventBus;
-import com.yk.base.eventbus.Subscribe;
+import com.yk.base.eventposter.EventPoster;
+import com.yk.base.eventposter.Subscribe;
 import com.yk.base.mvp.BaseMvpActivity;
 import com.yk.memo.R;
 import com.yk.memo.data.adapter.NoteAdapter;
@@ -45,7 +45,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        EventBus.getInstance().register(this);
+        EventPoster.getInstance().register(this);
         findView();
         initData();
         bindEvent();
@@ -54,7 +54,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getInstance().unregister(this);
+        EventPoster.getInstance().unregister(this);
     }
 
     private void findView() {
