@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,12 +16,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.yk.base.mvp.BaseMvpActivity;
 import com.yk.memo.R;
 import com.yk.memo.data.bean.Note;
 import com.yk.memo.ui.edit.fragment.EditFragment;
 import com.yk.memo.ui.edit.fragment.PreviewFragment;
+import com.yk.memo.utils.SnackBarUtils;
 
 public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> implements IEditView {
     private static final String TAG = "EditActivity2";
@@ -172,7 +171,7 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
         ClipData clipData = ClipData.newPlainText("markdown_src", src);
         clipboardManager.setPrimaryClip(clipData);
 
-        Snackbar.make(getWindow().getDecorView(), "已复制文本到剪切板", Snackbar.LENGTH_SHORT).show();
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "已复制文本到剪切板");
     }
 
     private String getCurSrc() {

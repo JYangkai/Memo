@@ -2,7 +2,6 @@ package com.yk.memo.ui.main;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +25,7 @@ import com.yk.memo.data.event.NoteAddEvent;
 import com.yk.memo.data.event.NoteRemoveEvent;
 import com.yk.memo.data.event.NoteUpdateEvent;
 import com.yk.memo.ui.edit.EditActivity;
+import com.yk.memo.utils.SnackBarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -235,11 +235,12 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         if (event.isNeedTop()) {
             rvNote.scrollToPosition(0);
         }
+
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "新增一条数据 成功");
     }
 
     @Subscribe(threadMode = Subscribe.Thread.UI)
     public void onNoteUpdateEvent(NoteUpdateEvent event) {
-        Log.d(TAG, "onNoteUpdateEvent: " + event);
         if (event == null) {
             return;
         }
@@ -253,6 +254,8 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
             noteAdapter.topNote(note);
             rvNote.scrollToPosition(0);
         }
+
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "更新一条数据 成功");
     }
 
     @Subscribe(threadMode = Subscribe.Thread.UI)
@@ -264,9 +267,9 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
 
         Note note = noteAdapter.findNoteForId(eventNote.getId());
         noteAdapter.refreshDataRemove(note);
-    }
 
-    private static final String TAG = "MainActivity2";
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "移除一条数据 成功");
+    }
 
     @Override
     public void onLoadNoteList(List<Note> noteList) {
@@ -277,11 +280,15 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         if (!TextUtils.isEmpty(query)) {
             noteAdapter.getFilter().filter(query);
         }
+
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "加载 " + noteAdapter.getItemCount() + " 条数据");
     }
 
     @Override
     public void onDeleteNote(Note note) {
         noteAdapter.refreshDataRemove(note);
+
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "删除 成功");
     }
 
     @Override
@@ -289,6 +296,8 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         noteAdapter.refreshDataRemove(noteList);
         noteAdapter.setMoreSelectMode(false);
         hideDeleteMenuItem();
+
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "删除所选数据 成功");
     }
 
     @Override
