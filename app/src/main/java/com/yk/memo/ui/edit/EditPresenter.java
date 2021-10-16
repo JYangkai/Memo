@@ -2,11 +2,15 @@ package com.yk.memo.ui.edit;
 
 import android.util.Log;
 
+import com.yk.base.eventposter.EventPoster;
 import com.yk.base.mvp.BaseMvpPresenter;
 import com.yk.base.rxSimple.Observable;
 import com.yk.base.rxSimple.Subscriber;
 import com.yk.memo.data.bean.Note;
 import com.yk.memo.data.db.NoteDbManager;
+import com.yk.memo.data.event.NoteAddEvent;
+import com.yk.memo.data.event.NoteRemoveEvent;
+import com.yk.memo.data.event.NoteUpdateEvent;
 
 public class EditPresenter extends BaseMvpPresenter<IEditView> {
     private static final String TAG = "EditPresenter2";
@@ -24,6 +28,13 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                 return NoteDbManager.getInstance().addNote(src);
             }
         })
+                .map(new Observable.Function1<Note, Note>() {
+                    @Override
+                    public Note call(Note note) {
+                        EventPoster.getInstance().post(new NoteAddEvent(true, note));
+                        return note;
+                    }
+                })
                 .subscribeOnIo()
                 .observeOnUi()
                 .subscribe(new Subscriber<Note>() {
@@ -64,6 +75,13 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                 return NoteDbManager.getInstance().updateNote(note, src);
             }
         })
+                .map(new Observable.Function1<Note, Note>() {
+                    @Override
+                    public Note call(Note note) {
+                        EventPoster.getInstance().post(new NoteUpdateEvent(true, note));
+                        return note;
+                    }
+                })
                 .subscribeOnIo()
                 .observeOnUi()
                 .subscribe(new Subscriber<Note>() {
@@ -103,6 +121,13 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                 return NoteDbManager.getInstance().deleteNote(note);
             }
         })
+                .map(new Observable.Function1<Note, Note>() {
+                    @Override
+                    public Note call(Note note) {
+                        EventPoster.getInstance().post(new NoteRemoveEvent(note));
+                        return note;
+                    }
+                })
                 .subscribeOnIo()
                 .observeOnUi()
                 .subscribe(new Subscriber<Note>() {

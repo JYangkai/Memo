@@ -21,8 +21,6 @@ public class PreviewFragment extends Fragment {
 
     private AppCompatTextView tvPreview;
 
-    private String src;
-
     public static PreviewFragment newInstance(String src) {
         PreviewFragment fragment = new PreviewFragment();
         loadData(fragment, src);
@@ -57,7 +55,7 @@ public class PreviewFragment extends Fragment {
 
     private void initData() {
         if (getArguments() != null) {
-            src = getArguments().getString(EXTRA_SRC);
+            String src = getArguments().getString(EXTRA_SRC);
             Markdown.load(src).into(tvPreview);
         }
     }

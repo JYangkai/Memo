@@ -3,6 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_edit_copy"
+        android:icon="@drawable/ic_baseline_content_copy_24"
+        android:title="Copy"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_edit_replay"
+        android:icon="@drawable/ic_baseline_reply_24"
+        android:title="Replay"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_edit_clear"
         android:icon="@drawable/ic_baseline_clear_24"
         android:title="Clear"

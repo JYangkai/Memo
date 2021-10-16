@@ -3,6 +3,7 @@ package com.yk.memo.ui.edit.fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,23 @@ public class EditFragment extends Fragment {
     }
 
     private void bindEvent() {
+        etContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (onEditListener != null) {
+                    onEditListener.onTextChange(s.toString());
+                }
+            }
+        });
+
         markdownToolView.setOnMarkdownToolClick(new MarkdownToolView.OnMarkdownToolClick() {
             @Override
             public void onTextAppend(MdType type, String src, int selectOffset) {
@@ -125,6 +143,9 @@ public class EditFragment extends Fragment {
     }
 
     public String getSrc() {
+        if (etContent == null) {
+            return "";
+        }
         Editable text = etContent.getText();
         if (text == null) {
             return "";
@@ -132,7 +153,22 @@ public class EditFragment extends Fragment {
         return text.toString();
     }
 
+    public void setSrc(String src) {
+        etContent.setText(src);
+        etContent.setSelection(src.length());
+    }
+
     public void clear() {
         etContent.setText(null);
+    }
+
+    private OnEditListener onEditListener;
+
+    public void setOnEditListener(OnEditListener onEditListener) {
+        this.onEditListener = onEditListener;
+    }
+
+    public interface OnEditListener {
+        void onTextChange(String src);
     }
 }
