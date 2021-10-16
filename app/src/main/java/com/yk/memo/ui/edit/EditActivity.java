@@ -3,60 +3,55 @@ package com.yk.memo.ui.edit;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
+import com.yk.base.eventposter.EventPoster;
 import com.yk.base.mvp.BaseMvpActivity;
-import com.yk.markdown.Markdown;
 import com.yk.memo.R;
 import com.yk.memo.data.bean.Note;
+import com.yk.memo.data.event.NoteAddEvent;
+import com.yk.memo.data.event.NoteRemoveEvent;
+import com.yk.memo.data.event.NoteUpdateEvent;
+import com.yk.memo.ui.edit.fragment.EditFragment;
+import com.yk.memo.ui.edit.fragment.PreviewFragment;
 import com.yk.memo.utils.TimeUtils;
 
 public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> implements IEditView {
-    private static final String TAG = "EditActivity";
+    private static final String TAG = "EditActivity2";
 
-    private static final String EXTRA_NOTE_ID = "extra_note_id";
+    private static final String EXTRA_NOTE = "extra_note";
 
-    public static void startEditActivity(Context context, long noteId) {
-        Log.d(TAG, "startEditActivity: " + noteId);
-        Intent intent = new Intent(context, EditActivity.class);
-        intent.putExtra(EXTRA_NOTE_ID, noteId);
-        context.startActivity(intent);
+    private enum Mode {
+        PREVIEW,
+        EDIT
     }
 
     private Toolbar toolbar;
-    private AppCompatTextView tvNoteContent;
-    private AppCompatEditText etNoteContent;
 
-    private AppCompatImageView ivFormat;
-    private AppCompatImageView ivQuote;
-    private AppCompatImageView ivCode;
-    private AppCompatImageView ivOrderedList;
-    private AppCompatImageView ivUnorderedList;
-    private AppCompatImageView ivTitle;
-    private AppCompatImageView ivSeparator;
+    private PreviewFragment previewFragment;
+    private EditFragment editFragment;
 
-    private long noteId;
+    private Note note;
+
+    public static void start(Context context, Note note) {
+        Intent intent = new Intent(context, EditActivity.class);
+        intent.putExtra(EXTRA_NOTE, note);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+        Log.d(TAG, "onCreate: ");
         findView();
         initData();
         bindEvent();
@@ -64,25 +59,36 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
 
     private void findView() {
         toolbar = findViewById(R.id.toolbar);
-        tvNoteContent = findViewById(R.id.tvNoteContent);
-        etNoteContent = findViewById(R.id.etNoteContent);
-
-        ivFormat = findViewById(R.id.ivFormat);
-        ivQuote = findViewById(R.id.ivQuote);
-        ivCode = findViewById(R.id.ivCode);
-        ivOrderedList = findViewById(R.id.ivOrderedList);
-        ivUnorderedList = findViewById(R.id.ivUnorderedList);
-        ivTitle = findViewById(R.id.ivTitle);
-        ivSeparator = findViewById(R.id.ivSeparator);
     }
 
     private void initData() {
         initExtra();
         initToolbar();
+        initFragment();
+    }
+
+    private void bindEvent() {
+        previewFragment.setOnPreviewListener(new PreviewFragment.OnPreviewListener() {
+            @Override
+            public void onClickPreview() {
+                chooseMode(Mode.EDIT);
+            }
+        });
+    }
+
+    private void initExtra() {
+        Object o = getIntent().getSerializableExtra(EXTRA_NOTE);
+        if (o != null) {
+            note = (Note) o;
+            Log.d(TAG, "initExtra: " + note);
+        }
     }
 
     private void initToolbar() {
-        toolbar.setTitle("Edit");
+        toolbar.setTitle("编辑");
+        if (note != null) {
+            toolbar.setSubtitle(TimeUtils.getTime(note.getUpdateTime()));
+        }
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -90,232 +96,84 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
         }
     }
 
-    private void initExtra() {
-        noteId = getIntent().getLongExtra(EXTRA_NOTE_ID, -1);
-        if (noteId != -1) {
-            presenter.loadNote(noteId);
+    private void initFragment() {
+        previewFragment = PreviewFragment.newInstance(note != null ? note.getSrc() : null);
+        editFragment = EditFragment.newInstance(note != null ? note.getSrc() : null);
+    }
+
+    private void chooseMode(Mode mode) {
+        Fragment fragment = null;
+        switch (mode) {
+            case PREVIEW:
+                fragment = previewFragment;
+                onMenuPreviewMode();
+                break;
+            case EDIT:
+                fragment = editFragment;
+                onMenuEditMode();
+                break;
+        }
+
+        if (fragment == null) {
+            throw new RuntimeException("mode params is error:" + mode);
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fl_content, fragment)
+                .commit();
+    }
+
+    private void onMenuEditMode() {
+        if (clearMenuItem != null) {
+            clearMenuItem.setVisible(true);
+        }
+        if (saveMenuItem != null) {
+            saveMenuItem.setVisible(true);
+        }
+        if (deleteMenuItem != null) {
+            deleteMenuItem.setVisible(false);
+        }
+        if (editMenuItem != null) {
+            editMenuItem.setVisible(false);
+        }
+        if (previewMenuItem != null) {
+            previewMenuItem.setVisible(true);
         }
     }
 
-    private void bindEvent() {
-        etNoteContent.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                Markdown.load(s.toString()).into(tvNoteContent);
-            }
-        });
-
-        ivFormat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(EditActivity.this, v);
-                popupMenu.getMenuInflater().inflate(R.menu.menu_iv_format, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.menu_iv_format_bold_italics) {
-                            appContent("******");
-                            selectContent(getContent().lastIndexOf("***"));
-                        } else if (item.getItemId() == R.id.menu_iv_format_bold) {
-                            appContent("****");
-                            selectContent(getContent().lastIndexOf("**"));
-                        } else if (item.getItemId() == R.id.menu_iv_format_italics) {
-                            appContent("**");
-                            selectContent(getContent().lastIndexOf("*"));
-                        }
-                        return true;
-                    }
-                });
-                popupMenu.show();
-            }
-        });
-
-        ivQuote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getContentLastChar() == '\n') {
-                    appContent("> ");
-                } else {
-                    appContent("\n> ");
-                }
-                selectContentLast();
-            }
-        });
-
-        ivCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(EditActivity.this, v);
-                popupMenu.getMenuInflater().inflate(R.menu.menu_iv_code, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.menu_iv_code_code_block) {
-                            if (getContentLastChar() == '\n') {
-                                appContent("```\n\n```");
-                            } else {
-                                appContent("\n```\n\n```");
-                            }
-                            selectContent(getContent().lastIndexOf("\n"));
-                        } else if (item.getItemId() == R.id.menu_iv_code_code) {
-                            appContent("``");
-                            selectContent(getContent().lastIndexOf("`"));
-                        }
-                        return true;
-                    }
-                });
-                popupMenu.show();
-            }
-        });
-
-        ivOrderedList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getContentLastChar() == '\n') {
-                    appContent("1. ");
-                } else {
-                    int index = getCurLineIndex() + 1;
-                    appContent("\n" + index + ". ");
-                }
-                selectContentLast();
-            }
-        });
-
-        ivUnorderedList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getContentLastChar() == '\n') {
-                    appContent("- ");
-                } else {
-                    appContent("\n- ");
-                }
-                selectContentLast();
-            }
-        });
-
-        ivTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(EditActivity.this, v);
-                popupMenu.getMenuInflater().inflate(R.menu.menu_iv_title, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.menu_iv_title_1) {
-                            insertTitle("# ");
-                        } else if (item.getItemId() == R.id.menu_iv_title_2) {
-                            insertTitle("## ");
-                        } else if (item.getItemId() == R.id.menu_iv_title_3) {
-                            insertTitle("### ");
-                        } else if (item.getItemId() == R.id.menu_iv_title_4) {
-                            insertTitle("#### ");
-                        } else if (item.getItemId() == R.id.menu_iv_title_5) {
-                            insertTitle("##### ");
-                        }
-                        return true;
-                    }
-                });
-                popupMenu.show();
-            }
-        });
-
-        ivSeparator.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getContentLastChar() == '\n') {
-                    appContent("---\n");
-                } else {
-                    appContent("\n---\n");
-                }
-                selectContentLast();
-            }
-        });
-    }
-
-    private int getCurLineIndex() {
-        String content = getContent();
-        if (TextUtils.isEmpty(content)) {
-            return 0;
+    private void onMenuPreviewMode() {
+        if (clearMenuItem != null) {
+            clearMenuItem.setVisible(false);
         }
-
-        String[] lines = content.split("\n");
-
-        if (lines == null) {
-            return 0;
+        if (saveMenuItem != null) {
+            saveMenuItem.setVisible(false);
         }
-
-        String line = lines[lines.length - 1];
-
-        if (line.matches("\\d+\\.\\s.*")) {
-            String index = line.substring(0, line.indexOf('.'));
-            return Integer.parseInt(index);
+        if (deleteMenuItem != null && note != null) {
+            deleteMenuItem.setVisible(true);
         }
-
-        return 0;
-    }
-
-    private void insertTitle(String content) {
-        if (getContentLastChar() == '\n') {
-            appContent(content);
-        } else {
-            appContent("\n" + content);
+        if (editMenuItem != null) {
+            editMenuItem.setVisible(true);
         }
-        selectContentLast();
-    }
-
-    private void appContent(String content) {
-        etNoteContent.append(content);
-    }
-
-    private void selectContentLast() {
-        selectContent(getContent().length());
-    }
-
-    private void selectContent(int index) {
-        etNoteContent.setSelection(index);
-    }
-
-    private String getContent() {
-        return etNoteContent.getText().toString();
-    }
-
-    private char getContentLastChar() {
-        String content = getContent();
-        if (TextUtils.isEmpty(content)) {
-            return '\n';
-        }
-        return content.charAt(content.length() - 1);
-    }
-
-    private void save() {
-        String content = etNoteContent.getText().toString();
-        if (TextUtils.isEmpty(content)) {
-            return;
-        }
-        if (noteId != -1) {
-            presenter.updateNote(noteId, content);
-        } else {
-            presenter.saveNote(content);
+        if (previewMenuItem != null) {
+            previewMenuItem.setVisible(false);
         }
     }
 
-    private void clear() {
-        etNoteContent.setText("");
-    }
+    private MenuItem clearMenuItem;
+    private MenuItem saveMenuItem;
+    private MenuItem deleteMenuItem;
+    private MenuItem editMenuItem;
+    private MenuItem previewMenuItem;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit, menu);
+        clearMenuItem = menu.findItem(R.id.menu_edit_clear);
+        saveMenuItem = menu.findItem(R.id.menu_edit_save);
+        deleteMenuItem = menu.findItem(R.id.menu_edit_delete);
+        editMenuItem = menu.findItem(R.id.menu_edit_edit);
+        previewMenuItem = menu.findItem(R.id.menu_edit_preview);
+        chooseMode(note != null ? Mode.PREVIEW : Mode.EDIT);
         return true;
     }
 
@@ -323,10 +181,21 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
-        } else if (item.getItemId() == R.id.menu_edit_save) {
-            save();
         } else if (item.getItemId() == R.id.menu_edit_clear) {
-            clear();
+            editFragment.clear();
+        } else if (item.getItemId() == R.id.menu_edit_save) {
+            if (note != null) {
+                presenter.updateNote(note, editFragment.getSrc());
+            } else {
+                presenter.saveNote(editFragment.getSrc());
+            }
+        } else if (item.getItemId() == R.id.menu_edit_delete) {
+            presenter.deleteNote(note);
+        } else if (item.getItemId() == R.id.menu_edit_edit) {
+            chooseMode(Mode.EDIT);
+        } else if (item.getItemId() == R.id.menu_edit_preview) {
+            PreviewFragment.loadData(previewFragment, editFragment.getSrc());
+            chooseMode(Mode.PREVIEW);
         }
         return true;
     }
@@ -337,14 +206,35 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
     }
 
     @Override
-    public void onLoadNote(Note note) {
-        etNoteContent.setText(note.getSrc());
-        toolbar.setSubtitle(TimeUtils.getTime(note.getUpdateTime()));
+    public void onSaveNote(Note note) {
+        EventPoster.getInstance().post(new NoteAddEvent(true, note));
+        finish();
     }
 
     @Override
-    public void onSaveNote(boolean success) {
-        Toast.makeText(this, success ? "Save Success" : "Save Fail", Toast.LENGTH_SHORT).show();
+    public void onUpdateNote(Note note) {
+        EventPoster.getInstance().post(new NoteUpdateEvent(true, note));
         finish();
+    }
+
+    @Override
+    public void onDeleteNote(Note note) {
+        EventPoster.getInstance().post(new NoteRemoveEvent(note));
+        finish();
+    }
+
+    @Override
+    public void onSaveNoteError(Exception e) {
+
+    }
+
+    @Override
+    public void onUpdateNoteError(Exception e) {
+
+    }
+
+    @Override
+    public void onDeleteNoteError(Exception e) {
+
     }
 }

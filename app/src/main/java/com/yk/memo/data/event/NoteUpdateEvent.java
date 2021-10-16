@@ -1,59 +1,37 @@
 package com.yk.memo.data.event;
 
-import android.text.SpannableStringBuilder;
+import com.yk.memo.data.bean.Note;
 
 public class NoteUpdateEvent {
-    private long noteId;
-    private String src;
-    private long updateTime;
-    private SpannableStringBuilder spanStrBuilder;
+    private boolean needTop;
+    private Note note;
 
-    public NoteUpdateEvent(long noteId, String src, long updateTime, SpannableStringBuilder spanStrBuilder) {
-        this.noteId = noteId;
-        this.src = src;
-        this.updateTime = updateTime;
-        this.spanStrBuilder = spanStrBuilder;
+    public NoteUpdateEvent(boolean needTop, Note note) {
+        this.needTop = needTop;
+        this.note = note;
     }
 
-    public long getNoteId() {
-        return noteId;
+    public boolean isNeedTop() {
+        return needTop;
     }
 
-    public void setNoteId(long noteId) {
-        this.noteId = noteId;
+    public void setNeedTop(boolean needTop) {
+        this.needTop = needTop;
     }
 
-    public String getSrc() {
-        return src;
+    public Note getNote() {
+        return note;
     }
 
-    public void setSrc(String src) {
-        this.src = src;
-    }
-
-    public long getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(long updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public SpannableStringBuilder getSpanStrBuilder() {
-        return spanStrBuilder;
-    }
-
-    public void setSpanStrBuilder(SpannableStringBuilder spanStrBuilder) {
-        this.spanStrBuilder = spanStrBuilder;
+    public void setNote(Note note) {
+        this.note = note;
     }
 
     @Override
     public String toString() {
         return "NoteUpdateEvent{" +
-                "noteId=" + noteId +
-                ", src='" + src + '\'' +
-                ", updateTime=" + updateTime +
-                ", spanStrBuilder=" + spanStrBuilder +
+                "needTop=" + needTop +
+                ", note=" + note +
                 '}';
     }
 }

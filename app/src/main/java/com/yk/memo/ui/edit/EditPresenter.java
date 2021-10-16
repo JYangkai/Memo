@@ -2,25 +2,26 @@ package com.yk.memo.ui.edit;
 
 import android.util.Log;
 
-import com.yk.base.eventposter.EventPoster;
 import com.yk.base.mvp.BaseMvpPresenter;
 import com.yk.base.rxSimple.Observable;
 import com.yk.base.rxSimple.Subscriber;
-import com.yk.markdown.Markdown;
 import com.yk.memo.data.bean.Note;
 import com.yk.memo.data.db.NoteDbManager;
-import com.yk.memo.data.event.NoteAddEvent;
-import com.yk.memo.data.event.NoteUpdateEvent;
 
 public class EditPresenter extends BaseMvpPresenter<IEditView> {
-    private static final String TAG = "EditPresenter";
+    private static final String TAG = "EditPresenter2";
 
-    public void loadNote(long noteId) {
+    /**
+     * 新增note
+     *
+     * @param src 原文本
+     */
+    public void saveNote(String src) {
         Observable.fromCallable(new Observable.OnCallable<Note>() {
             @Override
             public Note call() {
-                Log.d(TAG, "call: load note:" + noteId);
-                return NoteDbManager.getNote(noteId);
+                Log.d(TAG, "call: save note:" + src);
+                return NoteDbManager.getInstance().addNote(src);
             }
         })
                 .subscribeOnIo()
@@ -28,94 +29,49 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                 .subscribe(new Subscriber<Note>() {
                     @Override
                     public void onNext(Note note) {
-                        Log.d(TAG, "onNext: load note:" + note);
+                        Log.d(TAG, "onNext: save note:" + note);
                         if (getView() != null) {
-                            getView().onLoadNote(note);
+                            getView().onSaveNote(note);
                         }
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: load note");
+                        Log.d(TAG, "onComplete: save note");
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Log.e(TAG, "onError: load note ", e);
+                        Log.e(TAG, "onError: save note:", e);
+                        if (getView() != null) {
+                            getView().onSaveNoteError(e);
+                        }
                     }
                 });
     }
 
-    public void saveNote(String content) {
+    /**
+     * 更新note
+     *
+     * @param note note
+     * @param src  更新的文本
+     */
+    public void updateNote(Note note, String src) {
         Observable.fromCallable(new Observable.OnCallable<Note>() {
             @Override
             public Note call() {
-                Log.d(TAG, "call: saveNote");
-                return NoteDbManager.addNote(content);
+                Log.d(TAG, "call: update note:" + note);
+                return NoteDbManager.getInstance().updateNote(note, src);
             }
         })
-                .map(new Observable.Function1<Note, Note>() {
-                    @Override
-                    public Note call(Note note) {
-                        note.setSpanStrBuilder(Markdown.load(note.getSrc()).getMd());
-                        EventPoster.getInstance().post(new NoteAddEvent(note));
-                        return note;
-                    }
-                })
                 .subscribeOnIo()
                 .observeOnUi()
                 .subscribe(new Subscriber<Note>() {
                     @Override
                     public void onNext(Note note) {
-                        Log.d(TAG, "onNext: saveNote:" + note);
+                        Log.d(TAG, "onNext: update note:" + note);
                         if (getView() != null) {
-                            getView().onSaveNote(note != null);
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d(TAG, "onComplete: saveNote");
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        Log.e(TAG, "onError: saveNote ", e);
-                    }
-                });
-    }
-
-    public void updateNote(long noteId, String content) {
-        Observable.fromCallable(new Observable.OnCallable<Boolean>() {
-            @Override
-            public Boolean call() {
-                Log.d(TAG, "call: update note");
-                return NoteDbManager.updateNote(noteId, content);
-            }
-        })
-                .map(new Observable.Function1<Boolean, Boolean>() {
-                    @Override
-                    public Boolean call(Boolean success) {
-                        if (success) {
-                            Note note = NoteDbManager.getNote(noteId);
-                            NoteUpdateEvent event = new NoteUpdateEvent(
-                                    note.getId(),
-                                    note.getSrc(),
-                                    note.getUpdateTime(),
-                                    Markdown.load(note.getSrc()).getMd());
-                            EventPoster.getInstance().post(event);
-                        }
-                        return success;
-                    }
-                })
-                .subscribeOnIo()
-                .observeOnUi()
-                .subscribe(new Subscriber<Boolean>() {
-                    @Override
-                    public void onNext(Boolean success) {
-                        Log.d(TAG, "onNext: update note");
-                        if (getView() != null) {
-                            getView().onSaveNote(success);
+                            getView().onUpdateNote(note);
                         }
                     }
 
@@ -126,9 +82,50 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
 
                     @Override
                     public void onError(Exception e) {
-                        Log.e(TAG, "onError: update note ", e);
+                        Log.e(TAG, "onError: update note:", e);
+                        if (getView() != null) {
+                            getView().onUpdateNoteError(e);
+                        }
                     }
                 });
     }
 
+    /**
+     * 删除note
+     *
+     * @param note 待删除的note
+     */
+    public void deleteNote(Note note) {
+        Observable.fromCallable(new Observable.OnCallable<Note>() {
+            @Override
+            public Note call() {
+                Log.d(TAG, "call: delete note:" + note);
+                return NoteDbManager.getInstance().deleteNote(note);
+            }
+        })
+                .subscribeOnIo()
+                .observeOnUi()
+                .subscribe(new Subscriber<Note>() {
+                    @Override
+                    public void onNext(Note note) {
+                        Log.d(TAG, "onNext: delete note:" + note);
+                        if (getView() != null) {
+                            getView().onDeleteNote(note);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: delete note");
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e(TAG, "onError: delete note:", e);
+                        if (getView() != null) {
+                            getView().onDeleteNoteError(e);
+                        }
+                    }
+                });
+    }
 }

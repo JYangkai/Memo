@@ -3,10 +3,20 @@ package com.yk.memo.data.event;
 import com.yk.memo.data.bean.Note;
 
 public class NoteAddEvent {
+    private boolean needTop;
     private Note note;
 
-    public NoteAddEvent(Note note) {
+    public NoteAddEvent(boolean needTop, Note note) {
+        this.needTop = needTop;
         this.note = note;
+    }
+
+    public boolean isNeedTop() {
+        return needTop;
+    }
+
+    public void setNeedTop(boolean needTop) {
+        this.needTop = needTop;
     }
 
     public Note getNote() {
@@ -20,7 +30,8 @@ public class NoteAddEvent {
     @Override
     public String toString() {
         return "NoteAddEvent{" +
-                "note=" + note +
+                "needTop=" + needTop +
+                ", note=" + note +
                 '}';
     }
 }

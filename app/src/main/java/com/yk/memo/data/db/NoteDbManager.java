@@ -7,39 +7,120 @@ import org.litepal.LitePal;
 import java.util.List;
 
 public class NoteDbManager {
-    public static Note addNote(String src) {
-        Note note = new Note(src, System.currentTimeMillis(), System.currentTimeMillis());
-        boolean success = note.save();
-        return success ? note : null;
+    private static volatile NoteDbManager instance;
+
+    private NoteDbManager() {
     }
 
-    public static boolean addNote(Note note) {
-        return note.save();
+    public static NoteDbManager getInstance() {
+        if (instance == null) {
+            synchronized (NoteDbManager.class) {
+                if (instance == null) {
+                    instance = new NoteDbManager();
+                }
+            }
+        }
+        return instance;
     }
 
-    public static void deleteNote(long id) {
+    /**
+     * 新增Note
+     *
+     * @param src 源文本
+     * @return note
+     */
+    public Note addNote(String src) {
+        Note note = new Note(
+                src,
+                System.currentTimeMillis(),
+                System.currentTimeMillis()
+        );
+        return note.save() ? note : null;
+    }
+
+    /**
+     * 新增Note
+     *
+     * @param note 待新增的Note
+     * @return note
+     */
+    public Note addNote(Note note) {
+        return note.save() ? note : null;
+    }
+
+    /**
+     * 删除note
+     *
+     * @param id id
+     */
+    public void deleteNote(long id) {
         LitePal.delete(Note.class, id);
     }
 
-    public static void deleteNote(Note note) {
+    /**
+     * 删除note
+     *
+     * @param note note
+     */
+    public Note deleteNote(Note note) {
         deleteNote(note.getId());
+        return note;
     }
 
-    public static boolean updateNote(long id, String src) {
+    /**
+     * 删除note list
+     *
+     * @param noteList note list
+     * @return note list
+     */
+    public List<Note> deleteNoteList(List<Note> noteList) {
+        for (Note note : noteList) {
+            deleteNote(note);
+        }
+        return noteList;
+    }
+
+    /**
+     * 更新note
+     *
+     * @param id  id
+     * @param src 源文本
+     * @return note
+     */
+    public Note updateNote(long id, String src) {
         return updateNote(getNote(id), src);
     }
 
-    public static boolean updateNote(Note note, String src) {
+    /**
+     * 更新note
+     *
+     * @param note note
+     * @param src  源文本
+     * @return note
+     */
+    public Note updateNote(Note note, String src) {
         note.setSrc(src);
         note.setUpdateTime(System.currentTimeMillis());
-        return note.save();
+        note.update(note.getId());
+        return note;
     }
 
-    public static Note getNote(long id) {
+    /**
+     * 获取note
+     *
+     * @param id id
+     * @return note
+     */
+    public Note getNote(long id) {
         return LitePal.find(Note.class, id);
     }
 
-    public static List<Note> getAllNote() {
+    /**
+     * 获取所有note
+     *
+     * @return note list
+     */
+    public List<Note> getAllNote() {
         return LitePal.order("updateTime desc").find(Note.class);
     }
 }

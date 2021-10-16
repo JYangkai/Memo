@@ -1,7 +1,5 @@
 package com.yk.memo.data.bean;
 
-import android.text.SpannableStringBuilder;
-
 import androidx.annotation.Nullable;
 
 import org.litepal.annotation.Column;
@@ -10,16 +8,34 @@ import org.litepal.crud.LitePalSupport;
 import java.io.Serializable;
 
 public class Note extends LitePalSupport implements Serializable {
+    /**
+     * 标识id（主键）
+     */
     private long id;
+
+    /**
+     * 原文本
+     */
     private String src;
+
+    /**
+     * 创建时间
+     */
     private long createTime;
+
+    /**
+     * 更新时间
+     */
     private long updateTime;
 
-    @Column(ignore = true)
-    private SpannableStringBuilder spanStrBuilder;
-
+    /**
+     * 是否选择（数据库忽略字段）
+     */
     @Column(ignore = true)
     private boolean isSelect = false;
+
+    public Note() {
+    }
 
     public Note(String src, long createTime, long updateTime) {
         this.src = src;
@@ -55,14 +71,6 @@ public class Note extends LitePalSupport implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public SpannableStringBuilder getSpanStrBuilder() {
-        return spanStrBuilder;
-    }
-
-    public void setSpanStrBuilder(SpannableStringBuilder spanStrBuilder) {
-        this.spanStrBuilder = spanStrBuilder;
-    }
-
     public boolean isSelect() {
         return isSelect;
     }
@@ -87,7 +95,6 @@ public class Note extends LitePalSupport implements Serializable {
                 ", src='" + src + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
-                ", spanStrBuilder=" + spanStrBuilder +
                 ", isSelect=" + isSelect +
                 '}';
     }

@@ -14,39 +14,37 @@
             android:id="@+id/tvNoteContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp" />
+            android:layout_margin="16dp"
+            android:maxLines="10" />
 
-        <LinearLayout
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvNoteContent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_baseline_more_vert_24" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tvNoteContent"
-            android:layout_margin="16dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvTime"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/gray"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivMore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_more_vert_24" />
-
-        </LinearLayout>
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@id/ivMore"
+            android:textColor="@color/gray"
+            android:textSize="12sp" />
 
         <View
             android:id="@+id/viewSelect"
             android:layout_width="match_parent"
             android:layout_height="8dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:background="@color/design_default_color_primary" />
+            android:background="@color/design_default_color_primary"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

@@ -14,4 +14,22 @@
         android:title="Save"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/menu_edit_delete"
+        android:icon="@drawable/ic_baseline_delete_24"
+        android:title="Delete"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_edit_edit"
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:title="Edit"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_edit_preview"
+        android:icon="@drawable/ic_baseline_preview_24"
+        android:title="Preview"
+        app:showAsAction="always" />
+
 </menu>

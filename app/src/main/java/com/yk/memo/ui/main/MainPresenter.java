@@ -5,43 +5,31 @@ import android.util.Log;
 import com.yk.base.mvp.BaseMvpPresenter;
 import com.yk.base.rxSimple.Observable;
 import com.yk.base.rxSimple.Subscriber;
-import com.yk.markdown.Markdown;
 import com.yk.memo.data.bean.Note;
 import com.yk.memo.data.db.NoteDbManager;
 
 import java.util.List;
 
 public class MainPresenter extends BaseMvpPresenter<IMainView> {
-    private static final String TAG = "MainPresenter";
+    private static final String TAG = "MainPresenter2";
 
+    /**
+     * 加载全部note
+     */
     public void loadAllNote() {
         Observable.fromCallable(new Observable.OnCallable<List<Note>>() {
             @Override
             public List<Note> call() {
-                Log.d(TAG, "call: loadAll note");
-                return NoteDbManager.getAllNote();
+                Log.d(TAG, "call: load all note");
+                return NoteDbManager.getInstance().getAllNote();
             }
         })
-                .map(new Observable.Function1<List<Note>, List<Note>>() {
-                    @Override
-                    public List<Note> call(List<Note> noteList) {
-                        if (noteList == null || noteList.isEmpty()) {
-                            return null;
-                        }
-
-                        for (Note note : noteList) {
-                            note.setSpanStrBuilder(Markdown.load(note.getSrc()).getMd());
-                        }
-
-                        return noteList;
-                    }
-                })
                 .subscribeOnIo()
                 .observeOnUi()
                 .subscribe(new Subscriber<List<Note>>() {
                     @Override
                     public void onNext(List<Note> noteList) {
-                        Log.d(TAG, "onNext: loadAll note:" + noteList);
+                        Log.d(TAG, "onNext: load all note:" + noteList.size());
                         if (getView() != null) {
                             getView().onLoadNoteList(noteList);
                         }
@@ -49,34 +37,40 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: loadAll note");
+                        Log.d(TAG, "onComplete: load all note");
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Log.e(TAG, "onError: loadAll note ", e);
+                        Log.e(TAG, "onError: load all note:", e);
+                        if (getView() != null) {
+                            getView().onLoadNoteListError(e);
+                        }
                     }
                 });
     }
 
+    /**
+     * 删除 note
+     *
+     * @param note note
+     */
     public void deleteNote(Note note) {
-        Observable.fromCallable(new Observable.OnCallable<Boolean>() {
+        Observable.fromCallable(new Observable.OnCallable<Note>() {
             @Override
-            public Boolean call() {
-                Log.d(TAG, "call: delete note");
-                NoteDbManager.deleteNote(note);
-                return true;
+            public Note call() {
+                Log.d(TAG, "call: delete note:" + note);
+                return NoteDbManager.getInstance().deleteNote(note);
             }
         })
                 .subscribeOnIo()
                 .observeOnUi()
-                .subscribe(new Subscriber<Boolean>() {
+                .subscribe(new Subscriber<Note>() {
                     @Override
-                    public void onNext(Boolean success) {
-                        Log.d(TAG, "onNext: delete note");
-
+                    public void onNext(Note note) {
+                        Log.d(TAG, "onNext: delete note:" + note);
                         if (getView() != null) {
-                            getView().onDeleteNote(success, note);
+                            getView().onDeleteNote(note);
                         }
                     }
 
@@ -87,42 +81,49 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
 
                     @Override
                     public void onError(Exception e) {
-                        Log.e(TAG, "onError: delete note ", e);
+                        Log.e(TAG, "onError: delete note:", e);
+                        if (getView() != null) {
+                            getView().onDeleteNoteError(e);
+                        }
                     }
                 });
     }
 
-    public void deleteBatchNote(List<Note> noteList) {
-        Observable.fromCallable(new Observable.OnCallable<Boolean>() {
+    /**
+     * 删除note list
+     *
+     * @param noteList note list
+     */
+    public void deleteNoteList(List<Note> noteList) {
+        Observable.fromCallable(new Observable.OnCallable<List<Note>>() {
             @Override
-            public Boolean call() {
-                Log.d(TAG, "call: delete batch note");
-                for (Note note : noteList) {
-                    NoteDbManager.deleteNote(note);
-                }
-                return true;
+            public List<Note> call() {
+                Log.d(TAG, "call: delete note list:" + noteList.size());
+                return NoteDbManager.getInstance().deleteNoteList(noteList);
             }
         })
                 .subscribeOnIo()
                 .observeOnUi()
-                .subscribe(new Subscriber<Boolean>() {
+                .subscribe(new Subscriber<List<Note>>() {
                     @Override
-                    public void onNext(Boolean success) {
-                        Log.d(TAG, "onNext: delete batch note");
-
+                    public void onNext(List<Note> noteList) {
+                        Log.d(TAG, "onNext: delete note list:" + noteList.size());
                         if (getView() != null) {
-                            getView().onDeleteNoteList(success, noteList);
+                            getView().onDeleteNoteList(noteList);
                         }
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: delete batch note");
+                        Log.d(TAG, "onComplete: delete note list");
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Log.e(TAG, "onError: delete batch note ", e);
+                        Log.e(TAG, "onError: delete note list:", e);
+                        if (getView() != null) {
+                            getView().onDeleteNoteListError(e);
+                        }
                     }
                 });
     }

@@ -77,11 +77,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         Note note = filterList.get(position);
         Markdown.load(note.getSrc()).placeHolder(note.getSrc()).into(holder.tvNoteContent);
         holder.tvTime.setText(TimeUtils.getTime(note.getUpdateTime()));
-        if (note.isSelect()) {
-            holder.viewSelect.setVisibility(View.VISIBLE);
-        } else {
-            holder.viewSelect.setVisibility(View.GONE);
-        }
+        holder.viewSelect.setVisibility(note.isSelect() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -123,6 +119,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         };
     }
 
+    /**
+     * 置顶note
+     *
+     * @param note note
+     */
     public void topNote(Note note) {
         if (noteList.contains(note)) {
             Collections.swap(noteList, 0, noteList.indexOf(note));
@@ -135,6 +136,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         notifyDataSetChanged();
     }
 
+    /**
+     * 查找note（通过id）
+     *
+     * @param id id
+     * @return note
+     */
     public Note findNoteForId(long id) {
         Note findNote = null;
         for (Note note : noteList) {
@@ -147,6 +154,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         return findNote;
     }
 
+    /**
+     * 移除note并刷新
+     *
+     * @param note note
+     */
     public void refreshDataRemove(Note note) {
         if (note == null) {
             return;
@@ -158,6 +170,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         notifyDataSetChanged();
     }
 
+    /**
+     * 移除note list并刷新
+     *
+     * @param noteList note list
+     */
     public void refreshDataRemove(List<Note> noteList) {
         if (noteList == null || noteList.isEmpty()) {
             return;
@@ -168,6 +185,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         }
     }
 
+    /**
+     * 添加note并刷新
+     *
+     * @param note    note
+     * @param needTop 需要置顶
+     */
     public void refreshDataAdd(Note note, boolean needTop) {
         if (note == null) {
             return;
@@ -184,14 +207,19 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         if (!filterList.contains(note)) {
             if (needTop) {
                 filterList.add(0, note);
+                notifyItemInserted(0);
             } else {
                 filterList.add(note);
+                notifyItemInserted(filterList.size() - 1);
             }
         }
-
-        notifyDataSetChanged();
     }
 
+    /**
+     * 刷新note list并刷新
+     *
+     * @param noteList note list
+     */
     public void refreshDataAdd(List<Note> noteList) {
         if (noteList == null || noteList.isEmpty()) {
             return;
@@ -202,35 +230,60 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         }
     }
 
+    /**
+     * 刷新note
+     *
+     * @param note note
+     */
     public void refreshDataChange(Note note) {
         notifyItemChanged(filterList.indexOf(note));
     }
 
+    /**
+     * 选择/取消note
+     *
+     * @param note note
+     */
     public void selectNote(Note note) {
         note.setSelect(!note.isSelect());
         refreshDataChange(note);
-
-        if (getSelectNoteList().isEmpty()) {
-            setMoreSelectMode(false);
-        }
     }
 
+    /**
+     * 判断多选模式
+     *
+     * @return 是否多选模式
+     */
     public boolean isMoreSelectMode() {
         return isMoreSelectMode;
     }
 
+    /**
+     * 设置多选模式
+     *
+     * @param moreSelectMode 是否多选模式
+     */
     public void setMoreSelectMode(boolean moreSelectMode) {
         isMoreSelectMode = moreSelectMode;
 
         if (!isMoreSelectMode) {
-            for (Note note : filterList) {
+            for (Note note : noteList) {
+                if (!note.isSelect()) {
+                    continue;
+                }
                 note.setSelect(false);
+                if (filterList.contains(note)) {
+                    refreshDataChange(note);
+                }
             }
         }
-
-        notifyDataSetChanged();
     }
 
+    /**
+     * 获取选中的note list
+     *
+     * @return note list
+     */
     public List<Note> getSelectNoteList() {
         List<Note> selectNoteList = new ArrayList<>();
         for (Note note : filterList) {
@@ -242,10 +295,28 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         return selectNoteList;
     }
 
+    /**
+     * view holder
+     */
     static class ViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * 文本显示
+         */
         AppCompatTextView tvNoteContent;
+
+        /**
+         * 时间
+         */
         AppCompatTextView tvTime;
+
+        /**
+         * 更多按钮
+         */
         AppCompatImageView ivMore;
+
+        /**
+         * 选中标识
+         */
         View viewSelect;
 
         public ViewHolder(@NonNull View itemView) {
@@ -257,17 +328,43 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         }
     }
 
+    /**
+     * item事件 监听
+     */
     private OnItemListener onItemListener;
 
+    /**
+     * 设置item事件监听
+     *
+     * @param onItemListener onItemListener
+     */
     public void setOnItemListener(OnItemListener onItemListener) {
         this.onItemListener = onItemListener;
     }
 
     public interface OnItemListener {
+        /**
+         * 单击
+         *
+         * @param view view
+         * @param note note
+         */
         void onItemClick(View view, Note note);
 
+        /**
+         * 长按
+         *
+         * @param view view
+         * @param note note
+         */
         void onItemLongClick(View view, Note note);
 
+        /**
+         * 更多
+         *
+         * @param view view
+         * @param note note
+         */
         void onItemMoreClick(View view, Note note);
     }
 }
