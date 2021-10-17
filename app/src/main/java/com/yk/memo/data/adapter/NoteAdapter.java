@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.yk.markdown.Markdown;
 import com.yk.memo.R;
 import com.yk.memo.data.bean.Note;
+import com.yk.memo.ui.view.NoteCardView;
 import com.yk.memo.utils.TimeUtils;
 
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         Note note = filterList.get(position);
         Markdown.load(note.getSrc()).placeHolder(note.getSrc()).into(holder.tvNoteContent);
         holder.tvTime.setText(TimeUtils.getSmartTime(note.getUpdateTime()));
-        holder.viewSelect.setVisibility(note.isSelect() ? View.VISIBLE : View.GONE);
+        holder.noteCardView.select(note.isSelect());
     }
 
     @Override
@@ -300,6 +301,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
      */
     static class ViewHolder extends RecyclerView.ViewHolder {
         /**
+         * 自定义CardView（带选择标识）
+         */
+        NoteCardView noteCardView;
+
+        /**
          * 文本显示
          */
         AppCompatTextView tvNoteContent;
@@ -314,17 +320,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
          */
         AppCompatImageView ivMore;
 
-        /**
-         * 选中标识
-         */
-        View viewSelect;
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            noteCardView = itemView.findViewById(R.id.noteCardView);
             tvNoteContent = itemView.findViewById(R.id.tvNoteContent);
             tvTime = itemView.findViewById(R.id.tvTime);
             ivMore = itemView.findViewById(R.id.ivMore);
-            viewSelect = itemView.findViewById(R.id.viewSelect);
         }
     }
 
