@@ -41,6 +41,8 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
 
     private Note note;
 
+    private Mode mode;
+
     public static void start(Context context, Note note) {
         Intent intent = new Intent(context, EditActivity.class);
         intent.putExtra(EXTRA_NOTE, note);
@@ -152,7 +154,7 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
 
     private boolean isCanClear(String src) {
         // 不为空，才可以清理
-        return !TextUtils.isEmpty(src);
+        return mode == Mode.EDIT && !TextUtils.isEmpty(src);
     }
 
     private boolean isCanDelete() {
@@ -202,6 +204,8 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
         if (fragment == null) {
             throw new RuntimeException("mode params is error:" + mode);
         }
+
+        this.mode = mode;
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fl_content, fragment)
