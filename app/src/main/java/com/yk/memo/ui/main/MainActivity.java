@@ -21,10 +21,12 @@ import com.yk.base.mvp.BaseMvpActivity;
 import com.yk.memo.R;
 import com.yk.memo.data.adapter.NoteAdapter;
 import com.yk.memo.data.bean.Note;
+import com.yk.memo.data.event.MdStyleChangeEvent;
 import com.yk.memo.data.event.NoteAddEvent;
 import com.yk.memo.data.event.NoteRemoveEvent;
 import com.yk.memo.data.event.NoteUpdateEvent;
 import com.yk.memo.ui.edit.EditActivity;
+import com.yk.memo.ui.setting.SettingActivity;
 import com.yk.memo.utils.SnackBarUtils;
 
 import java.util.ArrayList;
@@ -172,6 +174,10 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         EditActivity.start(this, note);
     }
 
+    private void startSettingActivity() {
+        SettingActivity.start(this);
+    }
+
     private void deleteNoteList() {
         presenter.deleteNoteList(noteAdapter.getSelectNoteList());
     }
@@ -206,6 +212,8 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
             deleteNoteList();
         } else if (item.getItemId() == R.id.menu_main_edit) {
             startEditActivity(null);
+        } else if (item.getItemId() == R.id.menu_main_setting) {
+            startSettingActivity();
         }
         return true;
     }
@@ -223,6 +231,16 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     @Override
     public MainPresenter createPresenter() {
         return new MainPresenter();
+    }
+
+    @Subscribe(threadMode = Subscribe.Thread.UI)
+    public void onMdStyleChangeEvent(MdStyleChangeEvent event) {
+        if (event == null) {
+            return;
+        }
+        noteAdapter.notifyDataSetChanged();
+
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "已切换为 " + event.getStyle() + " 风格");
     }
 
     @Subscribe(threadMode = Subscribe.Thread.UI)

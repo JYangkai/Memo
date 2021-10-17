@@ -11,6 +11,7 @@ public class MdStyleManager {
     public enum Style {
         STANDARD,
         TYPORA,
+        CUSTOM
     }
 
     private BaseMdStyle mdStyle;

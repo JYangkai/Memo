@@ -14,4 +14,10 @@
         android:title="Edit"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/menu_main_setting"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="Setting"
+        app:showAsAction="always" />
+
 </menu>
