@@ -19,11 +19,12 @@ import androidx.fragment.app.Fragment;
 import com.yk.base.mvp.BaseMvpActivity;
 import com.yk.memo.R;
 import com.yk.memo.data.bean.Note;
+import com.yk.memo.ui.edit.fragment.ConfirmDialogFragment;
 import com.yk.memo.ui.edit.fragment.EditFragment;
 import com.yk.memo.ui.edit.fragment.PreviewFragment;
 import com.yk.memo.utils.SnackBarUtils;
 
-public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> implements IEditView {
+public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> implements IEditView, ConfirmDialogFragment.OnConfirmListener {
     private static final String TAG = "EditActivity2";
 
     private static final String EXTRA_NOTE = "extra_note";
@@ -273,6 +274,39 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
             chooseMode(Mode.PREVIEW);
         }
         return true;
+    }
+
+    private ConfirmDialogFragment confirmDialogFragment;
+
+    @Override
+    public void onBackPressed() {
+        if (saveMenuItem != null && saveMenuItem.isVisible()) {
+            if (confirmDialogFragment == null) {
+                confirmDialogFragment = ConfirmDialogFragment.newInstance();
+            }
+            confirmDialogFragment.show(getSupportFragmentManager());
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onPositiveClick() {
+        if (note != null) {
+            presenter.updateNote(note, editFragment.getSrc());
+        } else {
+            presenter.saveNote(editFragment.getSrc());
+        }
+    }
+
+    @Override
+    public void onNegativeClick() {
+        finish();
+    }
+
+    @Override
+    public void onNeutralClick() {
+        confirmDialogFragment.dismiss();
     }
 
     @Override
