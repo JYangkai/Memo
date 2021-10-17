@@ -1,6 +1,9 @@
 package com.yk.markdown.style;
 
+import android.content.Context;
+
 import com.yk.markdown.style.style.BaseMdStyle;
+import com.yk.markdown.style.style.CustomMdStyle;
 import com.yk.markdown.style.style.StandardMdStyle;
 import com.yk.markdown.style.style.TyporaMdStyle;
 
@@ -38,6 +41,10 @@ public class MdStyleManager {
                 mdStyle = new TyporaMdStyle();
                 break;
         }
+    }
+
+    public void chooseCustom(Context context) {
+        mdStyle = new CustomMdStyle(context);
     }
 
     public BaseMdStyle getMdStyle() {
