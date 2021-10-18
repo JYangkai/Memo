@@ -10,39 +10,50 @@ import com.yk.base.eventposter.EventPoster;
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.memo.R;
 import com.yk.memo.data.event.MdStyleChangeEvent;
+import com.yk.memo.utils.SpManager;
 
 public class SettingFragment extends PreferenceFragmentCompat {
+    private ListPreference markdownListPref;
+    private Preference customMarkdownPref;
+
     public static SettingFragment newInstance() {
         return new SettingFragment();
     }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.preferences, rootKey);
-        ListPreference listPreference = findPreference("key_markdown_style");
-        if (listPreference == null) {
-            return;
-        }
-        listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        setPreferencesFromResource(R.xml.pref_main, rootKey);
+        findPref();
+        initData();
+        bindEvent();
+    }
+
+    private void findPref() {
+        markdownListPref = findPreference("key_markdown_style");
+        customMarkdownPref = findPreference("custom_markdown");
+    }
+
+    private void initData() {
+        showCustomMarkdownPref(SpManager.getInstance().getMarkdownStyle());
+    }
+
+    private void bindEvent() {
+        markdownListPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                int value = Integer.parseInt((String) newValue);
-                MdStyleManager.Style style = MdStyleManager.Style.STANDARD;
-                switch (value) {
-                    case 0:
-                        style = MdStyleManager.Style.STANDARD;
-                        break;
-                    case 1:
-                        style = MdStyleManager.Style.TYPORA;
-                        break;
-                    case 2:
-                        break;
-                }
-                MdStyleManager.getInstance().choose(style);
+                String style = (String) newValue;
+
+                showCustomMarkdownPref(style);
+
+                MdStyleManager.getInstance().choose(getContext(), style);
 
                 EventPoster.getInstance().post(new MdStyleChangeEvent(style));
                 return true;
             }
         });
+    }
+
+    private void showCustomMarkdownPref(String style) {
+        customMarkdownPref.setVisible("Custom".equals(style));
     }
 }

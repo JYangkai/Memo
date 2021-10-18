@@ -7,11 +7,16 @@
         android:title="Markdown风格">
 
         <ListPreference
-            android:defaultValue="0"
+            android:defaultValue="Standard"
             android:entries="@array/markdown_style_entries"
             android:entryValues="@array/markdown_style_value"
             android:key="key_markdown_style"
             app:useSimpleSummaryProvider="true" />
+
+        <Preference
+            android:key="custom_markdown"
+            android:title="设置样式"
+            app:fragment="com.yk.memo.ui.setting.CustomMarkdownFragment" />
 
     </PreferenceCategory>
 

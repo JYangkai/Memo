@@ -1,19 +1,17 @@
 package com.yk.memo.data.event;
 
-import com.yk.markdown.style.MdStyleManager;
-
 public class MdStyleChangeEvent {
-    private MdStyleManager.Style style;
+    private String style;
 
-    public MdStyleChangeEvent(MdStyleManager.Style style) {
+    public MdStyleChangeEvent(String style) {
         this.style = style;
     }
 
-    public MdStyleManager.Style getStyle() {
+    public String getStyle() {
         return style;
     }
 
-    public void setStyle(MdStyleManager.Style style) {
+    public void setStyle(String style) {
         this.style = style;
     }
 

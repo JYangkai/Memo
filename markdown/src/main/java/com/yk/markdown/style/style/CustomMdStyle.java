@@ -22,7 +22,6 @@ public class CustomMdStyle extends BaseMdStyle {
 
     public CustomMdStyle(Context context) {
         sp = PreferenceManager.getDefaultSharedPreferences(context);
-        init();
     }
 
     @Override
@@ -33,8 +32,8 @@ public class CustomMdStyle extends BaseMdStyle {
         // 普通
         setNormal(
                 new MdStyleNormal(
-                        Color.parseColor(getValue(Sp.Quote.Key.TEXT_COLOR, Sp.Quote.Default.TEXT_COLOR)),
-                        Integer.parseInt(getValue(Sp.Quote.Key.TEXT_SIZE, Sp.Quote.Default.TEXT_SIZE))
+                        Color.parseColor(getValue(Sp.Normal.Key.TEXT_COLOR, Sp.Normal.Default.TEXT_COLOR)),
+                        Integer.parseInt(getValue(Sp.Normal.Key.TEXT_SIZE, Sp.Normal.Default.TEXT_SIZE))
                 )
         );
 
@@ -75,7 +74,7 @@ public class CustomMdStyle extends BaseMdStyle {
         setUnorderedList(
                 new MdStyleUnorderedList(
                         Color.parseColor(getValue(Sp.UnorderedList.Key.CIRCLE_COLOR, Sp.UnorderedList.Default.CIRCLE_COLOR)),
-                        Color.parseColor(getValue(Sp.UnorderedList.Key.CIRCLE_RADIUS, Sp.UnorderedList.Default.CIRCLE_RADIUS)),
+                        Integer.parseInt(getValue(Sp.UnorderedList.Key.CIRCLE_RADIUS, Sp.UnorderedList.Default.CIRCLE_RADIUS)),
                         Integer.parseInt(getValue(Sp.UnorderedList.Key.GAP_WIDTH, Sp.UnorderedList.Default.GAP_WIDTH)),
                         Color.parseColor(getValue(Sp.UnorderedList.Key.TEXT_COLOR, Sp.UnorderedList.Default.TEXT_COLOR)),
                         Integer.parseInt(getValue(Sp.UnorderedList.Key.TEXT_SIZE, Sp.UnorderedList.Default.TEXT_SIZE))

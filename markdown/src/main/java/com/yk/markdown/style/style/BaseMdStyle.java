@@ -27,10 +27,6 @@ public abstract class BaseMdStyle {
     private MdStyleBold bold;
     private MdStyleItalics italics;
 
-    public BaseMdStyle() {
-        init();
-    }
-
     public abstract void init();
 
     public MdStyleBase getBase() {

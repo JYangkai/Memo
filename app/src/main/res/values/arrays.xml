@@ -7,8 +7,8 @@
     </string-array>
 
     <string-array name="markdown_style_value">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
+        <item>Standard</item>
+        <item>Typora</item>
+        <item>Custom</item>
     </string-array>
 </resources>

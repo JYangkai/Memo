@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_baseline_text_format_24_black"
+        app:title="普通">
+        <EditTextPreference
+            android:defaultValue="#FF000000"
+            android:key="key_normal_text_color"
+            android:title="字体颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="64"
+            android:key="key_normal_text_size"
+            android:title="字体大小"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_baseline_format_quote_24_black"
+        app:title="引用">
+        <EditTextPreference
+            android:defaultValue="#30888888"
+            android:key="key_quote_stripe_color"
+            android:title="条纹颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="20"
+            android:key="key_quote_stripe_width"
+            android:title="条纹宽度"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="30"
+            android:key="key_quote_gap_width"
+            android:title="间隔"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="#A0000000"
+            android:key="key_quote_text_color"
+            android:title="字体颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="64"
+            android:key="key_quote_text_size"
+            android:title="字体大小"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_baseline_code_24_black"
+        app:title="代码块">
+        <EditTextPreference
+            android:defaultValue="30"
+            android:key="key_code_block_gap_width"
+            android:title="间隔"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="#30888888"
+            android:key="key_code_block_background_color"
+            android:title="背景颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="#A0000000"
+            android:key="key_code_block_text_color"
+            android:title="字体颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="64"
+            android:key="key_code_block_text_size"
+            android:title="字体大小"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_baseline_format_list_numbered_24_black"
+        app:title="有序列表">
+        <EditTextPreference
+            android:defaultValue="#FF000000"
+            android:key="key_ordered_list_index_color"
+            android:title="索引颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="56"
+            android:key="key_ordered_list_index_size"
+            android:title="索引大小"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="30"
+            android:key="key_ordered_list_index_width"
+            android:title="索引宽度"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="30"
+            android:key="key_ordered_list_gap_width"
+            android:title="间隔"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="#FF000000"
+            android:key="key_ordered_list_text_color"
+            android:title="字体颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="64"
+            android:key="key_ordered_list_text_size"
+            android:title="字体大小"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_baseline_format_list_bulleted_24_black"
+        app:title="无序列表">
+        <EditTextPreference
+            android:defaultValue="#FF000000"
+            android:key="key_unordered_list_circle_color"
+            android:title="索引颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="8"
+            android:key="key_unordered_list_circle_radius"
+            android:title="索引半径"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="30"
+            android:key="key_unordered_list_gap_width"
+            android:title="间隔"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="#FF000000"
+            android:key="key_unordered_list_text_color"
+            android:title="字体颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="64"
+            android:key="key_unordered_list_text_size"
+            android:title="字体大小"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_baseline_title_24_black"
+        app:title="标题">
+        <EditTextPreference
+            android:defaultValue="#FF000000"
+            android:key="key_title_text_color"
+            android:title="字体颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="128"
+            android:key="key_title_text_size_1"
+            android:title="一级标题字体大小"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="112"
+            android:key="key_title_text_size_2"
+            android:title="二级标题字体大小"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="96"
+            android:key="key_title_text_size_3"
+            android:title="三级标题字体大小"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="80"
+            android:key="key_title_text_size_4"
+            android:title="四级标题字体大小"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="64"
+            android:key="key_title_text_size_5"
+            android:title="五级标题字体大小"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_baseline_horizontal_rule_24_black"
+        app:title="分隔符">
+        <EditTextPreference
+            android:defaultValue="#30888888"
+            android:key="key_separator_color"
+            android:title="颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="2"
+            android:key="key_separator_size"
+            android:title="大小"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_baseline_code_24_black"
+        app:title="代码">
+        <EditTextPreference
+            android:defaultValue="#10FF0000"
+            android:key="key_code_background_color"
+            android:title="背景颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="#A0FF0000"
+            android:key="key_code_text_color"
+            android:title="字体颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="64"
+            android:key="key_code_text_size"
+            android:title="字体大小"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_baseline_text_format_24_black"
+        app:title="粗斜体">
+        <EditTextPreference
+            android:defaultValue="#FF000000"
+            android:key="key_bold_italics_text_color"
+            android:title="字体颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="64"
+            android:key="key_bold_italics_text_size"
+            android:title="字体大小"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_baseline_format_bold_24_black"
+        app:title="粗体">
+        <EditTextPreference
+            android:defaultValue="#FF000000"
+            android:key="key_bold_text_color"
+            android:title="字体颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="64"
+            android:key="key_bold_text_size"
+            android:title="字体大小"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_baseline_format_italic_24_black"
+        app:title="斜体">
+        <EditTextPreference
+            android:defaultValue="#FF000000"
+            android:key="key_italics_text_color"
+            android:title="字体颜色"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="64"
+            android:key="key_italics_text_size"
+            android:title="字体大小"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,5 +1,6 @@
 package com.yk.markdown;
 
+import android.content.Context;
 import android.os.Looper;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -52,6 +53,10 @@ public class Markdown {
 
     public static void initStyle(MdStyleManager.Style style) {
         MdStyleManager.getInstance().choose(style);
+    }
+
+    public static void initStyle(Context context, String style) {
+        MdStyleManager.getInstance().choose(context, style);
     }
 
     /**
