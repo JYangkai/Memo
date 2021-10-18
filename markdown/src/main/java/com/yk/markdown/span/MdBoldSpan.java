@@ -7,13 +7,18 @@ import androidx.annotation.NonNull;
 
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleBold;
+import com.yk.markdown.style.style.BaseMdStyle;
 
 public class MdBoldSpan extends MetricAffectingSpan {
     private final int textColor;
     private final int textSize;
 
     public MdBoldSpan() {
-        MdStyleBold bold = MdStyleManager.getInstance().getMdStyle().getBold();
+        this(MdStyleManager.getInstance().getMdStyle());
+    }
+
+    public MdBoldSpan(BaseMdStyle style) {
+        MdStyleBold bold = style.getBold();
         textColor = bold.getTextColor();
         textSize = bold.getTextSize();
     }

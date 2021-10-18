@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleSeparator;
 import com.yk.markdown.style.bean.MdStyleTitle;
+import com.yk.markdown.style.style.BaseMdStyle;
 
 public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSpan {
     private final int level;
@@ -22,9 +23,14 @@ public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSp
     }
 
     public MdTitleSpan(int level) {
+        this(level, MdStyleManager.getInstance().getMdStyle());
+    }
+
+    public MdTitleSpan(int level, BaseMdStyle style) {
         this.level = level;
 
-        MdStyleTitle title = MdStyleManager.getInstance().getMdStyle().getTitle();
+        MdStyleTitle title = style.getTitle();
+
         textColor = title.getTextColor();
         switch (level) {
             case 1:

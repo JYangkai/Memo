@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleQuote;
+import com.yk.markdown.style.style.BaseMdStyle;
 
 public class MdQuoteSpan extends MetricAffectingSpan implements LeadingMarginSpan {
     private final int stripeColor;
@@ -20,7 +21,11 @@ public class MdQuoteSpan extends MetricAffectingSpan implements LeadingMarginSpa
     private final int textSize;
 
     public MdQuoteSpan() {
-        MdStyleQuote quote = MdStyleManager.getInstance().getMdStyle().getQuote();
+        this(MdStyleManager.getInstance().getMdStyle());
+    }
+
+    public MdQuoteSpan(BaseMdStyle style) {
+        MdStyleQuote quote = style.getQuote();
         stripeColor = quote.getStripeColor();
         stripeWidth = quote.getStripeWidth();
         gapWidth = quote.getGapWidth();

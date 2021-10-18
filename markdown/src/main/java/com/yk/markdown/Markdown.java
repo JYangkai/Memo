@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.yk.markdown.core.MdParser;
 import com.yk.markdown.core.MdRender;
 import com.yk.markdown.core.MdThreadManager;
+import com.yk.markdown.style.MdStyleManager;
 
 public class Markdown {
     /**
@@ -19,6 +20,11 @@ public class Markdown {
      * 占位字符
      */
     private String placeHolder;
+
+    /**
+     * 风格
+     */
+    private MdStyleManager.Style style;
 
     /**
      * 设置的Tv
@@ -44,11 +50,20 @@ public class Markdown {
         return new Markdown(src);
     }
 
+    public static void initStyle(MdStyleManager.Style style) {
+        MdStyleManager.getInstance().choose(style);
+    }
+
     /**
      * 占位文本
      */
     public Markdown placeHolder(String placeHolder) {
         this.placeHolder = placeHolder;
+        return this;
+    }
+
+    public Markdown style(MdStyleManager.Style style) {
+        this.style = style;
         return this;
     }
 
@@ -106,8 +121,11 @@ public class Markdown {
     /**
      * 获取Md Span Builder
      */
-    public SpannableStringBuilder getMd() {
-        return MdRender.getSpanStrBuilder(MdParser.dealMarkdown(src));
+    private SpannableStringBuilder getMd() {
+        return MdRender.getSpanStrBuilder(
+                MdParser.dealMarkdown(src),
+                MdStyleManager.getInstance().getStyle(style)
+        );
     }
 
     /**

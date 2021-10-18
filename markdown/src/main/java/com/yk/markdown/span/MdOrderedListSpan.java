@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleOrderedList;
+import com.yk.markdown.style.style.BaseMdStyle;
 
 public class MdOrderedListSpan extends MetricAffectingSpan implements LeadingMarginSpan {
     private final int index;
@@ -28,15 +29,20 @@ public class MdOrderedListSpan extends MetricAffectingSpan implements LeadingMar
     }
 
     public MdOrderedListSpan(int index) {
-        MdStyleOrderedList orderedList = MdStyleManager.getInstance().getMdStyle().getOrderedList();
+        this(index, MdStyleManager.getInstance().getMdStyle());
+    }
+
+    public MdOrderedListSpan(int index, BaseMdStyle style) {
+        this.index = index;
+
+        MdStyleOrderedList orderedList = style.getOrderedList();
+
         indexColor = orderedList.getIndexColor();
         indexSize = orderedList.getIndexSize();
         indexWidth = orderedList.getIndexWidth();
         gapWidth = orderedList.getGapWidth();
         textColor = orderedList.getTextColor();
         textSize = orderedList.getTextSize();
-
-        this.index = index;
     }
 
     @Override

@@ -34,14 +34,23 @@ public class MdStyleManager {
     }
 
     public void choose(Style style) {
+        mdStyle = getStyle(style);
+    }
+
+    public BaseMdStyle getStyle(Style style) {
+        if (style == null) {
+            return mdStyle;
+        }
+        BaseMdStyle baseMdStyle = new StandardMdStyle();
         switch (style) {
             case STANDARD:
-                mdStyle = new StandardMdStyle();
+                baseMdStyle = new StandardMdStyle();
                 break;
             case TYPORA:
-                mdStyle = new TyporaMdStyle();
+                baseMdStyle = new TyporaMdStyle();
                 break;
         }
+        return baseMdStyle;
     }
 
     public void chooseCustom(Context context) {

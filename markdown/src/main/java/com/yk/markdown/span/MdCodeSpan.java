@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleCode;
+import com.yk.markdown.style.style.BaseMdStyle;
 
 public class MdCodeSpan extends MetricAffectingSpan {
     private final int backgroundColor;
@@ -14,7 +15,11 @@ public class MdCodeSpan extends MetricAffectingSpan {
     private final int textSize;
 
     public MdCodeSpan() {
-        MdStyleCode code = MdStyleManager.getInstance().getMdStyle().getCode();
+        this(MdStyleManager.getInstance().getMdStyle());
+    }
+
+    public MdCodeSpan(BaseMdStyle style) {
+        MdStyleCode code = style.getCode();
         backgroundColor = code.getBackgroundColor();
         textColor = code.getTextColor();
         textSize = code.getTextSize();

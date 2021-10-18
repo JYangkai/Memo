@@ -8,13 +8,18 @@ import androidx.annotation.NonNull;
 
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleSeparator;
+import com.yk.markdown.style.style.BaseMdStyle;
 
 public class MdSeparatorSpan implements LineBackgroundSpan {
     private final int color;
     private final int size;
 
     public MdSeparatorSpan() {
-        MdStyleSeparator separator = MdStyleManager.getInstance().getMdStyle().getSeparator();
+        this(MdStyleManager.getInstance().getMdStyle());
+    }
+
+    public MdSeparatorSpan(BaseMdStyle style) {
+        MdStyleSeparator separator = style.getSeparator();
         color = separator.getColor();
         size = separator.getSize();
     }

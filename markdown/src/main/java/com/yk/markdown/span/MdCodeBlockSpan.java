@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleCodeBlock;
+import com.yk.markdown.style.style.BaseMdStyle;
 
 public class MdCodeBlockSpan extends MetricAffectingSpan implements LeadingMarginSpan, LineBackgroundSpan {
     private final int gapWidth;
@@ -21,7 +22,11 @@ public class MdCodeBlockSpan extends MetricAffectingSpan implements LeadingMargi
     private final int textSize;
 
     public MdCodeBlockSpan() {
-        MdStyleCodeBlock codeBlock = MdStyleManager.getInstance().getMdStyle().getCodeBlock();
+        this(MdStyleManager.getInstance().getMdStyle());
+    }
+
+    public MdCodeBlockSpan(BaseMdStyle style) {
+        MdStyleCodeBlock codeBlock = style.getCodeBlock();
         gapWidth = codeBlock.getGapWidth();
         backgroundColor = codeBlock.getBackgroundColor();
         textColor = codeBlock.getTextColor();

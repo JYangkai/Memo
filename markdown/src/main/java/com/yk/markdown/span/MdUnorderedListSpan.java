@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleUnorderedList;
+import com.yk.markdown.style.style.BaseMdStyle;
 
 public class MdUnorderedListSpan extends MetricAffectingSpan implements LeadingMarginSpan {
     private final int circleColor;
@@ -21,7 +22,11 @@ public class MdUnorderedListSpan extends MetricAffectingSpan implements LeadingM
     private final int textSize;
 
     public MdUnorderedListSpan() {
-        MdStyleUnorderedList unorderedList = MdStyleManager.getInstance().getMdStyle().getUnorderedList();
+        this(MdStyleManager.getInstance().getMdStyle());
+    }
+
+    public MdUnorderedListSpan(BaseMdStyle style) {
+        MdStyleUnorderedList unorderedList = style.getUnorderedList();
         circleColor = unorderedList.getCircleColor();
         circleRadius = unorderedList.getCircleRadius();
         gapWidth = unorderedList.getGapWidth();

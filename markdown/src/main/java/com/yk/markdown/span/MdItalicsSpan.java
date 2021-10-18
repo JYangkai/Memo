@@ -7,13 +7,18 @@ import androidx.annotation.NonNull;
 
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleItalics;
+import com.yk.markdown.style.style.BaseMdStyle;
 
 public class MdItalicsSpan extends MetricAffectingSpan {
     private final int textColor;
     private final int textSize;
 
     public MdItalicsSpan() {
-        MdStyleItalics italics = MdStyleManager.getInstance().getMdStyle().getItalics();
+        this(MdStyleManager.getInstance().getMdStyle());
+    }
+
+    public MdItalicsSpan(BaseMdStyle style) {
+        MdStyleItalics italics = style.getItalics();
         textColor = italics.getTextColor();
         textSize = italics.getTextSize();
     }
