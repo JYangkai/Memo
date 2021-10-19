@@ -1,7 +1,7 @@
 package com.yk.memo.ui.main;
 
-import com.yk.mvp.BaseMvpView;
 import com.yk.memo.data.bean.Note;
+import com.yk.mvp.BaseMvpView;
 
 import java.util.List;
 
@@ -28,6 +28,13 @@ public interface IMainView extends BaseMvpView {
     void onDeleteNoteList(List<Note> noteList);
 
     /**
+     * 导出note
+     *
+     * @param note note
+     */
+    void onOutputNote(Note note);
+
+    /**
      * 加载note list错误
      */
     void onLoadNoteListError(Exception e);
@@ -41,4 +48,9 @@ public interface IMainView extends BaseMvpView {
      * 删除note list错误
      */
     void onDeleteNoteListError(Exception e);
+
+    /**
+     * 导出note 错误
+     */
+    void onOutputNoteError(Exception e);
 }

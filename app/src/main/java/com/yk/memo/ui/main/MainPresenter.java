@@ -1,17 +1,25 @@
 package com.yk.memo.ui.main;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.yk.memo.data.bean.Note;
+import com.yk.memo.data.db.NoteDbManager;
+import com.yk.memo.utils.FileUtils;
 import com.yk.mvp.BaseMvpPresenter;
 import com.yk.rxsample.Observable;
 import com.yk.rxsample.Subscriber;
-import com.yk.memo.data.bean.Note;
-import com.yk.memo.data.db.NoteDbManager;
 
 import java.util.List;
 
 public class MainPresenter extends BaseMvpPresenter<IMainView> {
     private static final String TAG = "MainPresenter2";
+
+    private Context context;
+
+    public MainPresenter(Context context) {
+        this.context = context;
+    }
 
     /**
      * 加载全部note
@@ -128,4 +136,47 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
                 });
     }
 
+    /**
+     * 导出note
+     *
+     * @param note note
+     */
+    public void outputNote(Note note) {
+        Observable.fromCallable(new Observable.OnCallable<Note>() {
+            @Override
+            public Note call() {
+                Log.d(TAG, "call: output note:" + note);
+                boolean success = FileUtils.outputNoteToMarkdownFolder(context, note);
+                return success ? note : null;
+            }
+        })
+                .subscribeOnIo()
+                .observeOnUi()
+                .subscribe(new Subscriber<Note>() {
+                    @Override
+                    public void onNext(Note note) {
+                        Log.d(TAG, "onNext: output note:" + note);
+                        if (getView() != null) {
+                            if (note != null) {
+                                getView().onOutputNote(note);
+                            } else {
+                                getView().onOutputNoteError(new RuntimeException("note is null, output error"));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: output note");
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e(TAG, "onError: output note", e);
+                        if (getView() != null) {
+                            getView().onOutputNoteError(e);
+                        }
+                    }
+                });
+    }
 }

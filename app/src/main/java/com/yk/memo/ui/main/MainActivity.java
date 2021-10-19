@@ -1,5 +1,6 @@
 package com.yk.memo.ui.main;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -17,7 +18,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.yk.eventposter.EventPoster;
 import com.yk.eventposter.Subscribe;
-import com.yk.mvp.BaseMvpActivity;
 import com.yk.memo.R;
 import com.yk.memo.data.adapter.NoteAdapter;
 import com.yk.memo.data.bean.Note;
@@ -28,6 +28,9 @@ import com.yk.memo.data.event.NoteUpdateEvent;
 import com.yk.memo.ui.edit.EditActivity;
 import com.yk.memo.ui.setting.SettingActivity;
 import com.yk.memo.utils.SnackBarUtils;
+import com.yk.mvp.BaseMvpActivity;
+import com.yk.permissionrequester.PermissionFragment;
+import com.yk.permissionrequester.PermissionRequester;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,11 +166,37 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.menu_item_note_delete) {
                     presenter.deleteNote(note);
+                } else if (item.getItemId() == R.id.menu_item_note_output) {
+                    outputNote(note);
                 }
                 return true;
             }
         });
         popupMenu.show();
+    }
+
+    private void outputNote(Note note) {
+        PermissionRequester.build(this)
+                .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .request(new PermissionFragment.OnPermissionRequestListener() {
+                    @Override
+                    public void onRequestSuccess(boolean success) {
+                        if (success) {
+                            presenter.outputNote(note);
+                        }
+                    }
+
+                    @Override
+                    public void onGrantedList(List<String> grantedList) {
+
+                    }
+
+                    @Override
+                    public void onDeniedList(List<String> deniedList) {
+
+                    }
+                });
     }
 
     private void startEditActivity(Note note) {
@@ -230,7 +259,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
 
     @Override
     public MainPresenter createPresenter() {
-        return new MainPresenter();
+        return new MainPresenter(this);
     }
 
     @Subscribe(threadMode = Subscribe.Thread.UI)
@@ -319,6 +348,11 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     }
 
     @Override
+    public void onOutputNote(Note note) {
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "导出数据 成功");
+    }
+
+    @Override
     public void onLoadNoteListError(Exception e) {
 
     }
@@ -330,6 +364,11 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
 
     @Override
     public void onDeleteNoteListError(Exception e) {
+
+    }
+
+    @Override
+    public void onOutputNoteError(Exception e) {
 
     }
 }

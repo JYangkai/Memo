@@ -3,6 +3,10 @@
 
     <item
         android:id="@+id/menu_item_note_delete"
-        android:title="delete" />
+        android:title="删除" />
+
+    <item
+        android:id="@+id/menu_item_note_output"
+        android:title="导出本地" />
 
 </menu>
