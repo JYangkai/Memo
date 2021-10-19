@@ -1,4 +1,4 @@
-package com.yk.base.mvp;
+package com.yk.mvp;
 
 import java.lang.ref.WeakReference;
 

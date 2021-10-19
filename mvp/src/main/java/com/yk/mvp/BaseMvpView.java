@@ -1,4 +1,4 @@
-package com.yk.base.mvp;
+package com.yk.mvp;
 
 public interface BaseMvpView {
 }

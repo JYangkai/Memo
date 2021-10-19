@@ -16,7 +16,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import com.yk.base.mvp.BaseMvpActivity;
+import com.yk.mvp.BaseMvpActivity;
 import com.yk.memo.R;
 import com.yk.memo.data.bean.Note;
 import com.yk.memo.ui.edit.fragment.ConfirmDialogFragment;

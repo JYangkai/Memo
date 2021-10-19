@@ -1,4 +1,4 @@
-package com.yk.base.eventposter;
+package com.yk.eventposter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

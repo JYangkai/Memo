@@ -1,4 +1,4 @@
-package com.yk.base.eventposter;
+package com.yk.eventposter;
 
 import androidx.annotation.Nullable;
 

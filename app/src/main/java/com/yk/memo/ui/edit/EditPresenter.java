@@ -2,10 +2,10 @@ package com.yk.memo.ui.edit;
 
 import android.util.Log;
 
-import com.yk.base.eventposter.EventPoster;
-import com.yk.base.mvp.BaseMvpPresenter;
-import com.yk.base.rxSimple.Observable;
-import com.yk.base.rxSimple.Subscriber;
+import com.yk.eventposter.EventPoster;
+import com.yk.mvp.BaseMvpPresenter;
+import com.yk.rxsample.Observable;
+import com.yk.rxsample.Subscriber;
 import com.yk.memo.data.bean.Note;
 import com.yk.memo.data.db.NoteDbManager;
 import com.yk.memo.data.event.NoteAddEvent;

@@ -1,4 +1,4 @@
-package com.yk.base.eventposter;
+package com.yk.rxsample;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -6,23 +6,23 @@ import android.os.Looper;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class EventThreadManager {
+public class RxThreadManager {
 
-    private static volatile EventThreadManager instance;
+    private static volatile RxThreadManager instance;
 
     private final Handler uiHandler = new Handler(Looper.getMainLooper());
 
     private final ExecutorService ioThread;
 
-    private EventThreadManager() {
+    private RxThreadManager() {
         ioThread = Executors.newSingleThreadExecutor();
     }
 
-    public static EventThreadManager getInstance() {
+    public static RxThreadManager getInstance() {
         if (instance == null) {
-            synchronized (EventThreadManager.class) {
+            synchronized (RxThreadManager.class) {
                 if (instance == null) {
-                    instance = new EventThreadManager();
+                    instance = new RxThreadManager();
                 }
             }
         }

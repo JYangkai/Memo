@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.yk.base.eventposter.EventPoster;
-import com.yk.base.eventposter.Subscribe;
-import com.yk.base.mvp.BaseMvpActivity;
+import com.yk.eventposter.EventPoster;
+import com.yk.eventposter.Subscribe;
+import com.yk.mvp.BaseMvpActivity;
 import com.yk.memo.R;
 import com.yk.memo.data.adapter.NoteAdapter;
 import com.yk.memo.data.bean.Note;

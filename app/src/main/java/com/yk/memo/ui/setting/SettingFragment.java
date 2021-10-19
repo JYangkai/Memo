@@ -6,7 +6,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import com.yk.base.eventposter.EventPoster;
+import com.yk.eventposter.EventPoster;
 import com.yk.markdown.style.MdStyleManager;
 import com.yk.memo.R;
 import com.yk.memo.data.event.MdStyleChangeEvent;
