@@ -1,3 +1,4 @@
+include ':permissionrequester'
 include ':rxsample'
 include ':mvp'
 include ':eventposter'
