@@ -1,5 +1,6 @@
 package com.yk.markdown.core;
 
+import android.content.Context;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -12,6 +13,7 @@ import com.yk.markdown.span.MdBoldItalicsSpan;
 import com.yk.markdown.span.MdBoldSpan;
 import com.yk.markdown.span.MdCodeBlockSpan;
 import com.yk.markdown.span.MdCodeSpan;
+import com.yk.markdown.span.MdImageSpan;
 import com.yk.markdown.span.MdItalicsSpan;
 import com.yk.markdown.span.MdNormalSpan;
 import com.yk.markdown.span.MdOrderedListSpan;
@@ -34,7 +36,7 @@ public class MdRender {
      * @param sectionList 段落列表
      * @return Span Builder
      */
-    public static SpannableStringBuilder getSpanStrBuilder(List<MdSection> sectionList, BaseMdStyle style) {
+    public static SpannableStringBuilder getSpanStrBuilder(Context context, List<MdSection> sectionList, BaseMdStyle style) {
         if (sectionList == null) {
             return null;
         }
@@ -47,7 +49,7 @@ public class MdRender {
 
         for (int i = 0; i < sectionList.size(); i++) {
             MdSection section = sectionList.get(i);
-            spanStrBuilder.append(getSpanStr(section, style));
+            spanStrBuilder.append(getSpanStr(context, section, style));
             if (i != sectionList.size() - 1) {
                 // 最后一个段落不需要换行
                 spanStrBuilder.append("\n");
@@ -63,7 +65,7 @@ public class MdRender {
      * @param section 段落
      * @return Span Builder
      */
-    private static SpannableStringBuilder getSpanStr(MdSection section, BaseMdStyle style) {
+    private static SpannableStringBuilder getSpanStr(Context context, MdSection section, BaseMdStyle style) {
         MdType type = section.getType();
 
         SpannableStringBuilder spanStrBuilder = new SpannableStringBuilder();
@@ -88,7 +90,7 @@ public class MdRender {
                 spanStrBuilder.append(dealSeparator(section, style));
                 break;
             default:
-                spanStrBuilder.append(dealNormal(section, style));
+                spanStrBuilder.append(dealNormal(context, section, style));
                 break;
         }
 
@@ -197,7 +199,7 @@ public class MdRender {
     /**
      * 处理其他普通字符
      */
-    private static SpannableStringBuilder dealNormal(MdSection section, BaseMdStyle style) {
+    private static SpannableStringBuilder dealNormal(Context context, MdSection section, BaseMdStyle style) {
         String src = section.getSrc();
 
         SpannableStringBuilder spanStrBuilder = new SpannableStringBuilder();
@@ -228,6 +230,8 @@ public class MdRender {
                 case ITALICS:
                     spanStrBuilder.append(dealWordItalics(word, style));
                     break;
+                case IMAGE:
+                    spanStrBuilder.append("\n").append(dealWordImage(context, word, style)).append("\n");
             }
         }
 
@@ -294,6 +298,19 @@ public class MdRender {
 
         SpannableString spanStr = new SpannableString(src);
         spanStr.setSpan(new MdItalicsSpan(style), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spanStr;
+    }
+
+    /**
+     * 处理图片
+     */
+    private static SpannableString dealWordImage(Context context, MdWord word, BaseMdStyle style) {
+        String src = word.getSrc();
+        String path = src.substring(src.indexOf("(") + 1, src.lastIndexOf(")"));
+
+        SpannableString spanStr = new SpannableString(src);
+        spanStr.setSpan(new MdImageSpan(context, path), 0, src.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         return spanStr;
     }

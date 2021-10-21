@@ -12,10 +12,12 @@ import com.yk.markdown.core.MdThreadManager;
 import com.yk.markdown.style.MdStyleManager;
 
 public class Markdown {
+    private final Context context;
+
     /**
      * Markdown源码
      */
-    private final String src;
+    private String src;
 
     /**
      * 占位字符
@@ -35,20 +37,14 @@ public class Markdown {
     /**
      * 构造方法
      *
-     * @param src Markdown源码
+     * @param context 上下文
      */
-    private Markdown(String src) {
-        this.src = src;
+    private Markdown(Context context) {
+        this.context = context;
     }
 
-    /**
-     * 加载文本
-     *
-     * @param src Markdown源码
-     * @return Markdown实例
-     */
-    public static Markdown load(String src) {
-        return new Markdown(src);
+    public static Markdown with(Context context) {
+        return new Markdown(context);
     }
 
     public static void initStyle(MdStyleManager.Style style) {
@@ -57,6 +53,17 @@ public class Markdown {
 
     public static void initStyle(Context context, String style) {
         MdStyleManager.getInstance().choose(context, style);
+    }
+
+    /**
+     * 加载文本
+     *
+     * @param src Markdown源码
+     * @return Markdown实例
+     */
+    public Markdown load(String src) {
+        this.src = src;
+        return this;
     }
 
     /**
@@ -128,6 +135,7 @@ public class Markdown {
      */
     private SpannableStringBuilder getMd() {
         return MdRender.getSpanStrBuilder(
+                context,
                 MdParser.dealMarkdown(src),
                 MdStyleManager.getInstance().getStyle(style)
         );

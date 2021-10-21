@@ -115,10 +115,95 @@ public class MdParser {
         String src = section.getSrc();
 
         // 首先处理代码（处理代码中会再处理其他类型，代码优先级最高）
-        List<MdWord> wordList = dealCode(src, 0);
+        List<MdWord> wordList = dealImage(src, 0);
 
         section.setWordList(wordList);
     }
+
+    /**
+     * 处理图片
+     *
+     * @param src    一行普通字符
+     * @param offset 偏移位置（表示src在父src中的起始位置）
+     * @return 字符列表
+     */
+    private static List<MdWord> dealImage(String src, int offset) {
+        // 保存所有的字符列表
+        List<MdWord> wordList = new ArrayList<>();
+
+        if (TextUtils.isEmpty(src)) {
+            return wordList;
+        }
+
+        // 仅保存图片的字符列表
+        List<MdWord> imageList = new ArrayList<>();
+
+        Pattern pattern = Pattern.compile("!\\[.*\\]\\(.*\\)");
+        Matcher matcher = pattern.matcher(src);
+        while (matcher.find()) {
+            // 找到代码
+            int start = matcher.start();
+            int end = matcher.end();
+            String group = matcher.group();
+
+            if (imageList.isEmpty()) {
+                // 如果之前未发现image
+                if (start != 0) {
+                    // 此次发现image，但起始位置不是0，则需要将前面的字段解析
+                    addCodeToList(wordList, src.substring(0, start), 0);
+                }
+            } else {
+                // 如果之前有发现image，则将上一个image到此image之间的字段解析
+                MdWord lastCode = imageList.get(imageList.size() - 1);
+                int lastEnd = lastCode.getEnd();
+                addCodeToList(wordList, src.substring(lastEnd, start), lastEnd);
+            }
+
+            // 将此次发现的image加入列表
+            imageList.add(new MdWord(MdType.IMAGE, group, start, end));
+        }
+
+        if (!imageList.isEmpty()) {
+            // 如果经过上面的匹配搜索后，有发现image
+            MdWord lastCode = imageList.get(imageList.size() - 1);
+            int lastEnd = lastCode.getEnd();
+            if (lastEnd != src.length()) {
+                // 判断最后一个image的结束位置不是src的长度，则解析后面的字段
+                addCodeToList(wordList, src.substring(lastEnd), lastEnd);
+            }
+        } else {
+            // 如果一个找不到，则直接解析整段src
+            addCodeToList(wordList, src, 0);
+        }
+
+        // 将image加入列表
+        wordList.addAll(imageList);
+
+        // 计算偏移位置
+        for (MdWord word : wordList) {
+            word.setStart(word.getStart() + offset);
+            word.setEnd(word.getEnd() + offset);
+        }
+
+        // 进行一次排序
+        Collections.sort(wordList, new Comparator<MdWord>() {
+            @Override
+            public int compare(MdWord o1, MdWord o2) {
+                return o1.getStart() - o2.getStart();
+            }
+        });
+
+        return wordList;
+    }
+
+    /**
+     * 将代码解析的数据加入列表
+     */
+    private static void addCodeToList(List<MdWord> wordList, String src, int offset) {
+        List<MdWord> otherWordList = dealCode(src, offset);
+        wordList.addAll(otherWordList);
+    }
+
 
     /**
      * 处理代码

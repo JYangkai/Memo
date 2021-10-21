@@ -56,7 +56,7 @@ public class PreviewFragment extends Fragment {
     private void initData() {
         if (getArguments() != null) {
             String src = getArguments().getString(EXTRA_SRC);
-            Markdown.load(src).into(tvPreview);
+            Markdown.with(getContext()).load(src).into(tvPreview);
         }
     }
 

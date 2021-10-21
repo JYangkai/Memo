@@ -11,5 +11,6 @@ public enum MdType {
     CODE, // 代码
     BOLD, // 粗体
     ITALICS, // 斜体
-    BOLD_ITALICS // 粗斜体
+    BOLD_ITALICS, // 粗斜体
+    IMAGE // 图片
 }
