@@ -1,3 +1,4 @@
+include ':imageloader'
 include ':permissionrequester'
 include ':rxsample'
 include ':mvp'
