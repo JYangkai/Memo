@@ -24,6 +24,7 @@
             android:name=".ui.edit.EditActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.setting.SettingActivity" />
+        <activity android:name=".ui.album.AlbumActivity" />
     </application>
 
 </manifest>

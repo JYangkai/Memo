@@ -14,6 +14,7 @@ import androidx.appcompat.widget.PopupMenu;
 
 import com.yk.markdown.bean.MdType;
 import com.yk.memo.R;
+import com.yk.memo.ui.album.AlbumActivity;
 
 public class MarkdownToolView extends FrameLayout {
     private AppCompatImageView ivFormat;
@@ -23,6 +24,7 @@ public class MarkdownToolView extends FrameLayout {
     private AppCompatImageView ivUnorderedList;
     private AppCompatImageView ivTitle;
     private AppCompatImageView ivSeparator;
+    private AppCompatImageView ivImage;
 
     public MarkdownToolView(@NonNull Context context) {
         this(context, null);
@@ -47,6 +49,7 @@ public class MarkdownToolView extends FrameLayout {
         ivUnorderedList = findViewById(R.id.ivUnorderedList);
         ivTitle = findViewById(R.id.ivTitle);
         ivSeparator = findViewById(R.id.ivSeparator);
+        ivImage = findViewById(R.id.ivImage);
     }
 
     private void bindEvent() {
@@ -96,6 +99,13 @@ public class MarkdownToolView extends FrameLayout {
             @Override
             public void onClick(View v) {
                 onClickSeparator(v);
+            }
+        });
+
+        ivImage.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlbumActivity.start(getContext());
             }
         });
     }

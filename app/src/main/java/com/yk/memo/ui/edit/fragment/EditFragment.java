@@ -1,5 +1,6 @@
 package com.yk.memo.ui.edit.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -13,8 +14,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
 
+import com.yk.eventposter.EventPoster;
+import com.yk.eventposter.Subscribe;
 import com.yk.markdown.bean.MdType;
 import com.yk.memo.R;
+import com.yk.memo.data.bean.Image;
+import com.yk.memo.data.event.MdImageAddEvent;
 import com.yk.memo.ui.view.MarkdownToolView;
 
 public class EditFragment extends Fragment {
@@ -31,6 +36,18 @@ public class EditFragment extends Fragment {
         bundle.putString(EXTRA_SRC, src);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        EventPoster.getInstance().register(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        EventPoster.getInstance().unregister(this);
     }
 
     @Nullable
@@ -160,6 +177,29 @@ public class EditFragment extends Fragment {
 
     public void clear() {
         etContent.setText(null);
+    }
+
+    @Subscribe(threadMode = Subscribe.Thread.UI)
+    public void onMdImageAddEvent(MdImageAddEvent event) {
+        if (event == null) {
+            return;
+        }
+
+        Image image = event.getImage();
+        if (image == null) {
+            return;
+        }
+
+        String name = image.getName();
+        String path = image.getPath();
+        if (TextUtils.isEmpty(path)) {
+            return;
+        }
+
+        String src = "![" + name + "](" + path + ")";
+
+        etContent.append(src);
+        etContent.setSelection(getSrc().length());
     }
 
     private OnEditListener onEditListener;

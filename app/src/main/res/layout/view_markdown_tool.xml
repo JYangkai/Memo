@@ -56,4 +56,11 @@
         android:layout_weight="1"
         android:src="@drawable/ic_baseline_horizontal_rule_24" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivImage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_baseline_image_24" />
+
 </LinearLayout>
