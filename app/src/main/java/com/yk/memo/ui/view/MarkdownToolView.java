@@ -1,5 +1,6 @@
 package com.yk.memo.ui.view;
 
+import android.Manifest;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -11,10 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.fragment.app.FragmentActivity;
 
 import com.yk.markdown.bean.MdType;
 import com.yk.memo.R;
 import com.yk.memo.ui.album.AlbumActivity;
+import com.yk.permissionrequester.PermissionFragment;
+import com.yk.permissionrequester.PermissionRequester;
+
+import java.util.List;
 
 public class MarkdownToolView extends FrameLayout {
     private AppCompatImageView ivFormat;
@@ -105,7 +111,7 @@ public class MarkdownToolView extends FrameLayout {
         ivImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlbumActivity.start(getContext());
+                onClickImage(v);
             }
         });
     }
@@ -183,6 +189,28 @@ public class MarkdownToolView extends FrameLayout {
 
     private void onClickSeparator(View v) {
         onAppend(MdType.SEPARATOR, "---\n", 0);
+    }
+
+    private void onClickImage(View v) {
+        PermissionRequester.build((FragmentActivity) getContext())
+                .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .request(new PermissionFragment.OnPermissionRequestListener() {
+                    @Override
+                    public void onRequestSuccess(boolean success) {
+                        AlbumActivity.start(getContext());
+                    }
+
+                    @Override
+                    public void onGrantedList(List<String> grantedList) {
+
+                    }
+
+                    @Override
+                    public void onDeniedList(List<String> deniedList) {
+
+                    }
+                });
     }
 
     private void onAppend(MdType type, String src, int selectOffset) {
