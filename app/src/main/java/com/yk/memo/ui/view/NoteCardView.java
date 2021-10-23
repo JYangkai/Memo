@@ -16,6 +16,8 @@ public class NoteCardView extends CardView {
 
     private boolean isSelect = false;
 
+    private boolean isOutputMarkdown = false;
+
     public NoteCardView(@NonNull Context context) {
         this(context, null);
     }
@@ -42,14 +44,21 @@ public class NoteCardView extends CardView {
         postInvalidate();
     }
 
+    public void outputMarkdown(boolean isOutputMarkdown) {
+        this.isOutputMarkdown = isOutputMarkdown;
+        postInvalidate();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (!isSelect) {
-            return;
+        if (isSelect) {
+            canvas.drawLine(0, 0, 0, getHeight(), paint);
         }
 
-        canvas.drawLine(0, 0, 0, getHeight(), paint);
+        if (isOutputMarkdown) {
+            canvas.drawLine(getWidth(), 0, getWidth(), getHeight(), paint);
+        }
     }
 }

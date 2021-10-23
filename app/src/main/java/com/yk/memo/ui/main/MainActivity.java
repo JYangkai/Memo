@@ -349,6 +349,8 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
 
     @Override
     public void onOutputNote(Note note) {
+        noteAdapter.refreshDataChange(note);
+
         SnackBarUtils.showMsgShort(getWindow().getDecorView(), "导出数据 成功");
     }
 

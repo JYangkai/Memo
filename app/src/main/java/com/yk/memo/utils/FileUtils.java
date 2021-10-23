@@ -41,4 +41,11 @@ public class FileUtils {
         return success;
     }
 
+    public static boolean isOutputMarkdown(Context context, Note note) {
+        String path = getMarkdownFolder(context) + TimeUtils.getTime(note.getCreateTime(), "yyyy-MM-dd_HH-mm-ss") + ".md";
+
+        File file = new File(path);
+        return file.exists();
+    }
+
 }
