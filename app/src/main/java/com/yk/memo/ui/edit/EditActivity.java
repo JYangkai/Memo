@@ -207,6 +207,8 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
 
         this.mode = mode;
 
+        onTextChange(getCurSrc());
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fl_content, fragment)
                 .commit();
