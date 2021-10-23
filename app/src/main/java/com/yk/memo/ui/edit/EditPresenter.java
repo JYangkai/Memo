@@ -1,19 +1,28 @@
 package com.yk.memo.ui.edit;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.yk.eventposter.EventPoster;
-import com.yk.mvp.BaseMvpPresenter;
-import com.yk.rxsample.Observable;
-import com.yk.rxsample.Subscriber;
 import com.yk.memo.data.bean.Note;
 import com.yk.memo.data.db.NoteDbManager;
 import com.yk.memo.data.event.NoteAddEvent;
 import com.yk.memo.data.event.NoteRemoveEvent;
 import com.yk.memo.data.event.NoteUpdateEvent;
+import com.yk.memo.utils.FileUtils;
+import com.yk.memo.utils.SpManager;
+import com.yk.mvp.BaseMvpPresenter;
+import com.yk.rxsample.Observable;
+import com.yk.rxsample.Subscriber;
 
 public class EditPresenter extends BaseMvpPresenter<IEditView> {
     private static final String TAG = "EditPresenter2";
+
+    private Context context;
+
+    public EditPresenter(Context context) {
+        this.context = context;
+    }
 
     /**
      * 新增note
@@ -32,6 +41,16 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                     @Override
                     public Note call(Note note) {
                         EventPoster.getInstance().post(new NoteAddEvent(true, note));
+                        return note;
+                    }
+                })
+                .map(new Observable.Function1<Note, Note>() {
+                    @Override
+                    public Note call(Note note) {
+                        if (SpManager.getInstance().getOutputMarkdown()) {
+                            boolean success = FileUtils.outputNoteToMarkdownFolder(context, note);
+                            Log.d(TAG, "call: save note output markdown:" + success);
+                        }
                         return note;
                     }
                 })
@@ -79,6 +98,16 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                     @Override
                     public Note call(Note note) {
                         EventPoster.getInstance().post(new NoteUpdateEvent(true, note));
+                        return note;
+                    }
+                })
+                .map(new Observable.Function1<Note, Note>() {
+                    @Override
+                    public Note call(Note note) {
+                        if (SpManager.getInstance().getOutputMarkdown()) {
+                            boolean success = FileUtils.outputNoteToMarkdownFolder(context, note);
+                            Log.d(TAG, "call: update note output markdown:" + success);
+                        }
                         return note;
                     }
                 })

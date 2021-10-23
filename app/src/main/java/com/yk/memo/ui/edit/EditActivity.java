@@ -317,7 +317,7 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
 
     @Override
     public EditPresenter createPresenter() {
-        return new EditPresenter();
+        return new EditPresenter(this);
     }
 
     @Override
