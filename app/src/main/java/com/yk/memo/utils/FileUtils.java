@@ -20,9 +20,7 @@ public class FileUtils {
     }
 
     public static boolean outputNoteToMarkdownFolder(Context context, Note note) {
-        String path = getMarkdownFolder(context) + TimeUtils.getTime(note.getCreateTime(), "yyyy-MM-dd_HH-mm-ss") + ".md";
-
-        File file = new File(path);
+        File file = new File(generateNotePath(context, note));
         if (file.exists()) {
             file.delete();
         }
@@ -42,10 +40,12 @@ public class FileUtils {
     }
 
     public static boolean isOutputMarkdown(Context context, Note note) {
-        String path = getMarkdownFolder(context) + TimeUtils.getTime(note.getCreateTime(), "yyyy-MM-dd_HH-mm-ss") + ".md";
-
-        File file = new File(path);
+        File file = new File(generateNotePath(context, note));
         return file.exists();
+    }
+
+    public static String generateNotePath(Context context, Note note) {
+        return getMarkdownFolder(context) + TimeUtils.getTime(note.getCreateTime(), "yyyy-MM-dd_HH-mm-ss") + ".md";
     }
 
 }
