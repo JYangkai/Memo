@@ -57,6 +57,7 @@ public class MdStyleManager {
                 baseMdStyle = new TyporaMdStyle();
                 break;
         }
+        baseMdStyle.init();
         return baseMdStyle;
     }
 
