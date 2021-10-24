@@ -15,6 +15,9 @@ import com.yk.memo.markdown.core.parser.section.MdUnorderedListParser;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 解析section
+ */
 public class MdSectionParser {
     private final IMdSectionParser quoteParser = new MdQuoteParser();
     private final IMdSectionParser codeBlockParser = new MdCodeBlockParser();
@@ -24,20 +27,27 @@ public class MdSectionParser {
     private final IMdSectionParser separatorParser = new MdSeparatorParser();
     private final IMdSectionParser normalParser = new MdNormalParser();
 
-    public List<MdSection> dealSection(String src) {
+    /**
+     * 解析section
+     */
+    public List<MdSection> parser(String src) {
         if (TextUtils.isEmpty(src)) {
+            // 源文本为空，则直接返回null
             return null;
         }
 
+        // 分行
         String[] srcSplit = src.split("\n");
 
         if (srcSplit.length == 0) {
+            // 分行的数据为空，则直接返回null
             return null;
         }
 
         List<MdSection> sectionList = new ArrayList<>();
 
         for (String s : srcSplit) {
+            // 遍历所有的行，使用各个parser去解析
             if (quoteParser.parser(sectionList, s)) {
                 continue;
             }

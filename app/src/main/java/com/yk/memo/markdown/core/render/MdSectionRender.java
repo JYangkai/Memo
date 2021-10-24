@@ -14,6 +14,9 @@ import com.yk.memo.markdown.core.render.section.MdTitleRender;
 import com.yk.memo.markdown.core.render.section.MdUnorderedListRender;
 import com.yk.memo.markdown.style.style.BaseMdStyle;
 
+/**
+ * 渲染section
+ */
 public class MdSectionRender {
     private final IMdSectionRender quoteRender = new MdQuoteRender();
     private final IMdSectionRender codeBlockRender = new MdCodeBlockRender();
@@ -22,24 +25,38 @@ public class MdSectionRender {
     private final IMdSectionRender titleRender = new MdTitleRender();
     private final IMdSectionRender separatorRender = new MdSeparatorRender();
 
-    public SpannableStringBuilder dealSection(Context context, MdSection section, BaseMdStyle style) {
+    /**
+     * 渲染section
+     */
+    public SpannableStringBuilder render(Context context, MdSection section, BaseMdStyle style) {
+        SpannableStringBuilder spanStrBuilder = new SpannableStringBuilder();
+
         MdType type = section.getType();
 
         switch (type) {
             case QUOTE:
-                return quoteRender.render(context, section, style);
+                spanStrBuilder.append(quoteRender.render(context, section, style));
+                break;
             case CODE_BLOCK:
-                return codeBlockRender.render(context, section, style);
+                spanStrBuilder.append(codeBlockRender.render(context, section, style));
+                break;
             case ORDERED_LIST:
-                return orderedListRender.render(context, section, style);
+                spanStrBuilder.append(orderedListRender.render(context, section, style));
+                break;
             case UNORDERED_LIST:
-                return unorderedListRender.render(context, section, style);
+                spanStrBuilder.append(unorderedListRender.render(context, section, style));
+                break;
             case TITLE:
-                return titleRender.render(context, section, style);
+                spanStrBuilder.append(titleRender.render(context, section, style));
+                break;
             case SEPARATOR:
-                return separatorRender.render(context, section, style);
+                spanStrBuilder.append(separatorRender.render(context, section, style));
+                break;
             default:
-                return null;
+                spanStrBuilder.append(section.getSrc());
+                break;
         }
+
+        return spanStrBuilder;
     }
 }

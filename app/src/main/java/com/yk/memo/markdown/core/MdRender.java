@@ -12,11 +12,17 @@ import com.yk.memo.markdown.style.style.BaseMdStyle;
 
 import java.util.List;
 
+/**
+ * Markdown渲染
+ */
 public class MdRender {
     private final MdSectionRender sectionRender = new MdSectionRender();
     private final MdWordRender wordRender = new MdWordRender();
 
-    public SpannableStringBuilder render(Context context, BaseMdStyle style, List<MdSection> sectionList) {
+    /**
+     * 渲染
+     */
+    public SpannableStringBuilder render(Context context, List<MdSection> sectionList, BaseMdStyle style) {
         if (sectionList == null || sectionList.isEmpty()) {
             return null;
         }
@@ -31,7 +37,7 @@ public class MdRender {
             if (type == MdType.NORMAL) {
                 spanStrBuilder.append(renderNormal(context, section, style));
             } else {
-                spanStrBuilder.append(sectionRender.dealSection(context, section, style));
+                spanStrBuilder.append(sectionRender.render(context, section, style));
             }
 
             if (i != sectionList.size() - 1) {
@@ -46,23 +52,13 @@ public class MdRender {
         List<MdWord> wordList = section.getWordList();
 
         if (wordList == null || wordList.isEmpty()) {
-            return null;
+            return new SpannableStringBuilder(section.getSrc());
         }
 
         SpannableStringBuilder spanStrBuilder = new SpannableStringBuilder();
 
         for (MdWord word : wordList) {
-            MdType type = word.getType();
-
-            if (type == MdType.IMAGE) {
-                spanStrBuilder.append("\n");
-            }
-
-            spanStrBuilder.append(wordRender.dealWord(context, word, style));
-
-            if (type == MdType.IMAGE) {
-                spanStrBuilder.append("\n");
-            }
+            spanStrBuilder.append(wordRender.render(context, word, style));
         }
 
         return spanStrBuilder;

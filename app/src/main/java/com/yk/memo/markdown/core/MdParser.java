@@ -1,5 +1,7 @@
 package com.yk.memo.markdown.core;
 
+import android.util.Log;
+
 import com.yk.memo.markdown.bean.MdSection;
 import com.yk.memo.markdown.bean.MdType;
 import com.yk.memo.markdown.core.parser.MdSectionParser;
@@ -7,12 +9,20 @@ import com.yk.memo.markdown.core.parser.MdWordParser;
 
 import java.util.List;
 
+/**
+ * Markdown解析
+ */
 public class MdParser {
+    private static final String TAG = "MdParser";
+
     private final MdSectionParser sectionParser = new MdSectionParser();
     private final MdWordParser wordParser = new MdWordParser();
 
+    /**
+     * 解析
+     */
     public List<MdSection> parser(String src) {
-        List<MdSection> sectionList = sectionParser.dealSection(src);
+        List<MdSection> sectionList = sectionParser.parser(src);
 
         if (sectionList == null || sectionList.isEmpty()) {
             return null;
@@ -23,8 +33,10 @@ public class MdParser {
             if (type != MdType.NORMAL) {
                 continue;
             }
-            section.setWordList(wordParser.dealWord(section.getSrc()));
+            section.setWordList(wordParser.parser(section.getSrc()));
         }
+
+        Log.d(TAG, "parser: " + sectionList);
 
         return sectionList;
     }

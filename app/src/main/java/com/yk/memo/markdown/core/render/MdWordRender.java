@@ -2,39 +2,65 @@ package com.yk.memo.markdown.core.render;
 
 import android.content.Context;
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 
 import com.yk.memo.markdown.bean.MdType;
 import com.yk.memo.markdown.bean.MdWord;
 import com.yk.memo.markdown.core.render.word.IMdWordRender;
+import com.yk.memo.markdown.core.render.word.MdBoldItalicsRender;
+import com.yk.memo.markdown.core.render.word.MdBoldRender;
 import com.yk.memo.markdown.core.render.word.MdCodeRender;
+import com.yk.memo.markdown.core.render.word.MdImageRender;
+import com.yk.memo.markdown.core.render.word.MdItalicsRender;
+import com.yk.memo.markdown.core.render.word.MdNormalRender;
 import com.yk.memo.markdown.style.style.BaseMdStyle;
 
+/**
+ * 渲染word
+ */
 public class MdWordRender {
-    private final IMdWordRender normalRender = new MdCodeRender();
-    private final IMdWordRender codeRender = new MdCodeRender();
-    private final IMdWordRender boldItalicsRender = new MdCodeRender();
-    private final IMdWordRender boldRender = new MdCodeRender();
-    private final IMdWordRender italicsRender = new MdCodeRender();
-    private final IMdWordRender imageRender = new MdCodeRender();
+    private static final String TAG = "MdWordRender";
 
-    public SpannableStringBuilder dealWord(Context context, MdWord word, BaseMdStyle style) {
+    private final IMdWordRender normalRender = new MdNormalRender();
+    private final IMdWordRender codeRender = new MdCodeRender();
+    private final IMdWordRender boldItalicsRender = new MdBoldItalicsRender();
+    private final IMdWordRender boldRender = new MdBoldRender();
+    private final IMdWordRender italicsRender = new MdItalicsRender();
+    private final IMdWordRender imageRender = new MdImageRender();
+
+    /**
+     * 渲染word
+     */
+    public SpannableStringBuilder render(Context context, MdWord word, BaseMdStyle style) {
         MdType type = word.getType();
+
+        SpannableStringBuilder spanStrBuilder = new SpannableStringBuilder();
+
+        Log.d(TAG, "render: " + word);
 
         switch (type) {
             case NORMAL:
-                return normalRender.render(context, word, style);
+                spanStrBuilder.append(normalRender.render(context, word, style));
+                break;
             case CODE:
-                return codeRender.render(context, word, style);
+                spanStrBuilder.append(codeRender.render(context, word, style));
+                break;
             case BOLD_ITALICS:
-                return boldItalicsRender.render(context, word, style);
+                spanStrBuilder.append(boldItalicsRender.render(context, word, style));
+                break;
             case BOLD:
-                return boldRender.render(context, word, style);
+                spanStrBuilder.append(boldRender.render(context, word, style));
+                break;
             case ITALICS:
-                return italicsRender.render(context, word, style);
+                spanStrBuilder.append(italicsRender.render(context, word, style));
+                break;
             case IMAGE:
-                return imageRender.render(context, word, style);
+                spanStrBuilder.append("\n").append(imageRender.render(context, word, style)).append("\n");
+                break;
             default:
-                return null;
+                spanStrBuilder.append(word.getSrc());
+                break;
         }
+        return spanStrBuilder;
     }
 }

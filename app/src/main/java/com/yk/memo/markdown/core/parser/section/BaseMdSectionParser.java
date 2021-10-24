@@ -6,34 +6,45 @@ import com.yk.memo.markdown.bean.MdType;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 基础解析类
+ */
 public abstract class BaseMdSectionParser implements IMdSectionParser {
     @Override
     public boolean parser(List<MdSection> sectionList, String src) {
         if (sectionList == null) {
+            // 为空表示解析失败
             return false;
         }
 
         if (!matcher(src)) {
+            // 匹配不上，则表示解析失败
             return false;
         }
 
+        // 获取解析类型
         MdType type = getType();
 
+        // 代码块是否关闭
         boolean codeBlockClose = isCodeBlockClose(getCodeBlockCount(sectionList));
 
+        // 上一个section
         MdSection lastSection = null;
         if (sectionList.size() > 0) {
             lastSection = sectionList.get(sectionList.size() - 1);
         }
 
         if (lastSection == null) {
+            // 如果上一个section为空，则直接添加当前section
             sectionList.add(new MdSection(type, src, new ArrayList<>()));
             return true;
         }
 
         if (needAppendLastSection(lastSection, codeBlockClose)) {
+            // 上一个section不为空，且需要添加到上一个section
             lastSection.appendSrc("\n").appendSrc(src);
         } else {
+            // 不需要添加到上一个section
             sectionList.add(new MdSection(type, src, new ArrayList<>()));
         }
 
@@ -46,7 +57,7 @@ public abstract class BaseMdSectionParser implements IMdSectionParser {
     public abstract MdType getType();
 
     /**
-     * 匹配规则
+     * 匹配
      */
     public abstract boolean matcher(String src);
 

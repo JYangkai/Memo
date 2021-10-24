@@ -13,17 +13,12 @@ public class Markdown {
     /**
      * context
      */
-    private Context context;
+    private final Context context;
 
     /**
      * Markdown源码
      */
     private String src;
-
-    /**
-     * 占位字符
-     */
-    private String placeHolder;
 
     /**
      * 风格
@@ -70,9 +65,14 @@ public class Markdown {
         MdThreadManager.getInstance().postIo(new Runnable() {
             @Override
             public void run() {
-                refreshUi(render.render(context,
-                        MdStyleManager.getStyle(style),
-                        parser.parser(src))
+                refreshUi(
+                        render.render(
+                                context,
+                                parser.parser(
+                                        src
+                                ),
+                                MdStyleManager.getInstance().getStyle(context, style)
+                        )
                 );
             }
         });
