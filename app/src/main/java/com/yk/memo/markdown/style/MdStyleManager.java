@@ -37,6 +37,10 @@ public class MdStyleManager {
         this.style = getStyle(context, style);
     }
 
+    public void choose(Context context, String style) {
+        this.style = getStyle(context, style);
+    }
+
     public BaseMdStyle getStyle(Context context, String style) {
         if (Style.STANDARD.name().equals(style)) {
             return getStyle(null, Style.STANDARD);

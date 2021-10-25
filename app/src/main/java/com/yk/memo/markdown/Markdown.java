@@ -37,6 +37,14 @@ public class Markdown {
         this.context = context;
     }
 
+    public static void init(Context context, MdStyleManager.Style style) {
+        MdStyleManager.getInstance().choose(context, style);
+    }
+
+    public static void init(Context context, String style) {
+        MdStyleManager.getInstance().choose(context, style);
+    }
+
     public static Markdown with(Context context) {
         return new Markdown(context);
     }
