@@ -6,10 +6,10 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.yk.markdown2.style.MdStyleManager;
-import com.yk.markdown2.style.style.BaseMdStyle;
 import com.yk.markdown2.Markdown;
 import com.yk.markdown2.core.RequestManager;
+import com.yk.markdown2.style.MdStyleManager;
+import com.yk.markdown2.style.style.BaseMdStyle;
 import com.yk.markdown2.utils.KeyUtils;
 
 public abstract class BaseRequester implements IRequester {
@@ -29,7 +29,9 @@ public abstract class BaseRequester implements IRequester {
 
     private TextView tv;
 
-    public abstract BaseMdStyle getMdStyle();
+    public BaseMdStyle getMdStyle() {
+        return MdStyleManager.getStyle(getContext(), getStyle());
+    }
 
     public abstract Context getContext();
 

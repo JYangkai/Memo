@@ -5,9 +5,6 @@ import android.content.Context;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.yk.markdown2.style.MdStyleManager;
-import com.yk.markdown2.style.style.BaseMdStyle;
-
 public class FragmentActivityRequester extends BaseRequester {
     private final FragmentActivity fa;
 
@@ -48,9 +45,11 @@ public class FragmentActivityRequester extends BaseRequester {
         if (requestFragment == null) {
             return;
         }
+        requestFragment.setOnLifeCircleListener(null);
         fa.getSupportFragmentManager().beginTransaction()
                 .remove(requestFragment)
                 .commit();
+        requestFragment = null;
     }
 
     @Override
@@ -59,11 +58,6 @@ public class FragmentActivityRequester extends BaseRequester {
         if (requestState == RequestState.DONE_REQUEST || requestState == RequestState.STOP_REQUEST) {
             removeRequestFragment();
         }
-    }
-
-    @Override
-    public BaseMdStyle getMdStyle() {
-        return MdStyleManager.getStyle(fa, getStyle());
     }
 
     @Override
