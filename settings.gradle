@@ -1,3 +1,4 @@
+include ':markdown2'
 include ':imageloader'
 include ':permissionrequester'
 include ':rxsample'
