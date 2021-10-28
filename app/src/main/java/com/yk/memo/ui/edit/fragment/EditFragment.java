@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.yk.eventposter.EventPoster;
 import com.yk.eventposter.Subscribe;
-import com.yk.markdown.bean.MdType;
+import com.yk.markdown2.bean.MdType;
 import com.yk.memo.R;
 import com.yk.memo.data.bean.Image;
 import com.yk.memo.data.event.MdImageAddEvent;

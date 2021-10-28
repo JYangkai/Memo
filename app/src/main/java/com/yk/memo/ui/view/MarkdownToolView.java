@@ -14,7 +14,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.FragmentActivity;
 
-import com.yk.markdown.bean.MdType;
+import com.yk.markdown2.bean.MdType;
 import com.yk.memo.R;
 import com.yk.memo.ui.album.AlbumActivity;
 import com.yk.permissionrequester.PermissionFragment;

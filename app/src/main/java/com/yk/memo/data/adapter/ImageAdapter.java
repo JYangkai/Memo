@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.yk.imageloader2.ImageLoader;
 import com.yk.memo.R;
 import com.yk.memo.data.bean.Image;
 
@@ -47,7 +47,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Image image = imageList.get(position);
-        Glide.with(context).load(image.getPath()).into(holder.ivCover);
+        ImageLoader.with(context).load(image.getPath()).into(holder.ivCover);
     }
 
     @Override
