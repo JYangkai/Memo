@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
-import com.yk.markdown.Markdown;
+import com.yk.markdown2.Markdown;
 import com.yk.memo.R;
 
 public class PreviewFragment extends Fragment {
@@ -56,7 +56,7 @@ public class PreviewFragment extends Fragment {
     private void initData() {
         if (getArguments() != null) {
             String src = getArguments().getString(EXTRA_SRC);
-            Markdown.with(getContext()).load(src).into(tvPreview);
+            Markdown.with(this).load(src).into(tvPreview);
         }
     }
 

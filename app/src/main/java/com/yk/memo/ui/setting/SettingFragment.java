@@ -9,7 +9,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.yk.eventposter.EventPoster;
-import com.yk.markdown.style.MdStyleManager;
 import com.yk.memo.R;
 import com.yk.memo.data.event.MdStyleChangeEvent;
 import com.yk.memo.utils.SpManager;
@@ -52,8 +51,6 @@ public class SettingFragment extends PreferenceFragmentCompat {
                 String style = (String) newValue;
 
                 showCustomMarkdownPref(style);
-
-                MdStyleManager.getInstance().choose(getContext(), style);
 
                 EventPoster.getInstance().post(new MdStyleChangeEvent(style));
                 return true;

@@ -18,6 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.yk.eventposter.EventPoster;
 import com.yk.eventposter.Subscribe;
+import com.yk.markdown2.Markdown;
 import com.yk.memo.R;
 import com.yk.memo.data.adapter.NoteAdapter;
 import com.yk.memo.data.bean.Note;
@@ -267,6 +268,9 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         if (event == null) {
             return;
         }
+
+        Markdown.configStyle(event.getStyle());
+
         noteAdapter.notifyDataSetChanged();
 
         SnackBarUtils.showMsgShort(getWindow().getDecorView(), "已切换为 " + event.getStyle() + " 风格");
