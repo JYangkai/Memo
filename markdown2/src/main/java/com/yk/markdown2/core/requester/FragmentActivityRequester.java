@@ -35,7 +35,7 @@ public class FragmentActivityRequester extends BaseRequester {
         });
         fa.getSupportFragmentManager().beginTransaction()
                 .add(requestFragment, RequestFragment.TAG)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     private void removeRequestFragment() {
@@ -48,7 +48,7 @@ public class FragmentActivityRequester extends BaseRequester {
         requestFragment.setOnLifeCircleListener(null);
         fa.getSupportFragmentManager().beginTransaction()
                 .remove(requestFragment)
-                .commit();
+                .commitAllowingStateLoss();
         requestFragment = null;
     }
 

@@ -34,7 +34,7 @@ public class ActivityRequester extends BaseRequester {
         });
         activity.getFragmentManager().beginTransaction()
                 .add(requestFragment, RequestFragment.TAG)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     private void removeRequestFragment() {
@@ -47,7 +47,7 @@ public class ActivityRequester extends BaseRequester {
         requestFragment.setOnLifeCircleListener(null);
         activity.getFragmentManager().beginTransaction()
                 .remove(requestFragment)
-                .commit();
+                .commitAllowingStateLoss();
         requestFragment = null;
     }
 
