@@ -9,14 +9,30 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.yk.markdown2.core.RequestBuilder;
-import com.yk.markdown2.style.MdStyleManager;
 import com.yk.markdown2.core.requester.IRequester;
+import com.yk.markdown2.style.MdStyleManager;
 
 public class Markdown {
     private static MdStyleManager.Style defaultStyle = MdStyleManager.Style.STANDARD;
 
-    public static void init(MdStyleManager.Style style) {
+    public static void configStyle(MdStyleManager.Style style) {
         defaultStyle = style;
+    }
+
+    public static void configStyle(String style) {
+        switch (style) {
+            case "Standard":
+                configStyle(MdStyleManager.Style.STANDARD);
+                break;
+            case "Typora":
+                configStyle(MdStyleManager.Style.TYPORA);
+                break;
+            case "Custom":
+                configStyle(MdStyleManager.Style.CUSTOM);
+                break;
+            default:
+                break;
+        }
     }
 
     public static MdStyleManager.Style getDefaultStyle() {

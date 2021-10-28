@@ -65,7 +65,7 @@ public class FragmentActivityRequester extends BaseRequester {
         return fa;
     }
 
-    private static class RequestFragment extends Fragment {
+    public static class RequestFragment extends Fragment {
         public static final String TAG = "RequestFragment";
 
         public static RequestFragment newInstance() {
