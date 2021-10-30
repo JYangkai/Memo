@@ -1,3 +1,4 @@
+include ':imageloader3'
 include ':imageloader2'
 include ':markdown2'
 include ':imageloader'
