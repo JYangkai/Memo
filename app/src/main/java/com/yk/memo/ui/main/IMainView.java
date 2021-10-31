@@ -37,6 +37,11 @@ public interface IMainView extends BaseMvpView {
     void onOutputNote(Note note);
 
     /**
+     * 分享note文件
+     */
+    void onShareNoteFile(Uri uri);
+
+    /**
      * 打包分享
      *
      * @param uri uri
@@ -62,6 +67,11 @@ public interface IMainView extends BaseMvpView {
      * 导出note 错误
      */
     void onOutputNoteError(Exception e);
+
+    /**
+     * 分享note文件 错误
+     */
+    void onShareNoteFileError(Exception e);
 
     /**
      * 打包分享 错误

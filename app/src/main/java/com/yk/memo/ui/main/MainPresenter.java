@@ -87,6 +87,64 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
     }
 
     /**
+     * 分享文件
+     */
+    public void shareNoteFile(Note note) {
+        Observable.fromCallable(new Observable.OnCallable<File>() {
+            @Override
+            public File call() {
+                Log.d(TAG, "call: shareNoteFile get file:" + note);
+
+                boolean isOutputMarkdown = FileUtils.isOutputMarkdown(context, note);
+                if (!isOutputMarkdown) {
+                    FileUtils.outputNoteToMarkdownFolder(context, note);
+                }
+                return new File(FileUtils.generateNotePath(context, note));
+            }
+        })
+                .map(new Observable.Function1<File, Uri>() {
+                    @Override
+                    public Uri call(File file) {
+                        Log.d(TAG, "call: shareNoteFile get uri");
+                        if (file == null) {
+                            return null;
+                        }
+                        return FileProvider.getUriForFile(context, "com.yk.memo.fileprovider", file);
+                    }
+                })
+                .subscribeOnIo()
+                .observeOnUi()
+                .subscribe(new Subscriber<Uri>() {
+                    @Override
+                    public void onNext(Uri uri) {
+                        Log.d(TAG, "onNext: shareNoteFile:" + uri);
+                        if (uri == null) {
+                            if (getView() != null) {
+                                getView().onShareNoteFileError(new RuntimeException("uri is null"));
+                            }
+                            return;
+                        }
+                        if (getView() != null) {
+                            getView().onShareNoteFile(uri);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: shareNoteFile");
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e(TAG, "onError: shareNoteFile:", e);
+                        if (getView() != null) {
+                            getView().onShareNoteFileError(e);
+                        }
+                    }
+                });
+    }
+
+    /**
      * 加载全部note
      */
     public void loadAllNote() {
