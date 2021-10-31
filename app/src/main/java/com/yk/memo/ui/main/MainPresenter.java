@@ -60,6 +60,12 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
                     @Override
                     public void onNext(Uri uri) {
                         Log.d(TAG, "onNext: zipShare:" + uri);
+                        if (uri == null) {
+                            if (getView() != null) {
+                                getView().onZipShareError(new RuntimeException("uri is null"));
+                            }
+                            return;
+                        }
                         if (getView() != null) {
                             getView().onZipShare(uri);
                         }
