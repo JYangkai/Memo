@@ -1,3 +1,8 @@
 <paths>
-    <external-files-path path="folder_markdown/" name="markdown" />
+    <external-files-path
+        name="markdown"
+        path="folder_markdown/" />
+    <external-files-path
+        name="markdownzip"
+        path="." />
 </paths>

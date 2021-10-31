@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_main_zip"
+        android:icon="@drawable/ic_baseline_share_24"
+        android:title="Zip Share"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_main_delete"
         android:icon="@drawable/ic_baseline_delete_24"
         android:title="Delete"

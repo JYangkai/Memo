@@ -30,6 +30,7 @@ import com.yk.memo.data.event.NoteAddEvent;
 import com.yk.memo.data.event.NoteRemoveEvent;
 import com.yk.memo.data.event.NoteUpdateEvent;
 import com.yk.memo.ui.edit.EditActivity;
+import com.yk.memo.ui.main.fragment.ConfirmDialogFragment;
 import com.yk.memo.ui.setting.SettingActivity;
 import com.yk.memo.utils.FileUtils;
 import com.yk.memo.utils.SnackBarUtils;
@@ -41,13 +42,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> implements IMainView {
+public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> implements IMainView, ConfirmDialogFragment.OnConfirmListener {
     private Toolbar toolbar;
     private SearchView searchView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rvNote;
 
     private NoteAdapter noteAdapter;
+
+    private ConfirmDialogFragment confirmDialogFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -248,6 +251,13 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         presenter.deleteNoteList(noteAdapter.getSelectNoteList());
     }
 
+    private void zipShare() {
+        if (confirmDialogFragment == null) {
+            confirmDialogFragment = ConfirmDialogFragment.newInstance();
+        }
+        confirmDialogFragment.show(getSupportFragmentManager());
+    }
+
     private MenuItem deleteMenuItem;
 
     private void showDeleteMenuItem() {
@@ -274,7 +284,9 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_main_delete) {
+        if (item.getItemId() == R.id.menu_main_zip) {
+            zipShare();
+        } else if (item.getItemId() == R.id.menu_main_delete) {
             deleteNoteList();
         } else if (item.getItemId() == R.id.menu_main_edit) {
             startEditActivity(null);
@@ -395,6 +407,17 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     }
 
     @Override
+    public void onZipShare(Uri uri) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.setType("*/*");
+
+        Intent share = Intent.createChooser(intent, null);
+        startActivity(share);
+    }
+
+    @Override
     public void onLoadNoteListError(Exception e) {
 
     }
@@ -411,6 +434,26 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
 
     @Override
     public void onOutputNoteError(Exception e) {
+
+    }
+
+    @Override
+    public void onZipShareError(Exception e) {
+
+    }
+
+    @Override
+    public void onPositiveClick() {
+        presenter.zipShare();
+    }
+
+    @Override
+    public void onNegativeClick() {
+
+    }
+
+    @Override
+    public void onNeutralClick() {
 
     }
 }

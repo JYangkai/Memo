@@ -1,5 +1,7 @@
 package com.yk.memo.ui.main;
 
+import android.net.Uri;
+
 import com.yk.memo.data.bean.Note;
 import com.yk.mvp.BaseMvpView;
 
@@ -35,6 +37,13 @@ public interface IMainView extends BaseMvpView {
     void onOutputNote(Note note);
 
     /**
+     * 打包分享
+     *
+     * @param uri uri
+     */
+    void onZipShare(Uri uri);
+
+    /**
      * 加载note list错误
      */
     void onLoadNoteListError(Exception e);
@@ -53,4 +62,9 @@ public interface IMainView extends BaseMvpView {
      * 导出note 错误
      */
     void onOutputNoteError(Exception e);
+
+    /**
+     * 打包分享 错误
+     */
+    void onZipShareError(Exception e);
 }

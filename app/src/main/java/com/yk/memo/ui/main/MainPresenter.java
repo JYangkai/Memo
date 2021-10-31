@@ -1,24 +1,83 @@
 package com.yk.memo.ui.main;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
+
+import androidx.core.content.FileProvider;
 
 import com.yk.memo.data.bean.Note;
 import com.yk.memo.data.db.NoteDbManager;
 import com.yk.memo.utils.FileUtils;
+import com.yk.memo.utils.ZipUtils;
 import com.yk.mvp.BaseMvpPresenter;
 import com.yk.rxsample.Observable;
 import com.yk.rxsample.Subscriber;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class MainPresenter extends BaseMvpPresenter<IMainView> {
     private static final String TAG = "MainPresenter2";
 
-    private Context context;
+    private final Context context;
 
     public MainPresenter(Context context) {
         this.context = context;
+    }
+
+    /**
+     * 打包分享
+     */
+    public void zipShare() {
+        Observable.fromCallable(new Observable.OnCallable<File>() {
+            @Override
+            public File call() {
+                Log.d(TAG, "call: zipShare get file");
+                File zipFile = null;
+                try {
+                    zipFile = ZipUtils.zipAllMarkdown(context);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return zipFile;
+            }
+        })
+                .map(new Observable.Function1<File, Uri>() {
+                    @Override
+                    public Uri call(File file) {
+                        Log.d(TAG, "call: zipShare get uri");
+                        if (file == null) {
+                            return null;
+                        }
+                        return FileProvider.getUriForFile(context, "com.yk.memo.fileprovider", file);
+                    }
+                })
+                .subscribeOnIo()
+                .observeOnUi()
+                .subscribe(new Subscriber<Uri>() {
+                    @Override
+                    public void onNext(Uri uri) {
+                        Log.d(TAG, "onNext: zipShare:" + uri);
+                        if (getView() != null) {
+                            getView().onZipShare(uri);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: zipShare");
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e(TAG, "onError: zipShare:", e);
+                        if (getView() != null) {
+                            getView().onZipShareError(e);
+                        }
+                    }
+                });
     }
 
     /**
