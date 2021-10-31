@@ -35,9 +35,9 @@ public class SettingFragment extends PreferenceFragmentCompat {
     }
 
     private void findPref() {
-        markdownListPref = findPreference("key_markdown_style");
-        customMarkdownPref = findPreference("custom_markdown");
-        outputMarkdownPref = findPreference("key_output_markdown");
+        markdownListPref = findPreference("pref_markdown_style");
+        customMarkdownPref = findPreference("pref_custom_markdown");
+        outputMarkdownPref = findPreference("pref_output_markdown");
     }
 
     private void initData() {

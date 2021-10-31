@@ -47,12 +47,12 @@ public class SpManager {
 
     public interface Sp {
         interface MarkdownStyle {
-            String KEY = "key_markdown_style";
+            String KEY = "pref_markdown_style";
             String DEFAULT_VALUE = "Standard";
         }
 
         interface OutputMarkdown {
-            String KEY = "key_output_markdown";
+            String KEY = "pref_output_markdown";
             boolean DEFAULT_VALUE = false;
         }
     }
