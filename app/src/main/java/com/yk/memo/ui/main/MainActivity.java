@@ -1,6 +1,7 @@
 package com.yk.memo.ui.main;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -169,6 +170,8 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
                     presenter.deleteNote(note);
                 } else if (item.getItemId() == R.id.menu_item_note_output) {
                     outputNote(note);
+                } else if (item.getItemId() == R.id.menu_item_note_share_text) {
+                    shareNoteText(note);
                 }
                 return true;
             }
@@ -198,6 +201,16 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
 
                     }
                 });
+    }
+
+    private void shareNoteText(Note note) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, note.getSrc());
+        intent.setType("text/plain");
+
+        Intent share = Intent.createChooser(intent, null);
+        startActivity(share);
     }
 
     private void startEditActivity(Note note) {
