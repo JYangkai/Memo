@@ -32,6 +32,9 @@ public class DiskCache {
     }
 
     public void init(Context context) {
+        if (cache != null) {
+            return;
+        }
         try {
             File file = getDiskLruCacheDir(context, "bitmap");
             if (!file.exists()) {
