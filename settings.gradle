@@ -1,7 +1,5 @@
-include ':imageloader3'
-include ':imageloader2'
-include ':markdown2'
 include ':imageloader'
+include ':markdown2'
 include ':permissionrequester'
 include ':rxsample'
 include ':mvp'
