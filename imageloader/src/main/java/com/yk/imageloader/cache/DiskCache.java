@@ -69,6 +69,9 @@ public class DiskCache {
         }
         try {
             DiskLruCache.Editor editor = cache.edit(key);
+            if (editor == null) {
+                return;
+            }
             boolean success = bitmap.compress(Bitmap.CompressFormat.JPEG, 100, editor.newOutputStream(0));
             if (success) {
                 editor.commit();
