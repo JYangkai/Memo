@@ -2,6 +2,7 @@ package com.yk.memo.ui.main;
 
 import android.Manifest;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -13,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -29,11 +31,13 @@ import com.yk.memo.data.event.NoteRemoveEvent;
 import com.yk.memo.data.event.NoteUpdateEvent;
 import com.yk.memo.ui.edit.EditActivity;
 import com.yk.memo.ui.setting.SettingActivity;
+import com.yk.memo.utils.FileUtils;
 import com.yk.memo.utils.SnackBarUtils;
 import com.yk.mvp.BaseMvpActivity;
 import com.yk.permissionrequester.PermissionFragment;
 import com.yk.permissionrequester.PermissionRequester;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,6 +176,8 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
                     outputNote(note);
                 } else if (item.getItemId() == R.id.menu_item_note_share_text) {
                     shareNoteText(note);
+                } else if (item.getItemId() == R.id.menu_item_note_share_file) {
+                    shareNoteFile(note);
                 }
                 return true;
             }
@@ -208,6 +214,23 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         intent.setAction(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_TEXT, note.getSrc());
         intent.setType("text/plain");
+
+        Intent share = Intent.createChooser(intent, null);
+        startActivity(share);
+    }
+
+    private void shareNoteFile(Note note) {
+        boolean isOutputMarkdown = FileUtils.isOutputMarkdown(this, note);
+        if (!isOutputMarkdown) {
+            FileUtils.outputNoteToMarkdownFolder(this, note);
+        }
+        File file = new File(FileUtils.generateNotePath(this, note));
+        Uri uri = FileProvider.getUriForFile(this, "com.yk.memo.fileprovider", file);
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.setType("*/*");
 
         Intent share = Intent.createChooser(intent, null);
         startActivity(share);

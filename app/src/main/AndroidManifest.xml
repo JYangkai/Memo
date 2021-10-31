@@ -26,6 +26,16 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.setting.SettingActivity" />
         <activity android:name=".ui.album.AlbumActivity" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.yk.memo.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
     </application>
 
 </manifest>

@@ -13,4 +13,8 @@
         android:id="@+id/menu_item_note_share_text"
         android:title="分享文本" />
 
+    <item
+        android:id="@+id/menu_item_note_share_file"
+        android:title="分享文件" />
+
 </menu>
