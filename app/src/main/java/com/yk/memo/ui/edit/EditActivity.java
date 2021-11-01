@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,13 +17,13 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import com.yk.mvp.BaseMvpActivity;
 import com.yk.memo.R;
 import com.yk.memo.data.bean.Note;
 import com.yk.memo.ui.edit.fragment.ConfirmDialogFragment;
 import com.yk.memo.ui.edit.fragment.EditFragment;
 import com.yk.memo.ui.edit.fragment.PreviewFragment;
 import com.yk.memo.utils.SnackBarUtils;
+import com.yk.mvp.BaseMvpActivity;
 
 public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> implements IEditView, ConfirmDialogFragment.OnConfirmListener {
     private static final String TAG = "EditActivity2";
@@ -278,6 +279,8 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
         } else if (item.getItemId() == R.id.menu_edit_preview) {
             PreviewFragment.loadData(previewFragment, editFragment.getSrc());
             chooseMode(Mode.PREVIEW);
+        } else if (item.getItemId() == R.id.menu_edit_share_shot) {
+            presenter.shareShot(previewFragment.getTv());
         }
         return true;
     }
@@ -336,6 +339,17 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
     }
 
     @Override
+    public void onShareShot(Uri uri) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.setType("*/*");
+
+        Intent share = Intent.createChooser(intent, null);
+        startActivity(share);
+    }
+
+    @Override
     public void onSaveNoteError(Exception e) {
 
     }
@@ -347,6 +361,11 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
 
     @Override
     public void onDeleteNoteError(Exception e) {
+
+    }
+
+    @Override
+    public void onShareShotError(Exception e) {
 
     }
 }

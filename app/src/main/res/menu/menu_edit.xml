@@ -44,4 +44,9 @@
         android:title="Preview"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/menu_edit_share_shot"
+        android:title="图片分享"
+        app:showAsAction="never" />
+
 </menu>

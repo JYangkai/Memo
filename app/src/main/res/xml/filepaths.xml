@@ -3,6 +3,9 @@
         name="markdown"
         path="folder_markdown/" />
     <external-files-path
+        name="markdownshot"
+        path="folder_markdown_shot" />
+    <external-files-path
         name="markdownzip"
         path="." />
 </paths>

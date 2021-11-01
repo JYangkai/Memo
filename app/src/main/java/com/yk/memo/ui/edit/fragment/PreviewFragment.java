@@ -71,6 +71,10 @@ public class PreviewFragment extends Fragment {
         });
     }
 
+    public AppCompatTextView getTv() {
+        return tvPreview;
+    }
+
     private OnPreviewListener onPreviewListener;
 
     public void setOnPreviewListener(OnPreviewListener onPreviewListener) {

@@ -1,7 +1,11 @@
 package com.yk.memo.ui.edit;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
+import android.view.View;
+
+import androidx.core.content.FileProvider;
 
 import com.yk.eventposter.EventPoster;
 import com.yk.memo.data.bean.Note;
@@ -11,9 +15,13 @@ import com.yk.memo.data.event.NoteRemoveEvent;
 import com.yk.memo.data.event.NoteUpdateEvent;
 import com.yk.memo.utils.FileUtils;
 import com.yk.memo.utils.SpManager;
+import com.yk.memo.utils.TimeUtils;
+import com.yk.memo.utils.ViewShotUtils;
 import com.yk.mvp.BaseMvpPresenter;
 import com.yk.rxsample.Observable;
 import com.yk.rxsample.Subscriber;
+
+import java.io.File;
 
 public class EditPresenter extends BaseMvpPresenter<IEditView> {
     private static final String TAG = "EditPresenter2";
@@ -178,6 +186,59 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                         Log.e(TAG, "onError: delete note:", e);
                         if (getView() != null) {
                             getView().onDeleteNoteError(e);
+                        }
+                    }
+                });
+    }
+
+    public void shareShot(View view) {
+        Observable.fromCallable(new Observable.OnCallable<File>() {
+            @Override
+            public File call() {
+                Log.d(TAG, "call: shareShot");
+                String output = FileUtils.getMarkdownShotFolder(context)
+                        + TimeUtils.getTime(System.currentTimeMillis(), "yyyy-MM-dd_HH-mm-ss")
+                        + ".jpeg";
+                boolean success = ViewShotUtils.shotAndSave(view, output);
+                return success ? new File(output) : null;
+            }
+        })
+                .map(new Observable.Function1<File, Uri>() {
+                    @Override
+                    public Uri call(File file) {
+                        if (file == null) {
+                            return null;
+                        }
+                        return FileProvider.getUriForFile(context, "com.yk.memo.fileprovider", file);
+                    }
+                })
+                .subscribeOnIo()
+                .observeOnUi()
+                .subscribe(new Subscriber<Uri>() {
+                    @Override
+                    public void onNext(Uri uri) {
+                        Log.d(TAG, "onNext: shareShot:" + uri);
+                        if (uri == null) {
+                            if (getView() != null) {
+                                getView().onShareShotError(new RuntimeException("uri is null"));
+                            }
+                            return;
+                        }
+                        if (getView() != null) {
+                            getView().onShareShot(uri);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: shareShot");
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e(TAG, "onError: shareShot:", e);
+                        if (getView() != null) {
+                            getView().onShareShotError(e);
                         }
                     }
                 });

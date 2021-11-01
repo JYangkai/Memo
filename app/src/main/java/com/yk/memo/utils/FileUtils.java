@@ -10,9 +10,14 @@ import java.io.IOException;
 
 public class FileUtils {
     private static final String FOLDER_MARKDOWN = "folder_markdown";
+    private static final String FOLDER_MARKDOWN_SHOT = "folder_markdown_shot";
 
     public static String getMarkdownFolder(Context context) {
         return getFolderPath(context, FOLDER_MARKDOWN);
+    }
+
+    public static String getMarkdownShotFolder(Context context) {
+        return getFolderPath(context, FOLDER_MARKDOWN_SHOT);
     }
 
     public static String getFolderPath(Context context, String folder) {
