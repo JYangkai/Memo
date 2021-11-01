@@ -13,7 +13,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.yk.markdown2.Markdown;
+import com.yk.markdown.Markdown;
 import com.yk.memo.R;
 import com.yk.memo.data.bean.Note;
 import com.yk.memo.ui.view.NoteCardView;

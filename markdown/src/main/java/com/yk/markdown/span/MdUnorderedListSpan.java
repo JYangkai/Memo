@@ -10,7 +10,6 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleUnorderedList;
 import com.yk.markdown.style.style.BaseMdStyle;
 
@@ -20,10 +19,6 @@ public class MdUnorderedListSpan extends MetricAffectingSpan implements LeadingM
     private final int gapWidth;
     private final int textColor;
     private final int textSize;
-
-    public MdUnorderedListSpan() {
-        this(MdStyleManager.getInstance().getMdStyle());
-    }
 
     public MdUnorderedListSpan(BaseMdStyle style) {
         MdStyleUnorderedList unorderedList = style.getUnorderedList();

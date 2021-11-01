@@ -10,7 +10,6 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleOrderedList;
 import com.yk.markdown.style.style.BaseMdStyle;
 
@@ -24,12 +23,8 @@ public class MdOrderedListSpan extends MetricAffectingSpan implements LeadingMar
     private final int textColor;
     private final int textSize;
 
-    public MdOrderedListSpan() {
-        this(1);
-    }
-
-    public MdOrderedListSpan(int index) {
-        this(index, MdStyleManager.getInstance().getMdStyle());
+    public MdOrderedListSpan(BaseMdStyle style) {
+        this(1, style);
     }
 
     public MdOrderedListSpan(int index, BaseMdStyle style) {

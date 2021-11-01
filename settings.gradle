@@ -1,9 +1,8 @@
+include ':markdown'
 include ':imageloader'
-include ':markdown2'
 include ':permissionrequester'
 include ':rxsample'
 include ':mvp'
 include ':eventposter'
-include ':markdown'
 include ':app'
 rootProject.name = "Memo"

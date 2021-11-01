@@ -1,32 +1,13 @@
 package com.yk.markdown.bean;
 
-public class MdWord {
-    private MdType type;
-    private String src;
+public class MdWord extends BaseMdBean {
     private int start;
     private int end;
 
     public MdWord(MdType type, String src, int start, int end) {
-        this.type = type;
-        this.src = src;
+        super(type, src);
         this.start = start;
         this.end = end;
-    }
-
-    public MdType getType() {
-        return type;
-    }
-
-    public void setType(MdType type) {
-        this.type = type;
-    }
-
-    public String getSrc() {
-        return src;
-    }
-
-    public void setSrc(String src) {
-        this.src = src;
     }
 
     public int getStart() {
@@ -45,12 +26,16 @@ public class MdWord {
         this.end = end;
     }
 
+    public void addOffset(int offset) {
+        setStart(getStart() + offset);
+        setEnd(getEnd() + offset);
+    }
+
     @Override
     public String toString() {
-        return "MdWord{" +
-                "type=" + type +
-                ", src='" + src + '\'' +
-                ", start=" + start +
+        return super.toString() +
+                ":MdWord{" +
+                "start=" + start +
                 ", end=" + end +
                 '}';
     }

@@ -9,7 +9,6 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleQuote;
 import com.yk.markdown.style.style.BaseMdStyle;
 
@@ -19,10 +18,6 @@ public class MdQuoteSpan extends MetricAffectingSpan implements LeadingMarginSpa
     private final int gapWidth;
     private final int textColor;
     private final int textSize;
-
-    public MdQuoteSpan() {
-        this(MdStyleManager.getInstance().getMdStyle());
-    }
 
     public MdQuoteSpan(BaseMdStyle style) {
         MdStyleQuote quote = style.getQuote();

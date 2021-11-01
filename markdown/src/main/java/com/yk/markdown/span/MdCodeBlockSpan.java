@@ -11,7 +11,6 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleCodeBlock;
 import com.yk.markdown.style.style.BaseMdStyle;
 
@@ -20,10 +19,6 @@ public class MdCodeBlockSpan extends MetricAffectingSpan implements LeadingMargi
     private final int backgroundColor;
     private final int textColor;
     private final int textSize;
-
-    public MdCodeBlockSpan() {
-        this(MdStyleManager.getInstance().getMdStyle());
-    }
 
     public MdCodeBlockSpan(BaseMdStyle style) {
         MdStyleCodeBlock codeBlock = style.getCodeBlock();

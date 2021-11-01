@@ -39,6 +39,6 @@ dependencies {
     implementation project(path: ':mvp')
     implementation project(path: ':rxsample')
     implementation project(path: ':permissionrequester')
-    implementation project(path: ':markdown2')
     implementation project(path: ':imageloader')
+    implementation project(path: ':markdown')
 }

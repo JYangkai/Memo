@@ -8,7 +8,6 @@ import android.text.style.MetricAffectingSpan;
 
 import androidx.annotation.NonNull;
 
-import com.yk.markdown.style.MdStyleManager;
 import com.yk.markdown.style.bean.MdStyleSeparator;
 import com.yk.markdown.style.bean.MdStyleTitle;
 import com.yk.markdown.style.style.BaseMdStyle;
@@ -18,15 +17,15 @@ public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSp
     private final int textColor;
     private final int textSize;
 
-    public MdTitleSpan() {
-        this(1);
-    }
+    private BaseMdStyle style;
 
-    public MdTitleSpan(int level) {
-        this(level, MdStyleManager.getInstance().getMdStyle());
+    public MdTitleSpan(BaseMdStyle style) {
+        this(1, style);
     }
 
     public MdTitleSpan(int level, BaseMdStyle style) {
+        this.style = style;
+
         this.level = level;
 
         MdStyleTitle title = style.getTitle();
@@ -77,7 +76,7 @@ public class MdTitleSpan extends MetricAffectingSpan implements LineBackgroundSp
         int preColor = paint.getColor();
         float preStrokeWidth = paint.getStrokeWidth();
 
-        MdStyleSeparator separator = MdStyleManager.getInstance().getMdStyle().getSeparator();
+        MdStyleSeparator separator = style.getSeparator();
 
         paint.setColor(separator.getColor());
         paint.setStrokeWidth(separator.getSize());

@@ -2,7 +2,7 @@ package com.yk.memo;
 
 import android.app.Application;
 
-import com.yk.markdown2.Markdown;
+import com.yk.markdown.Markdown;
 import com.yk.memo.utils.SpManager;
 
 import org.litepal.LitePal;

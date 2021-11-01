@@ -20,7 +20,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.yk.eventposter.EventPoster;
 import com.yk.eventposter.Subscribe;
-import com.yk.markdown2.Markdown;
+import com.yk.markdown.Markdown;
 import com.yk.memo.R;
 import com.yk.memo.data.adapter.NoteAdapter;
 import com.yk.memo.data.bean.Note;

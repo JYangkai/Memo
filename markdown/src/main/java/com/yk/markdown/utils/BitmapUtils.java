@@ -17,6 +17,9 @@ public class BitmapUtils {
     }
 
     private static Bitmap getScaleBitmap(Bitmap origin, int screenW, int screenH) {
+        if (origin == null) {
+            return null;
+        }
         float scale = getBitmapScale(origin.getWidth(), origin.getHeight(), screenW, screenH);
         Matrix matrix = new Matrix();
         matrix.postScale(scale, scale);
@@ -25,6 +28,9 @@ public class BitmapUtils {
 
     private static Bitmap getRotateBitmap(String path) {
         Bitmap origin = BitmapFactory.decodeFile(path);
+        if (origin == null) {
+            return null;
+        }
         int degree = getBitmapOrientation(getExifInterfaceFromPath(path));
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);

@@ -1,151 +1,77 @@
 package com.yk.markdown;
 
 import android.content.Context;
-import android.os.Looper;
-import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
-import android.widget.TextView;
+import android.view.View;
 
-import com.yk.markdown.core.MdParser;
-import com.yk.markdown.core.MdRender;
-import com.yk.markdown.core.MdThreadManager;
+import androidx.fragment.app.Fragment;
+
+import com.yk.markdown.manager.RequestManager;
 import com.yk.markdown.style.MdStyleManager;
 
 public class Markdown {
-    private final Context context;
 
-    /**
-     * Markdown源码
-     */
-    private String src;
+    private static MdStyleManager.Style defaultStyle = MdStyleManager.Style.STANDARD;
 
-    /**
-     * 占位字符
-     */
-    private String placeHolder;
+    public static void configStyle(MdStyleManager.Style style) {
+        defaultStyle = style;
+    }
 
-    /**
-     * 风格
-     */
-    private MdStyleManager.Style style;
+    public static void configStyle(String style) {
+        switch (style) {
+            case "Standard":
+                configStyle(MdStyleManager.Style.STANDARD);
+                break;
+            case "Typora":
+                configStyle(MdStyleManager.Style.TYPORA);
+                break;
+            case "Custom":
+                configStyle(MdStyleManager.Style.CUSTOM);
+                break;
+            default:
+                break;
+        }
+    }
 
-    /**
-     * 设置的Tv
-     */
-    private TextView tv;
+    public static MdStyleManager.Style getDefaultStyle() {
+        return defaultStyle;
+    }
 
-    /**
-     * 构造方法
-     *
-     * @param context 上下文
-     */
+    private final RequestManager requestManager;
+
+    private static volatile Markdown instance;
+
     private Markdown(Context context) {
-        this.context = context;
+        requestManager = new RequestManager(context);
     }
 
-    public static Markdown with(Context context) {
-        return new Markdown(context);
-    }
-
-    public static void initStyle(MdStyleManager.Style style) {
-        MdStyleManager.getInstance().choose(style);
-    }
-
-    public static void initStyle(Context context, String style) {
-        MdStyleManager.getInstance().choose(context, style);
-    }
-
-    /**
-     * 加载文本
-     *
-     * @param src Markdown源码
-     * @return Markdown实例
-     */
-    public Markdown load(String src) {
-        this.src = src;
-        return this;
-    }
-
-    /**
-     * 占位文本
-     */
-    public Markdown placeHolder(String placeHolder) {
-        this.placeHolder = placeHolder;
-        return this;
-    }
-
-    public Markdown style(MdStyleManager.Style style) {
-        this.style = style;
-        return this;
-    }
-
-    /**
-     * 设置到tv
-     */
-    public void into(TextView tv) {
-        if (tv == null) {
-            return;
-        }
-
-        if (TextUtils.isEmpty(src)) {
-            return;
-        }
-
-        this.tv = tv;
-
-        if (isMainThread()) {
-            executeTask();
-        } else {
-            MdThreadManager.getInstance().postUi(new Runnable() {
-                @Override
-                public void run() {
-                    executeTask();
+    public static Markdown getInstance(Context context) {
+        if (instance == null) {
+            synchronized (Markdown.class) {
+                if (instance == null) {
+                    instance = new Markdown(context);
                 }
-            });
+            }
         }
+        return instance;
     }
 
-    /**
-     * 执行任务
-     */
-    private void executeTask() {
-        tv.setText(placeHolder);
-        MdThreadManager.getInstance().postIo(new Runnable() {
-            @Override
-            public void run() {
-                refreshUi(getMd());
-            }
-        });
+    public RequestManager getRequestManager() {
+        return requestManager;
     }
 
-    /**
-     * 刷新界面
-     */
-    private void refreshUi(SpannableStringBuilder spanStrBuilder) {
-        MdThreadManager.getInstance().postUi(new Runnable() {
-            @Override
-            public void run() {
-                tv.setText(spanStrBuilder);
-            }
-        });
+    public static RequestManager with(Context context) {
+        return Markdown.getInstance(context).getRequestManager();
     }
 
-    /**
-     * 获取Md Span Builder
-     */
-    private SpannableStringBuilder getMd() {
-        return MdRender.getSpanStrBuilder(
-                context,
-                MdParser.dealMarkdown(src),
-                MdStyleManager.getInstance().getStyle(style)
-        );
+    public static RequestManager with(Fragment fragment) {
+        return with(fragment.getActivity());
     }
 
-    /**
-     * 判断主线程
-     */
-    private boolean isMainThread() {
-        return Thread.currentThread() == Looper.getMainLooper().getThread();
+    public static RequestManager with(android.app.Fragment fragment) {
+        return with(fragment.getActivity());
     }
 
+    public static RequestManager with(View view) {
+        return with(view.getContext());
+    }
 }
