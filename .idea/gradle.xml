@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/mvp" />
             <option value="$PROJECT_DIR$/permissionrequester" />
             <option value="$PROJECT_DIR$/rxsample" />
+            <option value="$PROJECT_DIR$/share" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

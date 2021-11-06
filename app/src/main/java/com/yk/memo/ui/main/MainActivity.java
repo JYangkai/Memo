@@ -1,7 +1,6 @@
 package com.yk.memo.ui.main;
 
 import android.Manifest;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -35,6 +34,7 @@ import com.yk.memo.utils.SnackBarUtils;
 import com.yk.mvp.BaseMvpActivity;
 import com.yk.permissionrequester.PermissionFragment;
 import com.yk.permissionrequester.PermissionRequester;
+import com.yk.share.ShareUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -210,13 +210,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     }
 
     private void shareNoteText(Note note) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TEXT, note.getSrc());
-        intent.setType("text/plain");
-
-        Intent share = Intent.createChooser(intent, null);
-        startActivity(share);
+        ShareUtils.shareText(this, note.getSrc());
     }
 
     private void startEditActivity(Note note) {
@@ -388,24 +382,12 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
 
     @Override
     public void onShareNoteFile(Uri uri) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        intent.setType("*/*");
-
-        Intent share = Intent.createChooser(intent, null);
-        startActivity(share);
+        ShareUtils.shareFile(this, uri);
     }
 
     @Override
     public void onZipShare(Uri uri) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        intent.setType("*/*");
-
-        Intent share = Intent.createChooser(intent, null);
-        startActivity(share);
+        ShareUtils.shareFile(this, uri);
     }
 
     @Override

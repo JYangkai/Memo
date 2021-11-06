@@ -24,6 +24,7 @@ import com.yk.memo.ui.edit.fragment.EditFragment;
 import com.yk.memo.ui.edit.fragment.PreviewFragment;
 import com.yk.memo.utils.SnackBarUtils;
 import com.yk.mvp.BaseMvpActivity;
+import com.yk.share.ShareUtils;
 
 public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> implements IEditView, ConfirmDialogFragment.OnConfirmListener {
     private static final String TAG = "EditActivity2";
@@ -340,13 +341,7 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
 
     @Override
     public void onShareShot(Uri uri) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        intent.setType("*/*");
-
-        Intent share = Intent.createChooser(intent, null);
-        startActivity(share);
+        ShareUtils.shareJpg(this, uri);
     }
 
     @Override
