@@ -42,4 +42,5 @@ dependencies {
     implementation project(path: ':markdown')
     implementation project(path: ':share')
     implementation project(path: ':db')
+    implementation project(path: ':io')
 }

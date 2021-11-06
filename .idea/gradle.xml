@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/db" />
             <option value="$PROJECT_DIR$/eventposter" />
             <option value="$PROJECT_DIR$/imageloader" />
+            <option value="$PROJECT_DIR$/io" />
             <option value="$PROJECT_DIR$/markdown" />
             <option value="$PROJECT_DIR$/mvp" />
             <option value="$PROJECT_DIR$/permissionrequester" />

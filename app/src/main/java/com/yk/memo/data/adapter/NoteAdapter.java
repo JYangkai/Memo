@@ -13,11 +13,11 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.yk.db.bean.Note;
 import com.yk.markdown.Markdown;
 import com.yk.memo.R;
-import com.yk.db.bean.Note;
 import com.yk.memo.ui.view.NoteCardView;
-import com.yk.memo.utils.FileUtils;
+import com.yk.memo.utils.NoteUtils;
 import com.yk.memo.utils.TimeUtils;
 
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         Markdown.with(context).load(note.getSrc()).into(holder.tvNoteContent);
         holder.tvTime.setText(TimeUtils.getSmartTime(note.getUpdateTime()));
         holder.noteCardView.select(note.isSelect());
-        holder.noteCardView.outputMarkdown(FileUtils.isOutputMarkdown(context, note));
+        holder.noteCardView.outputMarkdown(NoteUtils.isOutputNote(context, note));
     }
 
     @Override

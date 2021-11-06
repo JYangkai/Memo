@@ -7,13 +7,13 @@ import android.view.View;
 
 import androidx.core.content.FileProvider;
 
-import com.yk.eventposter.EventPoster;
 import com.yk.db.bean.Note;
 import com.yk.db.manager.NoteDbManager;
+import com.yk.eventposter.EventPoster;
 import com.yk.memo.data.event.NoteAddEvent;
 import com.yk.memo.data.event.NoteRemoveEvent;
 import com.yk.memo.data.event.NoteUpdateEvent;
-import com.yk.memo.utils.FileUtils;
+import com.yk.memo.utils.NoteUtils;
 import com.yk.memo.utils.SpManager;
 import com.yk.memo.utils.TimeUtils;
 import com.yk.memo.utils.ViewShotUtils;
@@ -56,7 +56,7 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                     @Override
                     public Note call(Note note) {
                         if (SpManager.getInstance().getOutputMarkdown()) {
-                            boolean success = FileUtils.outputNoteToMarkdownFolder(context, note);
+                            boolean success = NoteUtils.outputNote(context, note);
                             Log.d(TAG, "call: save note output markdown:" + success);
                         }
                         return note;
@@ -113,7 +113,7 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                     @Override
                     public Note call(Note note) {
                         if (SpManager.getInstance().getOutputMarkdown()) {
-                            boolean success = FileUtils.outputNoteToMarkdownFolder(context, note);
+                            boolean success = NoteUtils.outputNote(context, note);
                             Log.d(TAG, "call: update note output markdown:" + success);
                         }
                         return note;
@@ -196,7 +196,7 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
             @Override
             public File call() {
                 Log.d(TAG, "call: shareShot");
-                String output = FileUtils.getMarkdownShotFolder(context)
+                String output = NoteUtils.getMarkdownShotFolder(context)
                         + TimeUtils.getTime(System.currentTimeMillis(), "yyyy-MM-dd_HH-mm-ss")
                         + ".jpeg";
                 boolean success = ViewShotUtils.shotAndSave(view, output);

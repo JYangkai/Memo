@@ -1,3 +1,4 @@
+include ':io'
 include ':db'
 include ':share'
 include ':markdown'

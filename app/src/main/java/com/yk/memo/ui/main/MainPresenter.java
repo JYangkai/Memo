@@ -8,14 +8,12 @@ import androidx.core.content.FileProvider;
 
 import com.yk.db.bean.Note;
 import com.yk.db.manager.NoteDbManager;
-import com.yk.memo.utils.FileUtils;
-import com.yk.memo.utils.ZipUtils;
+import com.yk.memo.utils.NoteUtils;
 import com.yk.mvp.BaseMvpPresenter;
 import com.yk.rxsample.Observable;
 import com.yk.rxsample.Subscriber;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class MainPresenter extends BaseMvpPresenter<IMainView> {
@@ -35,13 +33,7 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
             @Override
             public File call() {
                 Log.d(TAG, "call: zipShare get file");
-                File zipFile = null;
-                try {
-                    zipFile = ZipUtils.zipAllMarkdown(context);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return zipFile;
+                return NoteUtils.zipAllMarkdown(context);
             }
         })
                 .map(new Observable.Function1<File, Uri>() {
@@ -95,11 +87,11 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
             public File call() {
                 Log.d(TAG, "call: shareNoteFile get file:" + note);
 
-                boolean isOutputMarkdown = FileUtils.isOutputMarkdown(context, note);
+                boolean isOutputMarkdown = NoteUtils.isOutputNote(context, note);
                 if (!isOutputMarkdown) {
-                    FileUtils.outputNoteToMarkdownFolder(context, note);
+                    NoteUtils.outputNote(context, note);
                 }
-                return new File(FileUtils.generateNotePath(context, note));
+                return new File(NoteUtils.generateNotePath(context, note));
             }
         })
                 .map(new Observable.Function1<File, Uri>() {
@@ -269,7 +261,7 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
             @Override
             public Note call() {
                 Log.d(TAG, "call: output note:" + note);
-                boolean success = FileUtils.outputNoteToMarkdownFolder(context, note);
+                boolean success = NoteUtils.outputNote(context, note);
                 return success ? note : null;
             }
         })
