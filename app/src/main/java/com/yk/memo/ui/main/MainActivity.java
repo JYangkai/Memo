@@ -22,7 +22,7 @@ import com.yk.eventposter.Subscribe;
 import com.yk.markdown.Markdown;
 import com.yk.memo.R;
 import com.yk.memo.data.adapter.NoteAdapter;
-import com.yk.memo.data.bean.Note;
+import com.yk.db.bean.Note;
 import com.yk.memo.data.event.MdStyleChangeEvent;
 import com.yk.memo.data.event.NoteAddEvent;
 import com.yk.memo.data.event.NoteRemoveEvent;

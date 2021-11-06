@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.yk.markdown.Markdown;
 import com.yk.memo.R;
-import com.yk.memo.data.bean.Note;
+import com.yk.db.bean.Note;
 import com.yk.memo.ui.view.NoteCardView;
 import com.yk.memo.utils.FileUtils;
 import com.yk.memo.utils.TimeUtils;

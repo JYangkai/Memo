@@ -1,6 +1,8 @@
-package com.yk.memo.data.db;
+package com.yk.db.manager;
 
-import com.yk.memo.data.bean.Note;
+import android.content.Context;
+
+import com.yk.db.bean.Note;
 
 import org.litepal.LitePal;
 
@@ -21,6 +23,10 @@ public class NoteDbManager {
             }
         }
         return instance;
+    }
+
+    public void init(Context context) {
+        LitePal.initialize(context);
     }
 
     /**

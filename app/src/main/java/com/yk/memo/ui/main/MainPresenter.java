@@ -6,8 +6,8 @@ import android.util.Log;
 
 import androidx.core.content.FileProvider;
 
-import com.yk.memo.data.bean.Note;
-import com.yk.memo.data.db.NoteDbManager;
+import com.yk.db.bean.Note;
+import com.yk.db.manager.NoteDbManager;
 import com.yk.memo.utils.FileUtils;
 import com.yk.memo.utils.ZipUtils;
 import com.yk.mvp.BaseMvpPresenter;

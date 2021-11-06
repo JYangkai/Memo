@@ -18,7 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.yk.memo.R;
-import com.yk.memo.data.bean.Note;
+import com.yk.db.bean.Note;
 import com.yk.memo.ui.edit.fragment.ConfirmDialogFragment;
 import com.yk.memo.ui.edit.fragment.EditFragment;
 import com.yk.memo.ui.edit.fragment.PreviewFragment;

@@ -2,10 +2,9 @@ package com.yk.memo;
 
 import android.app.Application;
 
+import com.yk.db.manager.NoteDbManager;
 import com.yk.markdown.Markdown;
 import com.yk.memo.utils.SpManager;
-
-import org.litepal.LitePal;
 
 public class MemoApplication extends Application {
     @Override
@@ -21,7 +20,7 @@ public class MemoApplication extends Application {
     }
 
     private void initLitePal() {
-        LitePal.initialize(this);
+        NoteDbManager.getInstance().init(this);
     }
 
     private void initMarkdown() {

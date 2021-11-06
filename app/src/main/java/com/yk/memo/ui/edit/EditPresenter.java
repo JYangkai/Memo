@@ -8,8 +8,8 @@ import android.view.View;
 import androidx.core.content.FileProvider;
 
 import com.yk.eventposter.EventPoster;
-import com.yk.memo.data.bean.Note;
-import com.yk.memo.data.db.NoteDbManager;
+import com.yk.db.bean.Note;
+import com.yk.db.manager.NoteDbManager;
 import com.yk.memo.data.event.NoteAddEvent;
 import com.yk.memo.data.event.NoteRemoveEvent;
 import com.yk.memo.data.event.NoteUpdateEvent;

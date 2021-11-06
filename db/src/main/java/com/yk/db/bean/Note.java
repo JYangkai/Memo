@@ -1,4 +1,4 @@
-package com.yk.memo.data.bean;
+package com.yk.db.bean;
 
 import androidx.annotation.Nullable;
 

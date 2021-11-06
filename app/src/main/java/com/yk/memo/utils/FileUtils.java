@@ -2,7 +2,7 @@ package com.yk.memo.utils;
 
 import android.content.Context;
 
-import com.yk.memo.data.bean.Note;
+import com.yk.db.bean.Note;
 
 import java.io.File;
 import java.io.FileOutputStream;

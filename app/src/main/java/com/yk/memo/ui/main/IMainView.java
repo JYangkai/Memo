@@ -2,7 +2,7 @@ package com.yk.memo.ui.main;
 
 import android.net.Uri;
 
-import com.yk.memo.data.bean.Note;
+import com.yk.db.bean.Note;
 import com.yk.mvp.BaseMvpView;
 
 import java.util.List;

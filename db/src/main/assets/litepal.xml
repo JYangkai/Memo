@@ -3,6 +3,6 @@
     <dbname value="MemoDb" />
     <version value="1" />
     <list>
-        <mapping class="com.yk.memo.data.bean.Note" />
+        <mapping class="com.yk.db.bean.Note" />
     </list>
 </litepal>

@@ -1,6 +1,6 @@
 package com.yk.memo.data.event;
 
-import com.yk.memo.data.bean.Note;
+import com.yk.db.bean.Note;
 
 public class NoteRemoveEvent {
     private Note note;
