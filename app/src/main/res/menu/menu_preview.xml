@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_preview_edit"
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:title="Edit"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_preview_share_file"
+        android:title="以文件方式分享"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_preview_share_image"
+        android:title="以图片方式分享"
+        app:showAsAction="never" />
+
+</menu>

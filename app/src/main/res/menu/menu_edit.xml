@@ -3,50 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_edit_copy"
+        android:id="@+id/menu_edit_2_copy"
         android:icon="@drawable/ic_baseline_content_copy_24"
         android:title="Copy"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_edit_replay"
+        android:id="@+id/menu_edit_2_replay"
         android:icon="@drawable/ic_baseline_reply_24"
         android:title="Replay"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_edit_clear"
+        android:id="@+id/menu_edit_2_clear"
         android:icon="@drawable/ic_baseline_clear_24"
         android:title="Clear"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_edit_save"
-        android:icon="@drawable/ic_baseline_done_24"
-        android:title="Save"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/menu_edit_delete"
-        android:icon="@drawable/ic_baseline_delete_24"
-        android:title="Delete"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/menu_edit_edit"
-        android:icon="@drawable/ic_baseline_edit_24"
-        android:title="Edit"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/menu_edit_preview"
+        android:id="@+id/menu_edit_2_preview"
         android:icon="@drawable/ic_baseline_preview_24"
         android:title="Preview"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_edit_share_shot"
-        android:title="图片分享"
-        app:showAsAction="never" />
+        android:id="@+id/menu_edit_2_save"
+        android:icon="@drawable/ic_baseline_done_24"
+        android:title="Save"
+        app:showAsAction="always" />
 
 </menu>

@@ -1,6 +1,9 @@
 package com.yk.memo.utils;
 
 import android.content.Context;
+import android.net.Uri;
+
+import androidx.core.content.FileProvider;
 
 import com.yk.db.bean.Note;
 import com.yk.io.FileUtils;
@@ -58,6 +61,10 @@ public class NoteUtils {
 
     public static String generateNotePath(Context context, Note note) {
         return getMarkdownFolder(context) + TimeUtils.getTime(note.getCreateTime(), "yyyy-MM-dd_HH-mm-ss") + ".md";
+    }
+
+    public static Uri getFileUri(Context context, File file) {
+        return FileProvider.getUriForFile(context, "com.yk.memo.fileprovider", file);
     }
 
 }

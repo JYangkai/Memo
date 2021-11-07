@@ -17,18 +17,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.yk.db.bean.Note;
 import com.yk.eventposter.EventPoster;
 import com.yk.eventposter.Subscribe;
 import com.yk.markdown.Markdown;
 import com.yk.memo.R;
 import com.yk.memo.data.adapter.NoteAdapter;
-import com.yk.db.bean.Note;
 import com.yk.memo.data.event.MdStyleChangeEvent;
 import com.yk.memo.data.event.NoteAddEvent;
 import com.yk.memo.data.event.NoteRemoveEvent;
 import com.yk.memo.data.event.NoteUpdateEvent;
 import com.yk.memo.ui.edit.EditActivity;
-import com.yk.memo.ui.main.fragment.ConfirmDialogFragment;
+import com.yk.memo.ui.view.ConfirmDialogFragment;
+import com.yk.memo.ui.preview.PreviewActivity;
 import com.yk.memo.ui.setting.SettingActivity;
 import com.yk.memo.utils.SnackBarUtils;
 import com.yk.mvp.BaseMvpActivity;
@@ -151,7 +152,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
                 hideDeleteMenuItem();
             }
         } else {
-            startEditActivity(note);
+            startPreviewActivity(note);
         }
     }
 
@@ -213,8 +214,12 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         ShareUtils.shareText(this, note.getSrc());
     }
 
-    private void startEditActivity(Note note) {
-        EditActivity.start(this, note);
+    private void startPreviewActivity(Note note) {
+        PreviewActivity.start(this, note);
+    }
+
+    private void startEditActivity() {
+        EditActivity.start(this, null);
     }
 
     private void startSettingActivity() {
@@ -263,7 +268,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         } else if (item.getItemId() == R.id.menu_main_delete) {
             deleteNoteList();
         } else if (item.getItemId() == R.id.menu_main_edit) {
-            startEditActivity(null);
+            startEditActivity();
         } else if (item.getItemId() == R.id.menu_main_setting) {
             startSettingActivity();
         }

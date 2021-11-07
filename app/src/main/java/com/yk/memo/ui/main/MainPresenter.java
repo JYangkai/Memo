@@ -4,8 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-import androidx.core.content.FileProvider;
-
 import com.yk.db.bean.Note;
 import com.yk.db.manager.NoteDbManager;
 import com.yk.memo.utils.NoteUtils;
@@ -43,7 +41,7 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
                         if (file == null) {
                             return null;
                         }
-                        return FileProvider.getUriForFile(context, "com.yk.memo.fileprovider", file);
+                        return NoteUtils.getFileUri(context, file);
                     }
                 })
                 .subscribeOnIo()
@@ -101,7 +99,7 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
                         if (file == null) {
                             return null;
                         }
-                        return FileProvider.getUriForFile(context, "com.yk.memo.fileprovider", file);
+                        return NoteUtils.getFileUri(context, file);
                     }
                 })
                 .subscribeOnIo()

@@ -1,4 +1,4 @@
-package com.yk.memo.ui.edit.fragment;
+package com.yk.memo.ui.view;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -36,8 +36,8 @@ public class ConfirmDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("数据未保存")
-                .setPositiveButton("保存", new DialogInterface.OnClickListener() {
+        builder.setMessage("是否一键打包分享")
+                .setPositiveButton("分享", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (onConfirmListener != null) {
@@ -45,7 +45,7 @@ public class ConfirmDialogFragment extends DialogFragment {
                         }
                     }
                 })
-                .setNegativeButton("不保存", new DialogInterface.OnClickListener() {
+                .setNegativeButton("不分享", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (onConfirmListener != null) {
