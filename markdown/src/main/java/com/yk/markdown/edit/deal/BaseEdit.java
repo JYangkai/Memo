@@ -6,6 +6,16 @@ import android.widget.EditText;
 
 public abstract class BaseEdit implements IEdit {
 
+    @Override
+    public void dealEdit(EditText et) {
+
+    }
+
+    @Override
+    public void dealImageEdit(EditText et, String name, String path) {
+
+    }
+
     public String getContent(EditText et) {
         Editable editable = et.getText();
 

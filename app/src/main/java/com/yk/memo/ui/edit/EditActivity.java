@@ -1,9 +1,11 @@
 package com.yk.memo.ui.edit;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,14 +16,24 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.Toolbar;
 
 import com.yk.db.bean.Note;
+import com.yk.eventposter.EventPoster;
+import com.yk.eventposter.Subscribe;
+import com.yk.markdown.bean.MdType;
 import com.yk.markdown.edit.EditManager;
 import com.yk.memo.R;
+import com.yk.memo.data.bean.Image;
+import com.yk.memo.data.event.MdImageAddEvent;
+import com.yk.memo.ui.album.AlbumActivity;
 import com.yk.memo.ui.preview.PreviewActivity;
 import com.yk.memo.ui.view.edit.MarkdownEditAdapter;
 import com.yk.memo.ui.view.edit.MarkdownEditBean;
 import com.yk.memo.ui.view.edit.MarkdownEditView;
 import com.yk.memo.utils.SnackBarUtils;
 import com.yk.mvp.BaseMvpActivity;
+import com.yk.permissionrequester.PermissionFragment;
+import com.yk.permissionrequester.PermissionRequester;
+
+import java.util.List;
 
 public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> implements IEditView {
     private static final String EXTRA_NOTE = "extra_note";
@@ -42,9 +54,16 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+        EventPoster.getInstance().register(this);
         findView();
         initData();
         bindEvent();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventPoster.getInstance().unregister(this);
     }
 
     private void findView() {
@@ -63,9 +82,39 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
         markdownEditView.setOnItemClickListener(new MarkdownEditAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(MarkdownEditBean bean) {
-                EditManager.getInstance().insert(bean.getType(), etContent);
+                if (bean.getType() == MdType.IMAGE) {
+                    startAlbumActivity();
+                } else {
+                    EditManager.getInstance().insert(bean.getType(), etContent);
+                }
             }
         });
+    }
+
+    private void startAlbumActivity() {
+        PermissionRequester.build(this)
+                .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .request(new PermissionFragment.OnPermissionRequestListener() {
+                    @Override
+                    public void onRequestSuccess(boolean success) {
+                        if (success) {
+                            AlbumActivity.start(EditActivity.this);
+                        } else {
+                            SnackBarUtils.showMsgShort(getWindow().getDecorView(), "操作需要授权");
+                        }
+                    }
+
+                    @Override
+                    public void onGrantedList(List<String> grantedList) {
+
+                    }
+
+                    @Override
+                    public void onDeniedList(List<String> deniedList) {
+
+                    }
+                });
     }
 
     private void initExtra() {
@@ -130,6 +179,20 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
             }
         }
         return true;
+    }
+
+    @Subscribe(threadMode = Subscribe.Thread.UI)
+    public void onMdImageAddEvent(MdImageAddEvent event) {
+        if (event == null) {
+            return;
+        }
+
+        Image image = event.getImage();
+        if (image == null) {
+            return;
+        }
+
+        EditManager.getInstance().insertImage(etContent, image.getName(), image.getPath());
     }
 
     @Override

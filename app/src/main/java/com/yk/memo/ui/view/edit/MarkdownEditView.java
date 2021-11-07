@@ -43,6 +43,7 @@ public class MarkdownEditView extends FrameLayout implements MarkdownEditAdapter
         list.add(new MarkdownEditBean(MdType.BOLD, "**粗体**"));
         list.add(new MarkdownEditBean(MdType.ITALICS, "*斜体*"));
         list.add(new MarkdownEditBean(MdType.BOLD_ITALICS, "***粗斜体***"));
+        list.add(new MarkdownEditBean(MdType.IMAGE, "插入图片"));
 
         MarkdownEditAdapter adapter = new MarkdownEditAdapter(list);
         adapter.setOnItemClickListener(this);

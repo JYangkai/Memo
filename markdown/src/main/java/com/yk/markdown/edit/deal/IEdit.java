@@ -6,4 +6,6 @@ public interface IEdit {
 
     void dealEdit(EditText et);
 
+    void dealImageEdit(EditText et, String name, String path);
+
 }

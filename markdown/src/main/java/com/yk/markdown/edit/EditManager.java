@@ -8,6 +8,7 @@ import com.yk.markdown.edit.deal.BoldItalicsEdit;
 import com.yk.markdown.edit.deal.CodeBlockEdit;
 import com.yk.markdown.edit.deal.CodeEdit;
 import com.yk.markdown.edit.deal.IEdit;
+import com.yk.markdown.edit.deal.ImageEdit;
 import com.yk.markdown.edit.deal.ItalicsEdit;
 import com.yk.markdown.edit.deal.OrderedListEdit;
 import com.yk.markdown.edit.deal.QuoteEdit;
@@ -28,6 +29,7 @@ public class EditManager {
     private final IEdit boldEdit;
     private final IEdit italicsEdit;
     private final IEdit boldItalicsEdit;
+    private final IEdit imageEdit;
 
     private EditManager() {
         quoteEdit = new QuoteEdit();
@@ -40,6 +42,7 @@ public class EditManager {
         boldEdit = new BoldEdit();
         italicsEdit = new ItalicsEdit();
         boldItalicsEdit = new BoldItalicsEdit();
+        imageEdit = new ImageEdit();
     }
 
     public static EditManager getInstance() {
@@ -61,6 +64,10 @@ public class EditManager {
         }
 
         edit.dealEdit(et);
+    }
+
+    public void insertImage(EditText et, String name, String path) {
+        imageEdit.dealImageEdit(et, name, path);
     }
 
     private IEdit getEdit(MdType type) {
