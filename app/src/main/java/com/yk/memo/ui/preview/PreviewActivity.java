@@ -111,6 +111,8 @@ public class PreviewActivity extends BaseMvpActivity<IPreviewView, PreviewPresen
                 EditActivity.start(this, note);
             }
             finish();
+        } else if (item.getItemId() == R.id.menu_preview_share_text) {
+            ShareUtils.shareText(this, note != null ? note.getSrc() : src);
         } else if (item.getItemId() == R.id.menu_preview_share_file) {
             if (note != null) {
                 presenter.shareFile(note);

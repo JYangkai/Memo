@@ -76,7 +76,7 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                     @Override
                     public Boolean call(Note note) {
                         if (note != null) {
-                            if (SpManager.getInstance().getOutputMarkdown()) {
+                            if (SpManager.getInstance().isOutputMarkdown()) {
                                 NoteUtils.outputNote(context, note);
                             }
                             EventPoster.getInstance().post(new NoteAddEvent(true, note));

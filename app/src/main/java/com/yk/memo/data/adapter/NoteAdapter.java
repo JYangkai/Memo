@@ -27,9 +27,19 @@ import java.util.List;
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> implements Filterable {
     private Context context;
 
+    /**
+     * 全部的note
+     */
     private final List<Note> noteList;
+
+    /**
+     * 筛选的note
+     */
     private final List<Note> filterList = new ArrayList<>();
 
+    /**
+     * 多选模式
+     */
     private boolean isMoreSelectMode = false;
 
     public NoteAdapter(List<Note> noteList) {

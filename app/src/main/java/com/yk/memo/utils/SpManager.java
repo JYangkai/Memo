@@ -33,7 +33,7 @@ public class SpManager {
         return getValue(Sp.MarkdownStyle.KEY, Sp.MarkdownStyle.DEFAULT_VALUE);
     }
 
-    public boolean getOutputMarkdown() {
+    public boolean isOutputMarkdown() {
         return getValue(Sp.OutputMarkdown.KEY, Sp.OutputMarkdown.DEFAULT_VALUE);
     }
 

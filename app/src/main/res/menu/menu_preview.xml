@@ -9,6 +9,11 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/menu_preview_share_text"
+        android:title="以文本方式分享"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/menu_preview_share_file"
         android:title="以文件方式分享"
         app:showAsAction="never" />
