@@ -34,14 +34,9 @@ public class PreviewActivity extends BaseMvpActivity<IPreviewView, PreviewPresen
 
     private String src;
 
-    public static void start(Context context, Note note) {
+    public static void start(Context context, Note note, String src) {
         Intent intent = new Intent(context, PreviewActivity.class);
         intent.putExtra(EXTRA_NOTE, note);
-        context.startActivity(intent);
-    }
-
-    public static void start(Context context, String src) {
-        Intent intent = new Intent(context, PreviewActivity.class);
         intent.putExtra(EXTRA_SRC, src);
         context.startActivity(intent);
     }
@@ -88,9 +83,6 @@ public class PreviewActivity extends BaseMvpActivity<IPreviewView, PreviewPresen
     }
 
     private void initTvPreview() {
-        if (note != null) {
-            Markdown.with(this).load(note.getSrc()).into(tvPreview);
-        }
         if (!TextUtils.isEmpty(src)) {
             Markdown.with(this).load(src).into(tvPreview);
         }

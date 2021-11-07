@@ -28,9 +28,9 @@ import com.yk.memo.data.event.NoteAddEvent;
 import com.yk.memo.data.event.NoteRemoveEvent;
 import com.yk.memo.data.event.NoteUpdateEvent;
 import com.yk.memo.ui.edit.EditActivity;
-import com.yk.memo.ui.view.ConfirmDialogFragment;
 import com.yk.memo.ui.preview.PreviewActivity;
 import com.yk.memo.ui.setting.SettingActivity;
+import com.yk.memo.ui.view.ConfirmDialogFragment;
 import com.yk.memo.utils.SnackBarUtils;
 import com.yk.mvp.BaseMvpActivity;
 import com.yk.permissionrequester.PermissionFragment;
@@ -215,7 +215,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     }
 
     private void startPreviewActivity(Note note) {
-        PreviewActivity.start(this, note);
+        PreviewActivity.start(this, note, note.getSrc());
     }
 
     private void startEditActivity() {

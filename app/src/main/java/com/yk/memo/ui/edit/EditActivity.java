@@ -116,15 +116,12 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
         } else if (item.getItemId() == R.id.menu_edit_2_replay) {
             if (note != null) {
                 etContent.setText(note.getSrc());
+                etContent.setSelection(getSrc().length());
             }
         } else if (item.getItemId() == R.id.menu_edit_2_clear) {
             etContent.setText(null);
         } else if (item.getItemId() == R.id.menu_edit_2_preview) {
-            if (note != null) {
-                PreviewActivity.start(this, note);
-            } else {
-                PreviewActivity.start(this, getSrc());
-            }
+            PreviewActivity.start(this, note, getSrc());
         } else if (item.getItemId() == R.id.menu_edit_2_save) {
             if (note != null) {
                 presenter.updateNote(note, getSrc());
