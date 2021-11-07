@@ -111,18 +111,18 @@ public class EditActivity extends BaseMvpActivity<IEditView, EditPresenter> impl
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
-        } else if (item.getItemId() == R.id.menu_edit_2_copy) {
+        } else if (item.getItemId() == R.id.menu_edit_copy) {
             presenter.copyToClipBoard(getSrc());
-        } else if (item.getItemId() == R.id.menu_edit_2_replay) {
+        } else if (item.getItemId() == R.id.menu_edit_replay) {
             if (note != null) {
                 etContent.setText(note.getSrc());
                 etContent.setSelection(getSrc().length());
             }
-        } else if (item.getItemId() == R.id.menu_edit_2_clear) {
+        } else if (item.getItemId() == R.id.menu_edit_clear) {
             etContent.setText(null);
-        } else if (item.getItemId() == R.id.menu_edit_2_preview) {
+        } else if (item.getItemId() == R.id.menu_edit_preview) {
             PreviewActivity.start(this, note, getSrc());
-        } else if (item.getItemId() == R.id.menu_edit_2_save) {
+        } else if (item.getItemId() == R.id.menu_edit_save) {
             if (note != null) {
                 presenter.updateNote(note, getSrc());
             } else {

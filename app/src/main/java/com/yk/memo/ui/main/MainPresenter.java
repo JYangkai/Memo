@@ -2,7 +2,6 @@ package com.yk.memo.ui.main;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import com.yk.db.bean.Note;
 import com.yk.db.manager.NoteDbManager;
@@ -15,7 +14,6 @@ import java.io.File;
 import java.util.List;
 
 public class MainPresenter extends BaseMvpPresenter<IMainView> {
-    private static final String TAG = "MainPresenter2";
 
     private final Context context;
 
@@ -23,125 +21,10 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
         this.context = context;
     }
 
-    /**
-     * 打包分享
-     */
-    public void zipShare() {
-        Observable.fromCallable(new Observable.OnCallable<File>() {
-            @Override
-            public File call() {
-                Log.d(TAG, "call: zipShare get file");
-                return NoteUtils.zipAllMarkdown(context);
-            }
-        })
-                .map(new Observable.Function1<File, Uri>() {
-                    @Override
-                    public Uri call(File file) {
-                        Log.d(TAG, "call: zipShare get uri");
-                        if (file == null) {
-                            return null;
-                        }
-                        return NoteUtils.getFileUri(context, file);
-                    }
-                })
-                .subscribeOnIo()
-                .observeOnUi()
-                .subscribe(new Subscriber<Uri>() {
-                    @Override
-                    public void onNext(Uri uri) {
-                        Log.d(TAG, "onNext: zipShare:" + uri);
-                        if (uri == null) {
-                            if (getView() != null) {
-                                getView().onZipShareError(new RuntimeException("uri is null"));
-                            }
-                            return;
-                        }
-                        if (getView() != null) {
-                            getView().onZipShare(uri);
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d(TAG, "onComplete: zipShare");
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        Log.e(TAG, "onError: zipShare:", e);
-                        if (getView() != null) {
-                            getView().onZipShareError(e);
-                        }
-                    }
-                });
-    }
-
-    /**
-     * 分享文件
-     */
-    public void shareNoteFile(Note note) {
-        Observable.fromCallable(new Observable.OnCallable<File>() {
-            @Override
-            public File call() {
-                Log.d(TAG, "call: shareNoteFile get file:" + note);
-
-                boolean isOutputMarkdown = NoteUtils.isOutputNote(context, note);
-                if (!isOutputMarkdown) {
-                    NoteUtils.outputNote(context, note);
-                }
-                return new File(NoteUtils.generateNotePath(context, note));
-            }
-        })
-                .map(new Observable.Function1<File, Uri>() {
-                    @Override
-                    public Uri call(File file) {
-                        Log.d(TAG, "call: shareNoteFile get uri");
-                        if (file == null) {
-                            return null;
-                        }
-                        return NoteUtils.getFileUri(context, file);
-                    }
-                })
-                .subscribeOnIo()
-                .observeOnUi()
-                .subscribe(new Subscriber<Uri>() {
-                    @Override
-                    public void onNext(Uri uri) {
-                        Log.d(TAG, "onNext: shareNoteFile:" + uri);
-                        if (uri == null) {
-                            if (getView() != null) {
-                                getView().onShareNoteFileError(new RuntimeException("uri is null"));
-                            }
-                            return;
-                        }
-                        if (getView() != null) {
-                            getView().onShareNoteFile(uri);
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d(TAG, "onComplete: shareNoteFile");
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        Log.e(TAG, "onError: shareNoteFile:", e);
-                        if (getView() != null) {
-                            getView().onShareNoteFileError(e);
-                        }
-                    }
-                });
-    }
-
-    /**
-     * 加载全部note
-     */
-    public void loadAllNote() {
+    public void loadData() {
         Observable.fromCallable(new Observable.OnCallable<List<Note>>() {
             @Override
             public List<Note> call() {
-                Log.d(TAG, "call: load all note");
                 return NoteDbManager.getInstance().getAllNote();
             }
         })
@@ -150,37 +33,84 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
                 .subscribe(new Subscriber<List<Note>>() {
                     @Override
                     public void onNext(List<Note> noteList) {
-                        Log.d(TAG, "onNext: load all note:" + noteList.size());
+                        if (noteList == null || noteList.isEmpty()) {
+                            onError(new RuntimeException("noteList is empty"));
+                            return;
+                        }
+
                         if (getView() != null) {
-                            getView().onLoadNoteList(noteList);
+                            getView().onLoadData(noteList);
                         }
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: load all note");
+
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Log.e(TAG, "onError: load all note:", e);
                         if (getView() != null) {
-                            getView().onLoadNoteListError(e);
+                            getView().onLoadDataError(e);
                         }
                     }
                 });
     }
 
-    /**
-     * 删除 note
-     *
-     * @param note note
-     */
+    public void shareFile(Note note) {
+        Observable.fromCallable(new Observable.OnCallable<File>() {
+            @Override
+            public File call() {
+                boolean isOutput = NoteUtils.isOutputNote(context, note);
+                if (!isOutput) {
+                    NoteUtils.outputNote(context, note);
+                }
+
+                return new File(NoteUtils.generateNotePath(context, note));
+            }
+        })
+                .map(new Observable.Function1<File, Uri>() {
+                    @Override
+                    public Uri call(File file) {
+                        if (file == null) {
+                            return null;
+                        }
+                        return NoteUtils.getFileUri(context, file);
+                    }
+                })
+                .subscribeOnIo()
+                .observeOnUi()
+                .subscribe(new Subscriber<Uri>() {
+                    @Override
+                    public void onNext(Uri uri) {
+                        if (uri == null) {
+                            onError(new RuntimeException("uri is null"));
+                            return;
+                        }
+
+                        if (getView() != null) {
+                            getView().onShareFile(uri);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        if (getView() != null) {
+                            getView().onShareFileError(e);
+                        }
+                    }
+                });
+    }
+
     public void deleteNote(Note note) {
         Observable.fromCallable(new Observable.OnCallable<Note>() {
             @Override
             public Note call() {
-                Log.d(TAG, "call: delete note:" + note);
                 return NoteDbManager.getInstance().deleteNote(note);
             }
         })
@@ -189,7 +119,11 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
                 .subscribe(new Subscriber<Note>() {
                     @Override
                     public void onNext(Note note) {
-                        Log.d(TAG, "onNext: delete note:" + note);
+                        if (note == null) {
+                            onError(new RuntimeException("note is null"));
+                            return;
+                        }
+
                         if (getView() != null) {
                             getView().onDeleteNote(note);
                         }
@@ -197,12 +131,11 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: delete note");
+
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Log.e(TAG, "onError: delete note:", e);
                         if (getView() != null) {
                             getView().onDeleteNoteError(e);
                         }
@@ -210,16 +143,10 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
                 });
     }
 
-    /**
-     * 删除note list
-     *
-     * @param noteList note list
-     */
     public void deleteNoteList(List<Note> noteList) {
         Observable.fromCallable(new Observable.OnCallable<List<Note>>() {
             @Override
             public List<Note> call() {
-                Log.d(TAG, "call: delete note list:" + noteList.size());
                 return NoteDbManager.getInstance().deleteNoteList(noteList);
             }
         })
@@ -228,7 +155,11 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
                 .subscribe(new Subscriber<List<Note>>() {
                     @Override
                     public void onNext(List<Note> noteList) {
-                        Log.d(TAG, "onNext: delete note list:" + noteList.size());
+                        if (noteList == null || noteList.isEmpty()) {
+                            onError(new RuntimeException("noteList is empty"));
+                            return;
+                        }
+
                         if (getView() != null) {
                             getView().onDeleteNoteList(noteList);
                         }
@@ -236,12 +167,11 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: delete note list");
+
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Log.e(TAG, "onError: delete note list:", e);
                         if (getView() != null) {
                             getView().onDeleteNoteListError(e);
                         }
@@ -249,45 +179,46 @@ public class MainPresenter extends BaseMvpPresenter<IMainView> {
                 });
     }
 
-    /**
-     * 导出note
-     *
-     * @param note note
-     */
-    public void outputNote(Note note) {
-        Observable.fromCallable(new Observable.OnCallable<Note>() {
+    public void shareZip() {
+        Observable.fromCallable(new Observable.OnCallable<File>() {
             @Override
-            public Note call() {
-                Log.d(TAG, "call: output note:" + note);
-                boolean success = NoteUtils.outputNote(context, note);
-                return success ? note : null;
+            public File call() {
+                return new File(NoteUtils.zipAllMarkdown(context));
             }
         })
+                .map(new Observable.Function1<File, Uri>() {
+                    @Override
+                    public Uri call(File file) {
+                        if (file == null) {
+                            return null;
+                        }
+                        return NoteUtils.getFileUri(context, file);
+                    }
+                })
                 .subscribeOnIo()
                 .observeOnUi()
-                .subscribe(new Subscriber<Note>() {
+                .subscribe(new Subscriber<Uri>() {
                     @Override
-                    public void onNext(Note note) {
-                        Log.d(TAG, "onNext: output note:" + note);
+                    public void onNext(Uri uri) {
+                        if (uri == null) {
+                            onError(new RuntimeException("uri is null"));
+                            return;
+                        }
+
                         if (getView() != null) {
-                            if (note != null) {
-                                getView().onOutputNote(note);
-                            } else {
-                                getView().onOutputNoteError(new RuntimeException("note is null, output error"));
-                            }
+                            getView().onShareZip(uri);
                         }
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: output note");
+
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Log.e(TAG, "onError: output note", e);
                         if (getView() != null) {
-                            getView().onOutputNoteError(e);
+                            getView().onShareZipError(e);
                         }
                     }
                 });

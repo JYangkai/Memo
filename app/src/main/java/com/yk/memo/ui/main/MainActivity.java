@@ -1,9 +1,7 @@
 package com.yk.memo.ui.main;
 
-import android.Manifest;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,17 +28,15 @@ import com.yk.memo.data.event.NoteUpdateEvent;
 import com.yk.memo.ui.edit.EditActivity;
 import com.yk.memo.ui.preview.PreviewActivity;
 import com.yk.memo.ui.setting.SettingActivity;
-import com.yk.memo.ui.view.ConfirmDialogFragment;
 import com.yk.memo.utils.SnackBarUtils;
 import com.yk.mvp.BaseMvpActivity;
-import com.yk.permissionrequester.PermissionFragment;
-import com.yk.permissionrequester.PermissionRequester;
 import com.yk.share.ShareUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> implements IMainView, ConfirmDialogFragment.OnConfirmListener {
+public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> implements IMainView {
+
     private Toolbar toolbar;
     private SearchView searchView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -48,13 +44,11 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
 
     private NoteAdapter noteAdapter;
 
-    private ConfirmDialogFragment confirmDialogFragment;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventPoster.getInstance().register(this);
         setContentView(R.layout.activity_main);
+        EventPoster.getInstance().register(this);
         findView();
         initData();
         bindEvent();
@@ -76,9 +70,29 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
     private void initData() {
         initToolbar();
         initRvNote();
-        initSwipeRefreshLayout();
 
-        loadAllNote();
+        loadData();
+    }
+
+    private void initToolbar() {
+        setSupportActionBar(toolbar);
+    }
+
+    private void initRvNote() {
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.design_default_color_primary,
+                R.color.design_default_color_secondary);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        noteAdapter = new NoteAdapter(new ArrayList<>());
+        rvNote.setLayoutManager(layoutManager);
+        rvNote.setAdapter(noteAdapter);
+    }
+
+    private void loadData() {
+        swipeRefreshLayout.setRefreshing(true);
+        presenter.loadData();
     }
 
     private void bindEvent() {
@@ -98,7 +112,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadAllNote();
+                loadData();
             }
         });
 
@@ -120,39 +134,14 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         });
     }
 
-    private void initToolbar() {
-        setSupportActionBar(toolbar);
-    }
-
-    private void initRvNote() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        noteAdapter = new NoteAdapter(new ArrayList<>());
-        rvNote.setLayoutManager(layoutManager);
-        rvNote.setAdapter(noteAdapter);
-    }
-
-    private void initSwipeRefreshLayout() {
-        swipeRefreshLayout.setColorSchemeResources(
-                R.color.design_default_color_primary,
-                R.color.design_default_color_secondary);
-    }
-
-    private void loadAllNote() {
-        swipeRefreshLayout.setRefreshing(true);
-        presenter.loadAllNote();
-    }
-
     private void onNoteItemClick(Note note) {
         if (noteAdapter.isMoreSelectMode()) {
             noteAdapter.selectNote(note);
-            if (noteAdapter.getSelectNoteList().isEmpty()) {
-                // 如果没有选中的note，则退出多选模式
+            if (noteAdapter.getSelectNoteList().size() == 0) {
                 noteAdapter.setMoreSelectMode(false);
-                hideDeleteMenuItem();
             }
         } else {
-            startPreviewActivity(note);
+            PreviewActivity.start(this, note, note.getSrc());
         }
     }
 
@@ -162,23 +151,20 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         }
         noteAdapter.setMoreSelectMode(true);
         noteAdapter.selectNote(note);
-        showDeleteMenuItem();
     }
 
     private void onNoteItemMoreClick(View view, Note note) {
         PopupMenu popupMenu = new PopupMenu(this, view);
-        popupMenu.getMenuInflater().inflate(R.menu.menu_item_note, popupMenu.getMenu());
+        popupMenu.getMenuInflater().inflate(R.menu.menu_note_more, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.menu_item_note_delete) {
+                if (item.getItemId() == R.id.menu_note_more_share_text) {
+                    ShareUtils.shareText(MainActivity.this, note.getSrc());
+                } else if (item.getItemId() == R.id.menu_note_more_share_file) {
+                    presenter.shareFile(note);
+                } else if (item.getItemId() == R.id.menu_note_more_delete) {
                     presenter.deleteNote(note);
-                } else if (item.getItemId() == R.id.menu_item_note_output) {
-                    outputNote(note);
-                } else if (item.getItemId() == R.id.menu_item_note_share_text) {
-                    shareNoteText(note);
-                } else if (item.getItemId() == R.id.menu_item_note_share_file) {
-                    presenter.shareNoteFile(note);
                 }
                 return true;
             }
@@ -186,108 +172,97 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         popupMenu.show();
     }
 
-    private void outputNote(Note note) {
-        PermissionRequester.build(this)
-                .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
-                .request(new PermissionFragment.OnPermissionRequestListener() {
-                    @Override
-                    public void onRequestSuccess(boolean success) {
-                        if (success) {
-                            presenter.outputNote(note);
-                        }
-                    }
-
-                    @Override
-                    public void onGrantedList(List<String> grantedList) {
-
-                    }
-
-                    @Override
-                    public void onDeniedList(List<String> deniedList) {
-
-                    }
-                });
-    }
-
-    private void shareNoteText(Note note) {
-        ShareUtils.shareText(this, note.getSrc());
-    }
-
-    private void startPreviewActivity(Note note) {
-        PreviewActivity.start(this, note, note.getSrc());
-    }
-
-    private void startEditActivity() {
-        EditActivity.start(this, null);
-    }
-
-    private void startSettingActivity() {
-        SettingActivity.start(this);
-    }
-
-    private void deleteNoteList() {
-        presenter.deleteNoteList(noteAdapter.getSelectNoteList());
-    }
-
-    private void zipShare() {
-        if (confirmDialogFragment == null) {
-            confirmDialogFragment = ConfirmDialogFragment.newInstance();
-        }
-        confirmDialogFragment.show(getSupportFragmentManager());
-    }
-
-    private MenuItem deleteMenuItem;
-
-    private void showDeleteMenuItem() {
-        if (deleteMenuItem == null) {
-            return;
-        }
-        deleteMenuItem.setVisible(true);
-    }
-
-    private void hideDeleteMenuItem() {
-        if (deleteMenuItem == null) {
-            return;
-        }
-        deleteMenuItem.setVisible(false);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        deleteMenuItem = menu.findItem(R.id.menu_main_delete);
-        hideDeleteMenuItem();
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_main_zip) {
-            zipShare();
-        } else if (item.getItemId() == R.id.menu_main_delete) {
-            deleteNoteList();
-        } else if (item.getItemId() == R.id.menu_main_edit) {
-            startEditActivity();
-        } else if (item.getItemId() == R.id.menu_main_setting) {
-            startSettingActivity();
-        }
-        return true;
+    private void updateToolbarSubTitle() {
+        toolbar.setSubtitle(noteAdapter.getItemCount() + " 条数据");
     }
 
     @Override
     public void onBackPressed() {
         if (noteAdapter.isMoreSelectMode()) {
             noteAdapter.setMoreSelectMode(false);
-            hideDeleteMenuItem();
             return;
         }
         super.onBackPressed();
     }
 
     @Override
-    public MainPresenter createPresenter() {
-        return new MainPresenter(this);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_main_delete) {
+            List<Note> noteList = noteAdapter.getSelectNoteList();
+            if (noteList.isEmpty()) {
+                SnackBarUtils.showMsgShort(getWindow().getDecorView(), "所选数据为空");
+            } else {
+                presenter.deleteNoteList(noteList);
+            }
+        } else if (item.getItemId() == R.id.menu_main_share) {
+            presenter.shareZip();
+        } else if (item.getItemId() == R.id.menu_main_setting) {
+            SettingActivity.start(this);
+        } else if (item.getItemId() == R.id.menu_main_edit) {
+            EditActivity.start(this, null);
+        }
+        return true;
+    }
+
+    @Subscribe(threadMode = Subscribe.Thread.UI)
+    public void onNoteAddEvent(NoteAddEvent event) {
+        if (event == null) {
+            return;
+        }
+
+        noteAdapter.refreshDataAdd(event.getNote(), event.isNeedTop());
+
+        if (event.isNeedTop()) {
+            rvNote.scrollToPosition(0);
+        }
+
+        updateToolbarSubTitle();
+
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "新增一条数据");
+    }
+
+    @Subscribe(threadMode = Subscribe.Thread.UI)
+    public void onNoteUpdateEvent(NoteUpdateEvent event) {
+        if (event == null) {
+            return;
+        }
+
+        Note eventNote = event.getNote();
+
+        Note note = noteAdapter.findNoteForId(eventNote.getId());
+        note.setSrc(eventNote.getSrc());
+        note.setUpdateTime(eventNote.getUpdateTime());
+
+        if (event.isNeedTop()) {
+            noteAdapter.topNote(note);
+            rvNote.scrollToPosition(0);
+        } else {
+            noteAdapter.refreshDataChange(note);
+        }
+
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "更新一条数据");
+    }
+
+    @Subscribe(threadMode = Subscribe.Thread.UI)
+    public void onNoteRemoveEvent(NoteRemoveEvent event) {
+        if (event == null) {
+            return;
+        }
+
+        Note eventNote = event.getNote();
+
+        Note note = noteAdapter.findNoteForId(eventNote.getId());
+        noteAdapter.refreshDataRemove(note);
+
+        updateToolbarSubTitle();
+
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "删除一条数据");
     }
 
     @Subscribe(threadMode = Subscribe.Thread.UI)
@@ -303,140 +278,75 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
         SnackBarUtils.showMsgShort(getWindow().getDecorView(), "已切换为 " + event.getStyle() + " 风格");
     }
 
-    @Subscribe(threadMode = Subscribe.Thread.UI)
-    public void onNoteAddEvent(NoteAddEvent event) {
-        if (event == null) {
-            return;
-        }
-        noteAdapter.refreshDataAdd(event.getNote(), event.isNeedTop());
-
-        if (event.isNeedTop()) {
-            rvNote.scrollToPosition(0);
-        }
-
-        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "新增一条数据 成功");
-    }
-
-    @Subscribe(threadMode = Subscribe.Thread.UI)
-    public void onNoteUpdateEvent(NoteUpdateEvent event) {
-        if (event == null) {
-            return;
-        }
-        Note eventNote = event.getNote();
-
-        Note note = noteAdapter.findNoteForId(eventNote.getId());
-        note.setSrc(eventNote.getSrc());
-        note.setUpdateTime(eventNote.getUpdateTime());
-
-        if (event.isNeedTop()) {
-            noteAdapter.topNote(note);
-            rvNote.scrollToPosition(0);
-        }
-
-        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "更新一条数据 成功");
-    }
-
-    @Subscribe(threadMode = Subscribe.Thread.UI)
-    public void onNoteRemoveEvent(NoteRemoveEvent event) {
-        if (event == null) {
-            return;
-        }
-        Note eventNote = event.getNote();
-
-        Note note = noteAdapter.findNoteForId(eventNote.getId());
-        noteAdapter.refreshDataRemove(note);
-
-        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "移除一条数据 成功");
+    @Override
+    public MainPresenter createPresenter() {
+        return new MainPresenter(this);
     }
 
     @Override
-    public void onLoadNoteList(List<Note> noteList) {
+    public void onLoadData(List<Note> noteList) {
         noteAdapter.refreshDataAdd(noteList);
+
         swipeRefreshLayout.setRefreshing(false);
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "加载 " + noteList.size() + " 条数据");
 
-        String query = searchView.getQuery().toString();
-        if (!TextUtils.isEmpty(query)) {
-            noteAdapter.getFilter().filter(query);
-        }
+        updateToolbarSubTitle();
+    }
 
-        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "加载 " + noteAdapter.getItemCount() + " 条数据");
+    @Override
+    public void onShareFile(Uri uri) {
+        ShareUtils.shareFile(this, uri);
     }
 
     @Override
     public void onDeleteNote(Note note) {
         noteAdapter.refreshDataRemove(note);
 
-        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "删除 成功");
+        updateToolbarSubTitle();
+
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "删除成功");
     }
 
     @Override
     public void onDeleteNoteList(List<Note> noteList) {
         noteAdapter.refreshDataRemove(noteList);
+
+        updateToolbarSubTitle();
+
         noteAdapter.setMoreSelectMode(false);
-        hideDeleteMenuItem();
 
-        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "删除所选数据 成功");
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "删除所选数据成功");
     }
 
     @Override
-    public void onOutputNote(Note note) {
-        noteAdapter.refreshDataChange(note);
-
-        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "导出数据 成功");
-    }
-
-    @Override
-    public void onShareNoteFile(Uri uri) {
+    public void onShareZip(Uri uri) {
         ShareUtils.shareFile(this, uri);
     }
 
     @Override
-    public void onZipShare(Uri uri) {
-        ShareUtils.shareFile(this, uri);
+    public void onLoadDataError(Exception e) {
+        swipeRefreshLayout.setRefreshing(false);
+
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "加载失败，或数据为空");
     }
 
     @Override
-    public void onLoadNoteListError(Exception e) {
-
+    public void onShareFileError(Exception e) {
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "分享文件失败");
     }
 
     @Override
     public void onDeleteNoteError(Exception e) {
-
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "删除失败");
     }
 
     @Override
     public void onDeleteNoteListError(Exception e) {
-
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "删除所选数据失败");
     }
 
     @Override
-    public void onOutputNoteError(Exception e) {
-
-    }
-
-    @Override
-    public void onShareNoteFileError(Exception e) {
-
-    }
-
-    @Override
-    public void onZipShareError(Exception e) {
-
-    }
-
-    @Override
-    public void onPositiveClick() {
-        presenter.zipShare();
-    }
-
-    @Override
-    public void onNegativeClick() {
-
-    }
-
-    @Override
-    public void onNeutralClick() {
-
+    public void onShareZipError(Exception e) {
+        SnackBarUtils.showMsgShort(getWindow().getDecorView(), "分享文件失败");
     }
 }

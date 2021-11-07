@@ -3,27 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_main_zip"
-        android:icon="@drawable/ic_baseline_share_24"
-        android:title="Zip Share"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/menu_main_delete"
         android:icon="@drawable/ic_baseline_delete_24"
-        android:title="Delete"
+        android:title="Delete All"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_main_edit"
-        android:icon="@drawable/ic_baseline_edit_24"
-        android:title="Edit"
+        android:id="@+id/menu_main_share"
+        android:icon="@drawable/ic_baseline_share_24"
+        android:title="Share Zip"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_main_setting"
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="Setting"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_main_edit"
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:title="Edit"
         app:showAsAction="always" />
 
 </menu>

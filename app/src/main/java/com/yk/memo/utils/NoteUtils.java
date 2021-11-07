@@ -51,20 +51,31 @@ public class NoteUtils {
         return FileUtils.isFileExists(generateNotePath(context, note));
     }
 
-    public static File zipAllMarkdown(Context context) {
+    public static String zipAllMarkdown(Context context) {
         File markdownFolder = new File(getMarkdownFolder(context));
-        String zipPath = markdownFolder.getParent() + File.separator +
-                TimeUtils.getTime(System.currentTimeMillis(), "yyyy-MM-dd_HH-mm-ss") + ".zip";
+        String zipPath = generateZipPath(markdownFolder);
         ZipUtils.zipFile(markdownFolder, zipPath);
-        return new File(zipPath);
+        return zipPath;
     }
 
     public static String generateNotePath(Context context, Note note) {
-        return getMarkdownFolder(context) + TimeUtils.getTime(note.getCreateTime(), "yyyy-MM-dd_HH-mm-ss") + ".md";
+        return getMarkdownFolder(context) + TimeUtils.getTime(note.getCreateTime(), getTimeFormat()) + ".md";
+    }
+
+    public static String generateShotPath(Context context) {
+        return getMarkdownShotFolder(context) + TimeUtils.getTime(System.currentTimeMillis(), getTimeFormat()) + ".jpg";
+    }
+
+    public static String generateZipPath(File folder) {
+        return folder.getParent() + File.separator + TimeUtils.getTime(System.currentTimeMillis(), getTimeFormat()) + ".zip";
     }
 
     public static Uri getFileUri(Context context, File file) {
         return FileProvider.getUriForFile(context, "com.yk.memo.fileprovider", file);
+    }
+
+    public static String getTimeFormat() {
+        return "yyyy-MM-dd_HH-mm-ss";
     }
 
 }

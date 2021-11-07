@@ -33,10 +33,6 @@ public class SpManager {
         return getValue(Sp.MarkdownStyle.KEY, Sp.MarkdownStyle.DEFAULT_VALUE);
     }
 
-    public boolean isOutputMarkdown() {
-        return getValue(Sp.OutputMarkdown.KEY, Sp.OutputMarkdown.DEFAULT_VALUE);
-    }
-
     public String getValue(String key, String defaultValue) {
         return sp.getString(key, defaultValue);
     }
@@ -49,11 +45,6 @@ public class SpManager {
         interface MarkdownStyle {
             String KEY = "pref_markdown_style";
             String DEFAULT_VALUE = "Standard";
-        }
-
-        interface OutputMarkdown {
-            String KEY = "pref_output_markdown";
-            boolean DEFAULT_VALUE = false;
         }
     }
 

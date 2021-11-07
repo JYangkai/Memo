@@ -98,6 +98,12 @@ public class PreviewActivity extends BaseMvpActivity<IPreviewView, PreviewPresen
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+        } else if (item.getItemId() == R.id.menu_preview_delete) {
+            if (note != null) {
+                presenter.deleteNote(note);
+            } else {
+                SnackBarUtils.showMsgShort(getWindow().getDecorView(), "未保存");
+            }
         } else if (item.getItemId() == R.id.menu_preview_edit) {
             if (note != null) {
                 EditActivity.start(this, note);
@@ -118,6 +124,15 @@ public class PreviewActivity extends BaseMvpActivity<IPreviewView, PreviewPresen
     @Override
     public PreviewPresenter createPresenter() {
         return new PreviewPresenter(this);
+    }
+
+    @Override
+    public void onDeleteNote(boolean success) {
+        if (success) {
+            finish();
+        } else {
+            SnackBarUtils.showMsgShort(getWindow().getDecorView(), "删除失败");
+        }
     }
 
     @Override

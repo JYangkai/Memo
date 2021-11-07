@@ -8,73 +8,25 @@ import com.yk.mvp.BaseMvpView;
 import java.util.List;
 
 public interface IMainView extends BaseMvpView {
-    /**
-     * 加载note list
-     *
-     * @param noteList note list
-     */
-    void onLoadNoteList(List<Note> noteList);
 
-    /**
-     * 删除note
-     *
-     * @param note note
-     */
+    void onLoadData(List<Note> noteList);
+
+    void onShareFile(Uri uri);
+
     void onDeleteNote(Note note);
 
-    /**
-     * 删除note list
-     *
-     * @param noteList note list
-     */
     void onDeleteNoteList(List<Note> noteList);
 
-    /**
-     * 导出note
-     *
-     * @param note note
-     */
-    void onOutputNote(Note note);
+    void onShareZip(Uri uri);
 
-    /**
-     * 分享note文件
-     */
-    void onShareNoteFile(Uri uri);
+    void onLoadDataError(Exception e);
 
-    /**
-     * 打包分享
-     *
-     * @param uri uri
-     */
-    void onZipShare(Uri uri);
+    void onShareFileError(Exception e);
 
-    /**
-     * 加载note list错误
-     */
-    void onLoadNoteListError(Exception e);
-
-    /**
-     * 删除note错误
-     */
     void onDeleteNoteError(Exception e);
 
-    /**
-     * 删除note list错误
-     */
     void onDeleteNoteListError(Exception e);
 
-    /**
-     * 导出note 错误
-     */
-    void onOutputNoteError(Exception e);
+    void onShareZipError(Exception e);
 
-    /**
-     * 分享note文件 错误
-     */
-    void onShareNoteFileError(Exception e);
-
-    /**
-     * 打包分享 错误
-     */
-    void onZipShareError(Exception e);
 }

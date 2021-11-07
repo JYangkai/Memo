@@ -10,7 +10,6 @@ import com.yk.eventposter.EventPoster;
 import com.yk.memo.data.event.NoteAddEvent;
 import com.yk.memo.data.event.NoteUpdateEvent;
 import com.yk.memo.utils.NoteUtils;
-import com.yk.memo.utils.SpManager;
 import com.yk.mvp.BaseMvpPresenter;
 import com.yk.rxsample.Observable;
 import com.yk.rxsample.Subscriber;
@@ -76,9 +75,7 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                     @Override
                     public Boolean call(Note note) {
                         if (note != null) {
-                            if (SpManager.getInstance().isOutputMarkdown()) {
-                                NoteUtils.outputNote(context, note);
-                            }
+                            NoteUtils.outputNote(context, note);
                             EventPoster.getInstance().post(new NoteAddEvent(true, note));
                         }
                         return note != null;
@@ -119,6 +116,7 @@ public class EditPresenter extends BaseMvpPresenter<IEditView> {
                     @Override
                     public Boolean call(Note note) {
                         if (note != null) {
+                            NoteUtils.outputNote(context, note);
                             EventPoster.getInstance().post(new NoteUpdateEvent(true, note));
                         }
                         return note != null;

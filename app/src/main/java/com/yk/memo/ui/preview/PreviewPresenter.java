@@ -5,8 +5,10 @@ import android.net.Uri;
 import android.widget.TextView;
 
 import com.yk.db.bean.Note;
+import com.yk.db.manager.NoteDbManager;
+import com.yk.eventposter.EventPoster;
+import com.yk.memo.data.event.NoteRemoveEvent;
 import com.yk.memo.utils.NoteUtils;
-import com.yk.memo.utils.TimeUtils;
 import com.yk.memo.utils.ViewShotUtils;
 import com.yk.mvp.BaseMvpPresenter;
 import com.yk.rxsample.Observable;
@@ -20,6 +22,46 @@ public class PreviewPresenter extends BaseMvpPresenter<IPreviewView> {
 
     public PreviewPresenter(Context context) {
         this.context = context;
+    }
+
+    public void deleteNote(Note note) {
+        Observable.fromCallable(new Observable.OnCallable<Note>() {
+            @Override
+            public Note call() {
+                return NoteDbManager.getInstance().deleteNote(note);
+            }
+        })
+                .map(new Observable.Function1<Note, Boolean>() {
+                    @Override
+                    public Boolean call(Note note) {
+                        if (note != null) {
+                            EventPoster.getInstance().post(new NoteRemoveEvent(note));
+                        }
+                        return note != null;
+                    }
+                })
+                .subscribeOnIo()
+                .observeOnUi()
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onNext(Boolean success) {
+                        if (getView() != null) {
+                            getView().onDeleteNote(success);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        if (getView() != null) {
+                            getView().onDeleteNote(false);
+                        }
+                    }
+                });
     }
 
     public void shareFile(Note note) {
@@ -76,9 +118,7 @@ public class PreviewPresenter extends BaseMvpPresenter<IPreviewView> {
         Observable.fromCallable(new Observable.OnCallable<File>() {
             @Override
             public File call() {
-                String output = NoteUtils.getMarkdownShotFolder(context)
-                        + TimeUtils.getTime(System.currentTimeMillis(), "yyyy-MM-dd_HH-mm-ss")
-                        + ".jpeg";
+                String output = NoteUtils.generateShotPath(context);
                 boolean success = ViewShotUtils.shotAndSave(view, output);
                 return success ? new File(output) : null;
             }

@@ -20,15 +20,4 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:icon="@drawable/ic_baseline_save_24"
-        android:title="自动导出Markdown">
-
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="pref_output_markdown"
-            android:title="启用" />
-
-    </PreferenceCategory>
-
 </PreferenceScreen>

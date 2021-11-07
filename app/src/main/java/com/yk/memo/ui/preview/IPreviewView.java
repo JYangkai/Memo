@@ -5,6 +5,8 @@ import android.net.Uri;
 import com.yk.mvp.BaseMvpView;
 
 public interface IPreviewView extends BaseMvpView {
+    void onDeleteNote(boolean success);
+
     void onShareFile(Uri uri);
 
     void onShareImage(Uri uri);
