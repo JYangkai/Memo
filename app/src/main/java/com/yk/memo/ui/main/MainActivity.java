@@ -1,5 +1,6 @@
 package com.yk.memo.ui.main;
 
+import android.Manifest;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,6 +31,8 @@ import com.yk.memo.ui.preview.PreviewActivity;
 import com.yk.memo.ui.setting.SettingActivity;
 import com.yk.memo.utils.SnackBarUtils;
 import com.yk.mvp.BaseMvpActivity;
+import com.yk.permissionrequester.PermissionFragment;
+import com.yk.permissionrequester.PermissionRequester;
 import com.yk.share.ShareUtils;
 
 import java.util.ArrayList;
@@ -162,7 +165,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
                 if (item.getItemId() == R.id.menu_note_more_share_text) {
                     ShareUtils.shareText(MainActivity.this, note.getSrc());
                 } else if (item.getItemId() == R.id.menu_note_more_share_file) {
-                    presenter.shareFile(note);
+                    shareFile(note);
                 } else if (item.getItemId() == R.id.menu_note_more_delete) {
                     presenter.deleteNote(note);
                 }
@@ -170,6 +173,32 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
             }
         });
         popupMenu.show();
+    }
+
+    private void shareFile(Note note) {
+        PermissionRequester.build(this)
+                .permission(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .request(new PermissionFragment.OnPermissionRequestListener() {
+                    @Override
+                    public void onRequestSuccess(boolean success) {
+                        if (success) {
+                            presenter.shareFile(note);
+                        } else {
+                            SnackBarUtils.showMsgShort(getWindow().getDecorView(), "操作需要授权");
+                        }
+                    }
+
+                    @Override
+                    public void onGrantedList(List<String> grantedList) {
+
+                    }
+
+                    @Override
+                    public void onDeniedList(List<String> deniedList) {
+
+                    }
+                });
     }
 
     private void updateToolbarSubTitle() {
@@ -201,13 +230,39 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresenter> impl
                 presenter.deleteNoteList(noteList);
             }
         } else if (item.getItemId() == R.id.menu_main_share) {
-            presenter.shareZip();
+            shareZip();
         } else if (item.getItemId() == R.id.menu_main_setting) {
             SettingActivity.start(this);
         } else if (item.getItemId() == R.id.menu_main_edit) {
             EditActivity.start(this, null);
         }
         return true;
+    }
+
+    private void shareZip() {
+        PermissionRequester.build(this)
+                .permission(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .request(new PermissionFragment.OnPermissionRequestListener() {
+                    @Override
+                    public void onRequestSuccess(boolean success) {
+                        if (success) {
+                            presenter.shareZip();
+                        } else {
+                            SnackBarUtils.showMsgShort(getWindow().getDecorView(), "操作需要授权");
+                        }
+                    }
+
+                    @Override
+                    public void onGrantedList(List<String> grantedList) {
+
+                    }
+
+                    @Override
+                    public void onDeniedList(List<String> deniedList) {
+
+                    }
+                });
     }
 
     @Subscribe(threadMode = Subscribe.Thread.UI)

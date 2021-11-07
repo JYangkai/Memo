@@ -1,5 +1,6 @@
 package com.yk.memo.ui.preview;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,7 +21,11 @@ import com.yk.memo.R;
 import com.yk.memo.ui.edit.EditActivity;
 import com.yk.memo.utils.SnackBarUtils;
 import com.yk.mvp.BaseMvpActivity;
+import com.yk.permissionrequester.PermissionFragment;
+import com.yk.permissionrequester.PermissionRequester;
 import com.yk.share.ShareUtils;
+
+import java.util.List;
 
 public class PreviewActivity extends BaseMvpActivity<IPreviewView, PreviewPresenter> implements IPreviewView {
 
@@ -113,12 +118,66 @@ public class PreviewActivity extends BaseMvpActivity<IPreviewView, PreviewPresen
             ShareUtils.shareText(this, note != null ? note.getSrc() : src);
         } else if (item.getItemId() == R.id.menu_preview_share_file) {
             if (note != null) {
-                presenter.shareFile(note);
+                shareFile(note);
+            } else {
+                SnackBarUtils.showMsgShort(getWindow().getDecorView(), "未保存");
             }
         } else if (item.getItemId() == R.id.menu_preview_share_image) {
-            presenter.shareImage(tvPreview);
+            shareImage();
         }
         return true;
+    }
+
+    private void shareFile(Note note) {
+        PermissionRequester.build(this)
+                .permission(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .request(new PermissionFragment.OnPermissionRequestListener() {
+                    @Override
+                    public void onRequestSuccess(boolean success) {
+                        if (success) {
+                            presenter.shareFile(note);
+                        } else {
+                            SnackBarUtils.showMsgShort(getWindow().getDecorView(), "操作需要授权");
+                        }
+                    }
+
+                    @Override
+                    public void onGrantedList(List<String> grantedList) {
+
+                    }
+
+                    @Override
+                    public void onDeniedList(List<String> deniedList) {
+
+                    }
+                });
+    }
+
+    private void shareImage() {
+        PermissionRequester.build(this)
+                .permission(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .request(new PermissionFragment.OnPermissionRequestListener() {
+                    @Override
+                    public void onRequestSuccess(boolean success) {
+                        if (success) {
+                            presenter.shareImage(tvPreview);
+                        } else {
+                            SnackBarUtils.showMsgShort(getWindow().getDecorView(), "操作需要授权");
+                        }
+                    }
+
+                    @Override
+                    public void onGrantedList(List<String> grantedList) {
+
+                    }
+
+                    @Override
+                    public void onDeniedList(List<String> deniedList) {
+
+                    }
+                });
     }
 
     @Override
