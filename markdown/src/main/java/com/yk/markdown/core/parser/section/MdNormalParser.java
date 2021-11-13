@@ -26,9 +26,11 @@ public class MdNormalParser extends BaseMdSectionParser {
             return false;
         }
 
-        String[] lastSrcSplit = lastSection.getSrc().split("\n");
-        String lastSrc = lastSrcSplit[lastSrcSplit.length - 1];
+        if (!codeBlockClose) {
+            return true;
+        }
 
-        return !lastSrc.isEmpty();
+        String src = lastSection.getSrc();
+        return src.lastIndexOf("\n") != src.length() - 1;
     }
 }
